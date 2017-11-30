@@ -9,18 +9,18 @@ namespace CoreTests
         [TestMethod]
         public void MiniMax()
         {
-            Player minimaxPlayer = new MiniMiniMaxPlayer();
+            PlayChooser minimaxPlayer = new MiniMiniMaxChooser();
 
             GamePosition position = new GamePosition("T_TF_F");            
-            PlayChoice choice = minimaxPlayer.ChooseToadPlay(position);
+            PlayChoice choice = minimaxPlayer.ChoosePlay(position);
             Assert.AreEqual(2, choice.Choice);
 
             position = new GamePosition("T_TT_F");
-            choice = minimaxPlayer.ChooseToadPlay(position);
+            choice = minimaxPlayer.ChoosePlay(position);
             Assert.AreEqual(3, choice.Choice);
 
             position = new GamePosition("T__TF_");
-            choice = minimaxPlayer.ChooseToadPlay(position);
+            choice = minimaxPlayer.ChoosePlay(position);
             Assert.AreEqual(0, choice.Choice);
         }
     }

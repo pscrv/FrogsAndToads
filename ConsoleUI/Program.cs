@@ -8,7 +8,7 @@ namespace ConsoleUI
 
         static void Main(string[] args)
         {
-            Game game = new Game("TF_TF_TF_TF", new ConsolePlayer(), new MiniMiniMaxPlayer());
+            Game game = new Game("TF_TF_TF__TF", new ConsoleChooser(), new MiniMiniMaxChooser());
             PlayInTurns(game);
 
             Console.ForegroundColor = ConsoleColor.Red;
@@ -23,27 +23,15 @@ namespace ConsoleUI
         }
 
 
-        static void PlayWholeGame(Game game)
-        {
-            game.Play();
-        }
-
-
         static void PlayInTurns(Game game)
         {
-            while (game.GameIsRunning)
+            foreach (GamePosition position in game.GameMoves())
             {
-                game.PlayOneMove();
-
-                if (game.GameIsRunning)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine($"   {game.ActivePlayer} moved to {game.CurrentPosition}");
-                    Console.WriteLine("      Press <Enter>");
-                    Console.ReadLine();
-                }
-            }
+                Console.WriteLine();
+                Console.WriteLine($"   {game.ActivePlayer} moved to {position}");
+                Console.WriteLine("      Press <Enter>");
+                Console.ReadLine();
+            }            
         }
-
     }
 }

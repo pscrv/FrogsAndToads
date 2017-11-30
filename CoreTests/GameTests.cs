@@ -13,7 +13,7 @@ namespace CoreTests
         [TestMethod]
         public void Play()
         {
-            Game game = new Game("T_F", new TrivialPlayer(), new TrivialPlayer());
+            Game game = new Game("T_F", new TrivialChooser(), new TrivialChooser());
             game.Play();
 
             Assert.AreEqual(4, game.History.Count);
@@ -26,16 +26,29 @@ namespace CoreTests
         [TestMethod]
         public void PlayOneMove()
         {
-            Game game = new Game("T_F", new TrivialPlayer(), new TrivialPlayer());
+            Game game = new Game("T_F", new TrivialChooser(), new TrivialChooser());
             Assert.AreEqual("< T _ F >", game.CurrentPosition);
 
             game.PlayOneMove();
             Assert.AreEqual("< _ T F >", game.CurrentPosition);
-            
+
             game.PlayOneMove();
             Assert.AreEqual("< F T _ >", game.CurrentPosition);
 
             game.PlayOneMove();
+            Assert.AreEqual("< F _ T >", game.CurrentPosition);
+        }
+
+
+        [TestMethod]
+        public void GameMoves()
+        {
+            Game game = new Game("T_F", new TrivialChooser(), new TrivialChooser());
+            Assert.AreEqual("< T _ F >", game.CurrentPosition);
+
+            foreach (GamePosition position in game.GameMoves())
+            { }
+
             Assert.AreEqual("< F _ T >", game.CurrentPosition);
         }
     }

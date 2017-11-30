@@ -48,6 +48,7 @@
     <Compile Include="GamePiece.cs" />
     <Compile Include="GamePosition.cs" />
     <Compile Include="PlayChoice.cs" />
+    <Compile Include="PlayChooser.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
