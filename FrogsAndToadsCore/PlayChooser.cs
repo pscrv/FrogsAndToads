@@ -34,7 +34,7 @@ namespace FrogsAndToadsCore
             List<int> possiblePlays = position.GetPossibleToadMoves();
             if (possiblePlays.Count == 0)
                 return PlayChoice.NoChoice();
-            return PlayChoice.ChoiceMade(possiblePlays[0]);
+            return PlayChoice.ChoiceMade(possiblePlays.First());
         }
     }
 
@@ -91,9 +91,9 @@ namespace FrogsAndToadsCore
                 return PlayChoice.NoChoice();
 
             if (possiblePlays.Count == 1)
-                return PlayChoice.ChoiceMade(possiblePlays[0]);
+                return PlayChoice.ChoiceMade(possiblePlays.First());
             
-            int bestPlay = possiblePlays[0];
+            int bestPlay = possiblePlays.First();
             int maximum = int.MinValue;
             foreach (int play in possiblePlays)
             {

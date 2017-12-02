@@ -107,17 +107,17 @@ namespace FrogsAndToadsCore
 
         public IEnumerable<GamePosition> GameMoves()
         {
+            Cycle<Player> players = new Cycle<Player> { _toadPlayer, _frogPlayer };
+
             while (true)
             {
-                _activePlayer = _toadPlayer;
-                if (_play().NoChoiceMade)
-                    yield break;
-                yield return _position;
-
-                _activePlayer = _frogPlayer;
-                if (_play().NoChoiceMade)
-                    yield break;
-                yield return _position;
+                foreach (Player player in players)
+                {
+                    _activePlayer = player;
+                    if (_play().NoChoiceMade)
+                        yield break;
+                    yield return _position;
+                }
             }
         }
 
