@@ -7,22 +7,9 @@ namespace FrogsAndToadsCore
 {
     public abstract class PlayChooser
     {
-        #region enum
-        protected enum PieceType { Toad, Frog }
-        #endregion
-
-
         #region abstract
         internal abstract PlayChoice ChoosePlay(GamePosition position);
-        #endregion        
-
-
-        #region internal methods
-        //internal PlayChoice ChoosePlay(GamePosition position)
-        //{
-        //    return _choosePlay(position);
-        //}
-        #endregion
+        #endregion    
     }
 
 
@@ -122,4 +109,9 @@ namespace FrogsAndToadsCore
             return PlayChoice.ChoiceMade(bestPlay);
         }                
     }
+
+
+
+
+
 }
