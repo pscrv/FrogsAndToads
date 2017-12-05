@@ -8,7 +8,7 @@ namespace ConsoleUI
 
         static void Main(string[] args)
         {
-            Game game = new Game("TF_TF_TF__TF", new ConsoleChooser(), new MiniMiniMaxChooser());
+            Game game = new Game("TF_TF_TF__TF", new ConsoleChooser(), new MiniMaxChooser());
             PlayInTurns(game);
 
             Console.ForegroundColor = ConsoleColor.Red;

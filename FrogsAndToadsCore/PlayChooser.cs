@@ -112,6 +112,104 @@ namespace FrogsAndToadsCore
 
 
 
+    public class MiniMaxChooser : PlayChooser
+    {
+        internal override PlayChoice ChoosePlay(GamePosition position)
+        {
+            GamePosition resultingPosition;
+            List<int> possibleToadMoves = position.GetPossibleToadMoves();
+
+            if (possibleToadMoves.Count == 0)
+                return PlayChoice.NoChoice();
+
+            if (possibleToadMoves.Count == 1)
+                return PlayChoice.ChoiceMade(possibleToadMoves.First());
+
+            int bestmove = int.MinValue;
+            int bestvalue = int.MinValue;
+            int currentvalue;
+            foreach (int move in possibleToadMoves)
+            {
+                resultingPosition = position.MovePiece(move);
+                currentvalue = _evaluatePositionForFrog(resultingPosition, 0, int.MinValue, int.MaxValue);
+                if (currentvalue > bestvalue)
+                {
+                    bestvalue = currentvalue;
+                    bestmove = move;
+                }
+            }
+
+            return PlayChoice.ChoiceMade(bestmove);
+        }
+        
 
 
+        private int _evaluatePositionForToad(GamePosition position, int depth, int bestToad, int bestFrog)
+        {
+            GamePosition resultingPosition;
+            List<int> possibleMoves = position.GetPossibleToadMoves();
+
+            if (possibleMoves.Count == 0)
+            {
+                return _evaluateEndPositionForFrogs(position);
+            }
+
+
+            int bestvalue = int.MinValue;
+            foreach (int move in possibleMoves)
+            {
+                resultingPosition = position.MovePiece(move);
+                bestvalue =
+                    Math.Max(
+                        bestvalue,
+                        _evaluatePositionForFrog(resultingPosition, depth + 1, bestToad, bestFrog)
+                        );
+                bestToad = Math.Max(bestToad, bestvalue);
+                if (bestToad > bestFrog)
+                    break;
+            }
+
+            return bestvalue;
+        }
+
+
+        private int _evaluatePositionForFrog(GamePosition position, int depth, int bestToad, int bestFrog)
+        {
+            GamePosition resultingPosition;
+            List<int>possibleMoves = position.GetPossibleFrogMoves();
+
+            if (possibleMoves.Count == 0)
+            {
+                return _evaluateEndPositionForToads(position);
+            }
+
+            int bestvalue = int.MaxValue;
+            foreach (int move in possibleMoves)
+            {
+                resultingPosition = position.MovePiece(move);
+                bestvalue =
+                    Math.Min(
+                        bestvalue,
+                        _evaluatePositionForToad(resultingPosition, depth + 1, bestToad, bestFrog)
+                        );
+                bestFrog = Math.Min(bestFrog, bestvalue);
+                if (bestToad > bestFrog)
+                    break;
+            }
+
+            return bestvalue;
+        }
+
+        
+
+        private int _evaluateEndPositionForToads(GamePosition position)
+        {
+            return 1 + position.GetPossibleToadMoves().Count;
+        }
+
+        private int _evaluateEndPositionForFrogs(GamePosition position)
+        {
+            return -1 - position.GetPossibleFrogMoves().Count;
+        }  
+    }
 }

@@ -7,20 +7,48 @@ namespace CoreTests
     public class PlayerTests
     {
         [TestMethod]
-        public void MiniMax()
+        public void MiniMiniMax()
         {
-            PlayChooser minimaxPlayer = new MiniMiniMaxChooser();
+            PlayChooser chooser = new MiniMiniMaxChooser();
 
             GamePosition position = new GamePosition("T_TF_F");            
-            PlayChoice choice = minimaxPlayer.ChoosePlay(position);
+            PlayChoice choice = chooser.ChoosePlay(position);
             Assert.AreEqual(2, choice.Choice);
 
             position = new GamePosition("T_TT_F");
-            choice = minimaxPlayer.ChoosePlay(position);
+            choice = chooser.ChoosePlay(position);
             Assert.AreEqual(3, choice.Choice);
 
             position = new GamePosition("T__TF_");
-            choice = minimaxPlayer.ChoosePlay(position);
+            choice = chooser.ChoosePlay(position);
+            Assert.AreEqual(0, choice.Choice);
+        }
+
+
+        [TestMethod]
+        public void MiniMax()
+        {
+            GamePosition position;
+            PlayChoice choice;
+            PlayChooser chooser = new MiniMaxChooser();
+
+            position = new GamePosition("T___");
+            choice = chooser.ChoosePlay(position);
+            Assert.AreEqual(0, choice.Choice);
+
+
+            position = new GamePosition("T_T_");
+            choice = chooser.ChoosePlay(position);
+            Assert.AreEqual(0, choice.Choice);
+
+
+            position = new GamePosition("T_T_F");
+            choice = chooser.ChoosePlay(position);
+            Assert.AreEqual(2, choice.Choice);
+
+
+            position = new GamePosition("TF_TF_TF__TF");
+            choice = chooser.ChoosePlay(position);
             Assert.AreEqual(0, choice.Choice);
         }
     }
