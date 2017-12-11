@@ -33,5 +33,14 @@
         {
             _noChoiceMade = true;
         }
+
+
+        public override string ToString()
+        {
+            if (_noChoiceMade)
+                return $"[x]";
+            return $"[{Choice}]";
+        }
+
     }
 }

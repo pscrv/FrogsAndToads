@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{380B045B-8D21-4854-8D89-40DDAA6341BB}</ProjectGuid>
+    <ProjectGuid>{D1A878CE-4F82-4B04-854F-59D2DD22C81A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FrogsAndToadsCore</RootNamespace>
-    <AssemblyName>FrogsAndToadsCore</AssemblyName>
+    <RootNamespace>GameCore</RootNamespace>
+    <AssemblyName>GameCore</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -29,9 +29,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,17 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cycle.cs" />
-    <Compile Include="DummyMain.cs" />
-    <Compile Include="FrogsAndToadGame.cs" />
-    <Compile Include="GameMove.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="GamePiece.cs" />
+    <Compile Include="GamePlayer.cs" />
     <Compile Include="GamePosition.cs" />
-    <Compile Include="PlayChoice.cs" />
-    <Compile Include="PlayChooser.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="PositionEvaluator.cs" />
+    <Compile Include="GameTrack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{ba2a6c8e-e743-4ce5-9f0d-2a1bef0d938f}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

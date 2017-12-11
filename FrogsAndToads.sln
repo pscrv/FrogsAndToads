@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleUI", "ConsoleUI\ConsoleUI.csproj", "{B2626D25-2F48-426D-81B4-34C3D46B97D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCore", "GameCore\GameCore.csproj", "{D1A878CE-4F82-4B04-854F-59D2DD22C81A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{B2626D25-2F48-426D-81B4-34C3D46B97D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2626D25-2F48-426D-81B4-34C3D46B97D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2626D25-2F48-426D-81B4-34C3D46B97D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1A878CE-4F82-4B04-854F-59D2DD22C81A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1A878CE-4F82-4B04-854F-59D2DD22C81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1A878CE-4F82-4B04-854F-59D2DD22C81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1A878CE-4F82-4B04-854F-59D2DD22C81A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

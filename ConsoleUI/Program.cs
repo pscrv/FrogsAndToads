@@ -5,10 +5,17 @@ namespace ConsoleUI
 {
     class Program
     {
+        //const string __GameString__ = "TF__TF_TF__TF";
+        const string __GameString__ = "TF__TF_";
+
 
         static void Main(string[] args)
         {
-            Game game = new Game("TF_TF_TF__TF", new ConsoleChooser(), new MiniMaxChooser());
+            FrogsAndToadGame game = new FrogsAndToadGame(
+                __GameString__, 
+                new ConsoleChooser(), 
+                new EvaluatingChooser(
+                    new MiniMaxEvaluator()));
             PlayInTurns(game);
 
             Console.ForegroundColor = ConsoleColor.Red;
@@ -23,7 +30,7 @@ namespace ConsoleUI
         }
 
 
-        static void PlayInTurns(Game game)
+        static void PlayInTurns(FrogsAndToadGame game)
         {
             foreach (GamePosition position in game.GameMoves())
             {

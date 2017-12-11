@@ -28,6 +28,11 @@ namespace FrogsAndToadsCore
 
         #region properties       
         public int Length => _track.Length;
+
+        public GamePiece this[int index]
+        {
+            get => _track[index];
+        }
         #endregion
 
 
@@ -114,6 +119,22 @@ namespace FrogsAndToadsCore
 
         }
 
+        internal bool CanMovePiece(GameMove move)
+        {
+            if (move.Source< 0 || move.Source >= _track.Length)
+                throw new IndexOutOfRangeException();
+
+
+            if (_track[move.Source].Move == 0)
+                return false;
+
+            int moveTarget = move.Source + _track[move.Source].Move;
+            return _targetIsFree(moveTarget);
+
+        }
+
+        
+
         internal bool CanJumpPiece(int index)
         {
             if (index < 0 || index >= _track.Length)
@@ -128,6 +149,22 @@ namespace FrogsAndToadsCore
                 _targetIsFree(jumpTarget)
                 && _track[index].CanJump(_track[moveTarget]);
         }
+
+        internal bool CanJumpPiece(GameMove move)
+        {
+            if (move.Source < 0 || move.Source >= _track.Length)
+                throw new IndexOutOfRangeException();
+
+            if (_track[move.Source].Move == 0)
+                return false;
+
+            int moveTarget = move.Source + _track[move.Source].Move;
+            int jumpTarget = moveTarget + _track[move.Source].Move;
+            return
+                _targetIsFree(jumpTarget)
+                && _track[move.Source].CanJump(_track[moveTarget]);
+        }
+
 
         internal GamePosition MovePiece(int index)
         {
@@ -152,6 +189,31 @@ namespace FrogsAndToadsCore
             throw new InvalidOperationException("Immovable piece.");    
         }
 
+        internal GamePosition MovePiece(GameMove move)
+        {
+            if (CanMovePiece(move))
+            {
+                int moveTarget = move.Source + _track[move.Source].Move;
+                GamePosition result = new GamePosition(this);
+                result._track[moveTarget] = result._track[move.Source];
+                result._track[move.Source] = new Space();
+                return result;
+            }
+
+            if (CanJumpPiece(move))
+            {
+                int jumpTarget = move.Source + _track[move.Source].Move + _track[move.Source].Move;
+                GamePosition result = new GamePosition(this);
+                result._track[jumpTarget] = result._track[move.Source];
+                result._track[move.Source] = new Space();
+                return result;
+            }
+
+            throw new InvalidOperationException("Immovable piece.");
+        }
+
+
+
         internal List<int> GetAllPossibleMoves()
         {
             return _getPossibleMoves(x => true);
@@ -175,15 +237,20 @@ namespace FrogsAndToadsCore
             List<int> possibleMoves = new List<int>();
             for (int i = 0; i < _track.Length; i++)
             {
-                if (pieceChooser(_track[i]) && (CanMovePiece(i) || CanJumpPiece(i)))
+                if (pieceChooser(_track[i])
+                    && (CanMovePiece(i) || CanJumpPiece(i)))
+                {
                     possibleMoves.Add(i);
+                }               
+
             }
             return possibleMoves;
         }
 
         private bool _targetIsFree(int target)
         {
-            return target >= 0
+            return 
+                target >= 0
                 && target < _track.Length
                 && _track[target] is Space;
         }

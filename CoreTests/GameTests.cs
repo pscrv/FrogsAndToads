@@ -1,8 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using FrogsAndToadsCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FrogsAndToadsCore;
+
 
 namespace CoreTests
 {
@@ -13,7 +11,7 @@ namespace CoreTests
         [TestMethod]
         public void Play()
         {
-            Game game = new Game("T_F", new TrivialChooser(), new TrivialChooser());
+            FrogsAndToadGame game = new FrogsAndToadGame("T_F", new TrivialChooser(), new TrivialChooser());
             game.Play();
 
             Assert.AreEqual(4, game.History.Count);
@@ -26,7 +24,7 @@ namespace CoreTests
         [TestMethod]
         public void PlayOneMove()
         {
-            Game game = new Game("T_F", new TrivialChooser(), new TrivialChooser());
+            FrogsAndToadGame game = new FrogsAndToadGame("T_F", new TrivialChooser(), new TrivialChooser());
             Assert.AreEqual("< T _ F >", game.CurrentPosition);
 
             game.PlayOneMove();
@@ -43,7 +41,7 @@ namespace CoreTests
         [TestMethod]
         public void GameMoves()
         {
-            Game game = new Game("T_F", new TrivialChooser(), new TrivialChooser());
+            FrogsAndToadGame game = new FrogsAndToadGame("T_F", new TrivialChooser(), new TrivialChooser());
             Assert.AreEqual("< T _ F >", game.CurrentPosition);
 
             foreach (GamePosition position in game.GameMoves())

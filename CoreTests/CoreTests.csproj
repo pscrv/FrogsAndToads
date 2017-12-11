@@ -51,8 +51,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameCoreTests.cs" />
     <Compile Include="GameTests.cs" />
+    <Compile Include="GameTrackTests.cs" />
     <Compile Include="PlayerTests.cs" />
+    <Compile Include="PositionEvaluatorTests.cs" />
     <Compile Include="PositionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -63,6 +66,14 @@
     <ProjectReference Include="..\FrogsAndToadsCore\FrogsAndToadsCore.csproj">
       <Project>{380b045b-8d21-4854-8d89-40ddaa6341bb}</Project>
       <Name>FrogsAndToadsCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameCore\GameCore.csproj">
+      <Project>{D1A878CE-4F82-4B04-854F-59D2DD22C81A}</Project>
+      <Name>GameCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

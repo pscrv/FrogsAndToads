@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace FrogsAndToadsCore
 {
-    public class Game
+    public class FrogsAndToadGame
     {
         #region private
         private GamePosition _position;
@@ -32,12 +32,12 @@ namespace FrogsAndToadsCore
 
 
         #region construction
-        public Game()
+        public FrogsAndToadGame()
             : this("", new TrivialChooser(), new TrivialChooser())
         { }
 
 
-        public Game(string position, PlayChooser toadChooser, PlayChooser frogChooser)
+        public FrogsAndToadGame(string position, PlayChooser toadChooser, PlayChooser frogChooser)
         {
             _position = position == "" 
                 ? GamePosition.MakeInitialPosition() 
@@ -108,17 +108,14 @@ namespace FrogsAndToadsCore
         public IEnumerable<GamePosition> GameMoves()
         {
             Cycle<Player> players = new Cycle<Player> { _toadPlayer, _frogPlayer };
-
-            while (true)
+            
+            foreach (Player player in players)
             {
-                foreach (Player player in players)
-                {
-                    _activePlayer = player;
-                    if (_play().NoChoiceMade)
-                        yield break;
-                    yield return _position;
-                }
-            }
+                _activePlayer = player;
+                if (_play().NoChoiceMade)
+                    yield break;
+                yield return _position;
+            }            
         }
 
         private PlayChoice _play()
