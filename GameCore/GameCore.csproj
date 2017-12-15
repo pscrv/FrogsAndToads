@@ -40,10 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttemptPlay.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePiece.cs" />
     <Compile Include="GamePlayer.cs" />
     <Compile Include="GamePosition.cs" />
+    <Compile Include="GamePositionEvaluator.cs" />
     <Compile Include="GameTrack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

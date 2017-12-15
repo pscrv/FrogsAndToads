@@ -3,53 +3,99 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using GameCore;
+
 namespace FrogsAndToadsCore
 {
-    public abstract class PlayChooser
+    public abstract class PlayChooser : GamePlayer
     {
         #region abstract
-        internal abstract PlayChoice ChoosePlay(GamePosition position);
-        #endregion    
+        internal abstract AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions);
+        #endregion
+
+
+
+        #region construction
+        public PlayChooser(string label) 
+            : base(label)
+        { }
+        #endregion
+        
+
+
+        #region GamePlayer
+        //public AttemptPlay ChoosePlay(IEnumerable<GamePosition> playOptions)
+        //{
+        //    IEnumerable<FrogsAndToadsPosition> options = 
+        //        playOptions.Select(x => x as FrogsAndToadsPosition);
+        //    return ChoosePlay(options);
+        //}
+
+        public override AttemptPlay Play(IEnumerable<GamePosition> playOptions)
+        {
+            IEnumerable<FrogsAndToadsPosition> options =
+                playOptions.Select(x => x as FrogsAndToadsPosition);
+            return ChoosePlay(options);
+        }
+        #endregion
     }
 
 
 
     public class TrivialChooser : PlayChooser
     {
-        internal override PlayChoice ChoosePlay(GamePosition position)
+        public TrivialChooser(string label) 
+            : base(label)
+        { }
+
+        internal override AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
-            List<int> possiblePlays = position.GetPossibleToadMoves();
-            if (possiblePlays.Count == 0)
-                return PlayChoice.NoChoice();
-            return PlayChoice.ChoiceMade(possiblePlays.First());
-        }
+            return
+                playOptions.Count() == 0
+                ? AttemptPlay.Failure
+                : AttemptPlay.Success(playOptions.First());                    
+        }        
     }
 
 
 
     public class ConsoleChooser : PlayChooser
-    {        
-        internal override PlayChoice ChoosePlay(GamePosition position)
+    {
+        public ConsoleChooser(string label) 
+            : base(label)
+        { }
+
+        internal override AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
-            List<int> possiblePlays = position.GetPossibleToadMoves();
+            if (playOptions.Count() == 0)
+                return AttemptPlay.Failure;
 
-            if (possiblePlays.Count == 0)
-                return PlayChoice.NoChoice();
-            
-            List<string> choices = possiblePlays.Select(x => x.ToString()).ToList();
-
+            List<string> choices = playOptions.Select(x => x.ToString()).ToList();
             ConsoleColor resetColour = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"The position is: {position}");
 
-            string result = "";
-            while (!choices.Contains(result))
+            string input;
+            int result = -1;
+            while (result < 0 || result >= choices.Count)
             {
-                Console.WriteLine($"Please choose a move from the list {ListToString<string>(choices)}");
-                result = Console.ReadLine();
+                Console.WriteLine($"Please choose a move from: ");
+                for (int i = 0; i < choices.Count; i++)
+                {
+                    Console.WriteLine($"    {i}: {choices[i]}");
+                }
+
+                input = Console.ReadLine();
+                if (int.TryParse(input, out int res))
+                    result = res;
             }
+
             Console.ForegroundColor = resetColour;
-            return PlayChoice.ChoiceMade(int.Parse(result));
+
+            return AttemptPlay.Success(playOptions.ToList()[result]);
+
+
+
+
         }
 
         private string ListToString<T>(List<T> list)
@@ -70,29 +116,32 @@ namespace FrogsAndToadsCore
 
     public class MiniMiniMaxChooser : PlayChooser
     {
-        internal override PlayChoice ChoosePlay(GamePosition position)
+        public MiniMiniMaxChooser(string label) 
+            : base(label)
+        { }
+
+        internal override AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
-            List<int> possiblePlays = position.GetPossibleToadMoves();
+            if (playOptions.Count() == 0)
+                return AttemptPlay.Failure;
 
-            if (possiblePlays.Count == 0)
-                return PlayChoice.NoChoice();
+            if (playOptions.Count() == 1)
+                return AttemptPlay.Success(playOptions.First());
 
-            if (possiblePlays.Count == 1)
-                return PlayChoice.ChoiceMade(possiblePlays.First());
-            
-            int bestPlay = possiblePlays.First();
+            GamePosition bestOption = playOptions.First();
+            FrogsAndToadsPosition currentOption;
             int maximum = int.MinValue;
-            foreach (int play in possiblePlays)
+            foreach (GamePosition option in playOptions)
             {
-                GamePosition resultingPosition = position.MovePiece(play);
+                currentOption = option as FrogsAndToadsPosition;
 
-                List<int> possibleResponses = resultingPosition.GetPossibleFrogMoves();
-                            
+                List<int> possibleResponses = currentOption.GetPossibleFrogMoves();
+
                 int minimum = int.MaxValue;
                 foreach (int response in possibleResponses)
                 {
                     int reResponseCount;
-                    reResponseCount = resultingPosition.MovePiece(response).GetPossibleToadMoves().Count;
+                    reResponseCount = currentOption.MovePiece(response).GetPossibleToadMoves().Count;
 
                     if (reResponseCount < minimum)
                         minimum = reResponseCount;
@@ -101,13 +150,13 @@ namespace FrogsAndToadsCore
                 if (minimum > maximum)
                 {
                     maximum = minimum;
-                    bestPlay = play;
+                    bestOption = option;
                 }
 
             }
 
-            return PlayChoice.ChoiceMade(bestPlay);
-        }                
+            return AttemptPlay.Success(bestOption);
+        }
     }
 
 
@@ -115,38 +164,43 @@ namespace FrogsAndToadsCore
     public class EvaluatingChooser : PlayChooser
     {
         #region private attributes
-        private PositionEvaluator _evaluator;
+        private GamePositionEvaluator _evaluator;
         #endregion
 
 
         #region abstract overrides
-        internal override PlayChoice ChoosePlay(GamePosition position)
+        internal override AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
-            List<int> possibleToadMoves = position.GetPossibleToadMoves();
+            if (playOptions.Count() == 0)
+                return AttemptPlay.Failure;
 
-            if (possibleToadMoves.Count == 0)
-                return PlayChoice.NoChoice();
+            if (playOptions.Count() == 1)
+                return AttemptPlay.Success(playOptions.First());
 
-            if (possibleToadMoves.Count == 1)
-                return PlayChoice.ChoiceMade(possibleToadMoves.First());
-            
-            Dictionary<int, int> moveValues = _evaluator.ToadMoveEvaluations(position);
-            KeyValuePair<int, int> best = moveValues.First();
-            foreach (KeyValuePair<int, int> kvp in moveValues)
+            int optionValue;
+            int bestValue = int.MinValue;
+            GamePosition bestOption = null;
+            foreach (GamePosition option in playOptions)
             {
-                if (kvp.Value > best.Value)
-                    best = kvp;
-            }
-            
-            return PlayChoice.ChoiceMade(best.Key);
+                optionValue = _evaluator.FrogEvaluation(option as FrogsAndToadsPosition);
+                if (optionValue > bestValue)
+                {
+                    bestValue = optionValue;
+                    bestOption = option;
+                }
+            }            
+
+            return AttemptPlay.Success(bestOption);
         }
+        
         #endregion
 
 
 
-        public EvaluatingChooser(PositionEvaluator evaluator)
-        {
-            _evaluator = evaluator;
+        public EvaluatingChooser(string label, GamePositionEvaluator evaluator)
+            :base(label)
+        {    _evaluator = evaluator;
+        
         }
         
         

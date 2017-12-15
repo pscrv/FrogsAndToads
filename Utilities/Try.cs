@@ -4,6 +4,8 @@
     {
         private static Try<T> _failureInstance 
             = new Try<T>(default(T)) { IsFailure = true };
+
+
         public static Try<T> Failure
             => _failureInstance;
 
@@ -18,7 +20,7 @@
 
 
 
-        private Try(T value)
+        protected Try(T value)
         {
             Value = value;
         }

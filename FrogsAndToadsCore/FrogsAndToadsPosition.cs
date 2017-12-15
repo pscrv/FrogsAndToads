@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public class GamePosition
+    public class FrogsAndToadsPosition : GamePosition
     {
         #region static
-        internal static GamePosition MakeInitialPosition()
+        internal static FrogsAndToadsPosition MakeInitialPosition()
         {
             return __simpleDefault();
         }
 
-        private static GamePosition __simpleDefault()
+        private static FrogsAndToadsPosition __simpleDefault()
         {
-            return new GamePosition(1, 1, 1);
+            return new FrogsAndToadsPosition(1, 1, 1);
         }
         #endregion
 
@@ -33,17 +34,22 @@ namespace FrogsAndToadsCore
         {
             get => _track[index];
         }
+
+        public override GamePosition Reverse
+            => new FrogsAndToadsPosition(
+                _track.Reverse()
+                .Select(x => x.Converse)
+                .ToArray());
+        
         #endregion
 
 
 
         #region construction
-        internal GamePosition(int toadCount, int spaceCount, int frogCount)
+        internal FrogsAndToadsPosition(int toadCount, int spaceCount, int frogCount)
         {
             _track = new GamePiece[toadCount + spaceCount + frogCount];
-
-            // all these Toads are the same instance
-            // is that is no problem, make Toad etc singletons
+            
             var toads = Enumerable.Repeat(Toad.Instance, toadCount).ToArray();
             var spaces = Enumerable.Repeat(Space.Instance, spaceCount).ToArray();
             var frogs = Enumerable.Repeat(Frog.Instance, frogCount).ToArray();
@@ -53,7 +59,7 @@ namespace FrogsAndToadsCore
             Array.Copy(frogs, 0, _track, toadCount + spaceCount, frogCount);
         }
 
-        internal GamePosition(string positionString)
+        internal FrogsAndToadsPosition(string positionString)
         {
             _track = new GamePiece[positionString.Length];
             for (int i = 0; i < positionString.Length; i++)
@@ -78,25 +84,14 @@ namespace FrogsAndToadsCore
             }
         }
 
-        private GamePosition(GamePiece[] track)
+        private FrogsAndToadsPosition(GamePiece[] track)
         {
             _track = new GamePiece[track.Length];
             Array.Copy(track, _track, track.Length);
         }
+        
 
-        internal GamePosition Reverse()
-        {
-            int length = _track.Length;
-            GamePiece[] _reverseTrack = new GamePiece[_track.Length];
-            for (int i = 0, j = length - 1; i < length; i++, j--)
-            {
-                _reverseTrack[j] = _track[i].Converse;
-            }
-
-            return new GamePosition(_reverseTrack);
-        }
-
-        internal GamePosition(GamePosition position)
+        internal FrogsAndToadsPosition(FrogsAndToadsPosition position)
         {
             _track = new GamePiece[position._track.Length];
             Array.Copy(position._track, _track, _track.Length);
@@ -113,24 +108,14 @@ namespace FrogsAndToadsCore
 
             if (_track[index].Move == 0)
                 return false;
-            
+
             int moveTarget = index + _track[index].Move;
             return _targetIsFree(moveTarget);
-
         }
 
         internal bool CanMovePiece(GameMove move)
         {
-            if (move.Source< 0 || move.Source >= _track.Length)
-                throw new IndexOutOfRangeException();
-
-
-            if (_track[move.Source].Move == 0)
-                return false;
-
-            int moveTarget = move.Source + _track[move.Source].Move;
-            return _targetIsFree(moveTarget);
-
+            return _targetIsFree(move.Target);
         }
 
         
@@ -166,12 +151,12 @@ namespace FrogsAndToadsCore
         }
 
 
-        internal GamePosition MovePiece(int index)
+        internal FrogsAndToadsPosition MovePiece(int index)
         {
             if (CanMovePiece(index))
             {
                 int moveTarget = index + _track[index].Move;
-                GamePosition result = new GamePosition(this);
+                FrogsAndToadsPosition result = new FrogsAndToadsPosition(this);
                 result._track[moveTarget] = result._track[index];
                 result._track[index] = new Space();
                 return result;
@@ -180,7 +165,7 @@ namespace FrogsAndToadsCore
             if (CanJumpPiece(index))
             {
                 int jumpTarget = index + _track[index].Move + _track[index].Move;
-                GamePosition result = new GamePosition(this);
+                FrogsAndToadsPosition result = new FrogsAndToadsPosition(this);
                 result._track[jumpTarget] = result._track[index];
                 result._track[index] = new Space();
                 return result;
@@ -189,28 +174,28 @@ namespace FrogsAndToadsCore
             throw new InvalidOperationException("Immovable piece.");    
         }
 
-        internal GamePosition MovePiece(GameMove move)
-        {
-            if (CanMovePiece(move))
-            {
-                int moveTarget = move.Source + _track[move.Source].Move;
-                GamePosition result = new GamePosition(this);
-                result._track[moveTarget] = result._track[move.Source];
-                result._track[move.Source] = new Space();
-                return result;
-            }
+        //internal FrogsAndToadsPosition MovePiece(GameMove move)
+        //{
+        //    if (CanMovePiece(move))
+        //    {
+        //        int moveTarget = move.Source + _track[move.Source].Move;
+        //        FrogsAndToadsPosition result = new FrogsAndToadsPosition(this);
+        //        result._track[moveTarget] = result._track[move.Source];
+        //        result._track[move.Source] = new Space();
+        //        return result;
+        //    }
 
-            if (CanJumpPiece(move))
-            {
-                int jumpTarget = move.Source + _track[move.Source].Move + _track[move.Source].Move;
-                GamePosition result = new GamePosition(this);
-                result._track[jumpTarget] = result._track[move.Source];
-                result._track[move.Source] = new Space();
-                return result;
-            }
+        //    if (CanJumpPiece(move))
+        //    {
+        //        int jumpTarget = move.Source + _track[move.Source].Move + _track[move.Source].Move;
+        //        FrogsAndToadsPosition result = new FrogsAndToadsPosition(this);
+        //        result._track[jumpTarget] = result._track[move.Source];
+        //        result._track[move.Source] = new Space();
+        //        return result;
+        //    }
 
-            throw new InvalidOperationException("Immovable piece.");
-        }
+        //    throw new InvalidOperationException("Immovable piece.");
+        //}
 
 
 

@@ -1,34 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class PositionEvaluator
+    public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator
     {
-        #region abstract
-        internal abstract int ToadEvaluation(GamePosition position);
-        internal abstract Dictionary<int, int> ToadMoveEvaluations(GamePosition position);
-        #endregion
+        public abstract int ToadEvaluation(FrogsAndToadsPosition position);
+        public abstract Dictionary<int, int> ToadMoveEvaluations(FrogsAndToadsPosition position);
+
+
+
+        public override int ToadEvaluation(GamePosition position)
+        {
+            if (position is FrogsAndToadsPosition ftp)
+                return ToadEvaluation(ftp);
+
+            throw new ArgumentException("Can only evalute FrogsAndToadsPosition.");
+        }
     }
 
 
-    public class MiniMaxEvaluator : PositionEvaluator
+
+    public class MiniMaxEvaluator : FrogsAndToadsPositionEvaluator
     {
-
-
-
         #region abstract overrides
-        internal override int ToadEvaluation(GamePosition position)
+        public override int ToadEvaluation(FrogsAndToadsPosition position)
         {
             return _evaluatePositionForToad(
-                position, 
-                0, 
-                int.MinValue, 
+                position,
+                0,
+                int.MinValue,
                 int.MaxValue);
         }
-
      
-        internal override Dictionary<int, int> ToadMoveEvaluations(GamePosition position)
+        public override Dictionary<int, int> ToadMoveEvaluations(FrogsAndToadsPosition position)
         {
             Dictionary<int, int> values = new Dictionary<int, int>();
 
@@ -48,12 +54,12 @@ namespace FrogsAndToadsCore
 
         #region private
         private int _evaluatePositionForToad(
-            GamePosition position, 
+            FrogsAndToadsPosition position, 
             int depth, 
             int bestToad, 
             int bestFrog)
         {
-            GamePosition resultingPosition;
+            FrogsAndToadsPosition resultingPosition;
             List<int> possibleMoves = position.GetPossibleToadMoves();
 
             if (possibleMoves.Count == 0)
@@ -83,12 +89,12 @@ namespace FrogsAndToadsCore
 
 
         private int _evaluatePositionForFrog(
-            GamePosition position, 
+            FrogsAndToadsPosition position, 
             int depth, 
             int bestToad, 
             int bestFrog)
         {
-            GamePosition resultingPosition;
+            FrogsAndToadsPosition resultingPosition;
             List<int> possibleMoves = position.GetPossibleFrogMoves();
 
             if (possibleMoves.Count == 0)
@@ -115,12 +121,12 @@ namespace FrogsAndToadsCore
 
 
 
-        private int _evaluateEndPositionForToads(GamePosition position)
+        private int _evaluateEndPositionForToads(FrogsAndToadsPosition position)
         {
             return position.GetPossibleToadMoves().Count;
         }
 
-        private int _evaluateEndPositionForFrogs(GamePosition position)
+        private int _evaluateEndPositionForFrogs(FrogsAndToadsPosition position)
         {
             return -position.GetPossibleFrogMoves().Count;
         }

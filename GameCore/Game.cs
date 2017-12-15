@@ -9,7 +9,6 @@ namespace GameCore
     {
         #region absract
         public abstract IEnumerable<GamePosition> GetLeftMoves(GamePosition position);
-        public abstract IEnumerable<GamePosition> GetRightMoves(GamePosition position);
         #endregion
 
 
@@ -25,7 +24,16 @@ namespace GameCore
 
 
         #region public properties
-        public GamePosition Position => _position;
+        public GamePosition Position
+        {
+            get => _position;
+            private set
+            {
+                _position = value;
+                _positionHistory.Add(value);
+            }
+        }
+
         public ReadOnlyCollection<GamePosition> History => _positionHistory.AsReadOnly();
         public GamePlayer Winner => _winner;
         public bool GameIsOver => _gameIsOver;
@@ -50,16 +58,29 @@ namespace GameCore
         #region public methods
         public void Play()
         {
-            while (true)
+            while (! _gameIsOver)
             {
-                _play(_leftPlayer, _rightPlayer, GetLeftMoves(_position));
-                if (_gameIsOver)
-                    return;
-
-                _play(_rightPlayer, _leftPlayer, GetRightMoves(_position));
-                if (_gameIsOver)
-                    return;
+                PlayRound();
             }
+        }
+
+        public void PlayRound()
+        {
+            PlayLeftMove();
+            if (GameIsOver)
+                return;
+
+            PlayRightMove();
+        }
+
+        public void PlayLeftMove()
+        {
+            _play(_leftPlayer, _rightPlayer, true);
+        }
+
+        public void PlayRightMove()
+        {
+            _play(_rightPlayer, _leftPlayer, false);
         }
         #endregion
 
@@ -68,17 +89,28 @@ namespace GameCore
         private void _play(
             GamePlayer activePlayer, 
             GamePlayer inactivePlayer, 
-            IEnumerable<GamePosition> options)
+            bool isLeftPlay)
         {
-            Try<GamePosition> result = activePlayer.Play(options);
-            if (result == Try<GamePosition>.Failure)
+            IEnumerable<GamePosition> options =
+                GetLeftMoves(_reverseIfRightPlay(Position, isLeftPlay));
+
+            AttemptPlay result = activePlayer.Play(options);
+            if (result == AttemptPlay.Failure)
             {
                 _gameIsOver = true;
                 _winner = inactivePlayer;
                 return;
             }
-            _position = result.Value;
-            _positionHistory.Add(_position);
+
+            Position = _reverseIfRightPlay(result.Value, isLeftPlay);
+        }
+
+        GamePosition _reverseIfRightPlay(GamePosition position, bool isleftplay)
+        {
+            return
+                isleftplay
+                ? position
+                : position.Reverse;
         }
         #endregion
     }    

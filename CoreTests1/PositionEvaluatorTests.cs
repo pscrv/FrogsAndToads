@@ -17,6 +17,7 @@ namespace CoreTests
         FrogsAndToadsPosition position;
         GamePositionEvaluator evaluator;
         int value;
+        Dictionary<int, int> values;
 
         [TestMethod]
         public void MiniMaxEvaluator()
@@ -36,8 +37,28 @@ namespace CoreTests
             position = new FrogsAndToadsPosition(gameString3);
             evaluator = new MiniMaxEvaluator();
             value = evaluator.ToadEvaluation(position);
-            Assert.AreEqual(1, value);                       
-            
+            Assert.AreEqual(1, value);
+                        
+
+            position = new FrogsAndToadsPosition(gameString1);
+            evaluator = new MiniMaxEvaluator();
+            values = evaluator.ToadMoveEvaluations(position);
+            Assert.AreEqual(1, values.Count);
+            Assert.AreEqual(1, values[0]);
+
+            position = new FrogsAndToadsPosition(gameString2);
+            evaluator = new MiniMaxEvaluator();
+            values = evaluator.ToadMoveEvaluations(position);
+            Assert.AreEqual(1, values.Count);
+            Assert.AreEqual(0, values[0]);
+
+
+            position = new FrogsAndToadsPosition(gameString3);
+            evaluator = new MiniMaxEvaluator();
+            values = evaluator.ToadMoveEvaluations(position);
+            Assert.AreEqual(1, values[0]);
+            Assert.AreEqual(-1, values[4]);
+
         }
     }
 }

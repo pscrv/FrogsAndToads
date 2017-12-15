@@ -6,7 +6,7 @@ namespace GameCore
 {
     public abstract class GamePlayer
     {
-        internal abstract Try<GamePosition> Play(IEnumerable<GamePosition> playOptions);
+        public abstract AttemptPlay Play(IEnumerable<GamePosition> playOptions);
 
 
         public readonly string Label;

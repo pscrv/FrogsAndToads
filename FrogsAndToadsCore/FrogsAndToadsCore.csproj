@@ -45,15 +45,25 @@
   <ItemGroup>
     <Compile Include="Cycle.cs" />
     <Compile Include="DummyMain.cs" />
-    <Compile Include="FrogsAndToadGame.cs" />
+    <Compile Include="FrogsAndToadsGame.cs" />
+    <Compile Include="FrogsAndToadsPlayer.cs" />
+    <Compile Include="FrogsAndToadsPosition.cs" />
     <Compile Include="GameMove.cs" />
     <Compile Include="GamePiece.cs" />
-    <Compile Include="GamePosition.cs" />
     <Compile Include="PlayChoice.cs" />
     <Compile Include="PlayChooser.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="PositionEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameCore\GameCore.csproj">
+      <Project>{D1A878CE-4F82-4B04-854F-59D2DD22C81A}</Project>
+      <Name>GameCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

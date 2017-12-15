@@ -1,6 +1,7 @@
 ﻿namespace GameCore
 {
-    public class GamePosition
+    public abstract class GamePosition
     {
+        public abstract GamePosition Reverse { get; }
     }
 }

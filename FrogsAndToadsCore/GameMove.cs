@@ -4,17 +4,17 @@ namespace FrogsAndToadsCore
 {
     internal class GameMove
     {
-        private GamePosition _position;
+        private FrogsAndToadsPosition _position;
 
         internal int Source { get; }
         internal int Target { get; }
 
-        internal GameMove(int location, GamePosition position)
+        internal GameMove(int location, FrogsAndToadsPosition position)
         {
             _position = position;
 
             if (_locationIsInvalid(location))
-                throw new InvalidOperationException("location is not valid.");
+                throw new IndexOutOfRangeException("location is not valid.");
                 
                 
             if(_isMovablePiece(location))
