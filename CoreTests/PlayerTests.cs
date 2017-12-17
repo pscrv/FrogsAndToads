@@ -12,14 +12,17 @@ namespace CoreTests
         PlayChooser chooser;
         AttemptPlay result;
         FrogsAndToadsPosition position;
-
-        //IEnumerable<GamePosition> options 
-        //    => position.GetPossibleToadMoves()
-        //    .Select(x => position.MovePiece(x));
+        
 
         IEnumerable<FrogsAndToadsPosition> options
-            => position.GetPossibleToadMoves()
-            .Select(x => position.MovePiece(x));
+        {
+            get
+            {
+                return position.GetPossibleToadMoves()
+                    .Select(x => x.Source)
+                    .Select(x => position.MovePiece(x));
+            }
+        }
 
 
 

@@ -113,7 +113,7 @@ namespace FrogsAndToadsCore
             return _targetIsFree(moveTarget);
         }
 
-        internal bool CanMovePiece(GameMove move)
+        internal bool CanMovePiece(FrogsAndToadsMove move)
         {
             return _targetIsFree(move.Target);
         }
@@ -135,7 +135,7 @@ namespace FrogsAndToadsCore
                 && _track[index].CanJump(_track[moveTarget]);
         }
 
-        internal bool CanJumpPiece(GameMove move)
+        internal bool CanJumpPiece(FrogsAndToadsMove move)
         {
             if (move.Source < 0 || move.Source >= _track.Length)
                 throw new IndexOutOfRangeException();
@@ -174,47 +174,32 @@ namespace FrogsAndToadsCore
             throw new InvalidOperationException("Immovable piece.");    
         }
 
-        //internal FrogsAndToadsPosition MovePiece(GameMove move)
-        //{
-        //    if (CanMovePiece(move))
-        //    {
-        //        int moveTarget = move.Source + _track[move.Source].Move;
-        //        FrogsAndToadsPosition result = new FrogsAndToadsPosition(this);
-        //        result._track[moveTarget] = result._track[move.Source];
-        //        result._track[move.Source] = new Space();
-        //        return result;
-        //    }
 
-        //    if (CanJumpPiece(move))
-        //    {
-        //        int jumpTarget = move.Source + _track[move.Source].Move + _track[move.Source].Move;
-        //        FrogsAndToadsPosition result = new FrogsAndToadsPosition(this);
-        //        result._track[jumpTarget] = result._track[move.Source];
-        //        result._track[move.Source] = new Space();
-        //        return result;
-        //    }
-
-        //    throw new InvalidOperationException("Immovable piece.");
-        //}
-
-
-
-        internal List<int> GetAllPossibleMoves()
+        internal FrogsAndToadsPosition PlayMove(FrogsAndToadsMove move)
         {
-            return _getPossibleMoves(x => true);
+            FrogsAndToadsPosition result = new FrogsAndToadsPosition(this);
+            result._track[move.Target] = result._track[move.Source];
+            result._track[move.Source] = new Space();
+            return result;
         }
 
-        internal List<int> GetPossibleToadMoves()
-        {
-            return _getPossibleMoves(x => x is Toad);
-        }
 
-        internal List<int> GetPossibleFrogMoves()
+        internal List<FrogsAndToadsMove> GetAllPossibleMoves()
         {
-            return _getPossibleMoves(x => x is Frog);
+            return _getPossibleMoves1(x => true);
+        }
+        
+        internal List<FrogsAndToadsMove> GetPossibleToadMoves()
+        {
+            return _getPossibleMoves1(x => x is Toad);
+        }
+        
+        internal List<FrogsAndToadsMove> GetPossibleFrogMoves()
+        {
+            return _getPossibleMoves1(x => x is Frog);
         }
         #endregion
-        
+
 
         #region private methods
         private List<int> _getPossibleMoves(Predicate<GamePiece> pieceChooser)
@@ -228,6 +213,24 @@ namespace FrogsAndToadsCore
                     possibleMoves.Add(i);
                 }               
 
+            }
+            return possibleMoves;
+        }
+
+        private List<FrogsAndToadsMove> _getPossibleMoves1(Predicate<GamePiece> pieceChooser)
+        {
+            List<FrogsAndToadsMove> possibleMoves = new List<FrogsAndToadsMove>();
+            for (int i = 0; i < _track.Length; i++)
+            {
+                if (pieceChooser(_track[i]))
+                {
+                    TestMove tm = FrogsAndToadsMove.CreateMove(i, this);
+
+                    if (tm == TestMove.Failure)
+                        continue;
+
+                    possibleMoves.Add(tm.Value);
+                }
             }
             return possibleMoves;
         }

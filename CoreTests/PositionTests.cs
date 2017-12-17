@@ -3,12 +3,20 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using FrogsAndToadsCore;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CoreTests
 {
     [TestClass]
     public class PositionTests
     {
+        FrogsAndToadsPosition position;
+        List<FrogsAndToadsMove> possibleMoves;
+        List<int> sources => possibleMoves.Select(x => x.Source).ToList();
+        List<int> targets => possibleMoves.Select(x => x.Target).ToList();
+
+
+
         [TestMethod]
         public void Construction()
         {
@@ -41,7 +49,7 @@ namespace CoreTests
         {
             // Will fail, when MakeInitialPosition is properly implemented
 
-            FrogsAndToadsPosition position = FrogsAndToadsPosition.MakeInitialPosition();
+            position = FrogsAndToadsPosition.MakeInitialPosition();
             Assert.AreEqual("< T _ F >", position.ToString());
         }
 
@@ -49,7 +57,7 @@ namespace CoreTests
         [TestMethod]
         public void CanMovePiece()
         {
-            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
+            position = new FrogsAndToadsPosition(2, 2, 2);
 
             try
             {
@@ -81,7 +89,7 @@ namespace CoreTests
         [TestMethod]
         public void MovePiece()
         {
-            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
+            position = new FrogsAndToadsPosition(2, 2, 2);
 
             try
             {
@@ -112,42 +120,72 @@ namespace CoreTests
             Assert.AreEqual("< T _ _ F T F >", position.ToString());
         }
 
-        [TestMethod]
-        public void GetAllPossibleMoves()
-        {
-            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
+        //[TestMethod]
+        //public void GetAllPossibleMoves()
+        //{
+        //    FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
 
-            List<int> possibleMoves = position.GetAllPossibleMoves();
+        //    List<int> possibleMoves = position.GetAllPossibleMoves();
+        //    Assert.AreEqual(2, possibleMoves.Count);
+        //    Assert.IsTrue(possibleMoves.Contains(1));
+        //    Assert.IsTrue(possibleMoves.Contains(4));
+
+        //    position = position.MovePiece(1);
+        //    position = position.MovePiece(4);
+        //    possibleMoves = position.GetAllPossibleMoves();
+        //    Assert.AreEqual(4, possibleMoves.Count);
+        //    Assert.IsTrue(possibleMoves.Contains(0));
+        //    Assert.IsTrue(possibleMoves.Contains(2));
+        //    Assert.IsTrue(possibleMoves.Contains(3));
+        //    Assert.IsTrue(possibleMoves.Contains(5));
+        //}
+
+        [TestMethod]
+        public void GetAllPossibleMoves1()
+        {
+            position = new FrogsAndToadsPosition(2, 2, 2);
+            
+            possibleMoves = position.GetAllPossibleMoves();
+            //List<int> sources = possibleMoves.Select(x => x.Source).ToList();
+            //List<int> targets = possibleMoves.Select(x => x.Target).ToList();
             Assert.AreEqual(2, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(1));
-            Assert.IsTrue(possibleMoves.Contains(4));
+            Assert.IsTrue(sources.Contains(1));
+            Assert.IsTrue(sources.Contains(4));
+            Assert.IsTrue(targets.Contains(2));
+            Assert.IsTrue(targets.Contains(3));
 
             position = position.MovePiece(1);
             position = position.MovePiece(4);
+
             possibleMoves = position.GetAllPossibleMoves();
+            //sources = possibleMoves.Select(x => x.Source).ToList();
+            //targets = possibleMoves.Select(x => x.Target).ToList();
             Assert.AreEqual(4, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(0));
-            Assert.IsTrue(possibleMoves.Contains(2));
-            Assert.IsTrue(possibleMoves.Contains(3));
-            Assert.IsTrue(possibleMoves.Contains(5));
+            Assert.IsTrue(sources.Contains(0));
+            Assert.IsTrue(sources.Contains(2));
+            Assert.IsTrue(sources.Contains(3));
+            Assert.IsTrue(sources.Contains(5));
+            Assert.IsTrue(targets.Contains(1));
+            Assert.IsTrue(targets.Contains(4));
         }
 
-
         [TestMethod]
-        public void GetPossibleToadMoves()
+        public void GetPossibleToadMoves1()
         {
-            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
-
-            List<int> possibleMoves = position.GetPossibleToadMoves();
+            position = new FrogsAndToadsPosition(2, 2, 2);
+            possibleMoves = position.GetPossibleToadMoves();
             Assert.AreEqual(1, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(1));
+            Assert.IsTrue(sources.Contains(1));
+            Assert.IsTrue(targets.Contains(2));
 
             position = position.MovePiece(1);
             position = position.MovePiece(4);
             possibleMoves = position.GetPossibleToadMoves();
             Assert.AreEqual(2, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(0));
-            Assert.IsTrue(possibleMoves.Contains(2));
+            Assert.IsTrue(sources.Contains(0));
+            Assert.IsTrue(sources.Contains(2));
+            Assert.IsTrue(targets.Contains(1));
+            Assert.IsTrue(targets.Contains(4));
         }
 
 
@@ -156,16 +194,18 @@ namespace CoreTests
         {
             FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
 
-            List<int> possibleMoves = position.GetPossibleFrogMoves();
+            possibleMoves = position.GetPossibleFrogMoves();
             Assert.AreEqual(1, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(4));
+            Assert.IsTrue(sources.Contains(4));
+            Assert.IsTrue(targets.Contains(3));
 
             position = position.MovePiece(1);
             position = position.MovePiece(4);
             possibleMoves = position.GetPossibleFrogMoves();
             Assert.AreEqual(2, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(3));
-            Assert.IsTrue(possibleMoves.Contains(5));
-        }
+            Assert.IsTrue(sources.Contains(3));
+            Assert.IsTrue(sources.Contains(5));
+            Assert.IsTrue(targets.Contains(1));
+            Assert.IsTrue(targets.Contains(4));        }
     }
 }

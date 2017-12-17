@@ -41,6 +41,7 @@ namespace FrogsAndToadsCore
             FrogsAndToadsPosition ftp = (position as FrogsAndToadsPosition);
             return ftp
                 .GetPossibleToadMoves()
+                .Select(x => x.Source)
                 .Select(x => ftp.MovePiece(x));
         }
         #endregion

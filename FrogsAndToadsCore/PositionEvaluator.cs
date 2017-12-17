@@ -7,7 +7,7 @@ namespace FrogsAndToadsCore
     public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator
     {
         public abstract int ToadEvaluation(FrogsAndToadsPosition position);
-        public abstract Dictionary<int, int> ToadMoveEvaluations(FrogsAndToadsPosition position);
+        //public abstract Dictionary<int, int> ToadMoveEvaluations(FrogsAndToadsPosition position);
 
 
 
@@ -34,21 +34,21 @@ namespace FrogsAndToadsCore
                 int.MaxValue);
         }
      
-        public override Dictionary<int, int> ToadMoveEvaluations(FrogsAndToadsPosition position)
-        {
-            Dictionary<int, int> values = new Dictionary<int, int>();
+        //public override Dictionary<int, int> ToadMoveEvaluations(FrogsAndToadsPosition position)
+        //{
+        //    Dictionary<int, int> values = new Dictionary<int, int>();
 
-            foreach (int move in position.GetPossibleToadMoves())
-            {
-                values[move] = _evaluatePositionForFrog(
-                    position.MovePiece(move),
-                    0,
-                    int.MinValue,
-                    int.MaxValue);
-            }
+        //    foreach (int move in position.GetPossibleToadMoves())
+        //    {
+        //        values[move] = _evaluatePositionForFrog(
+        //            position.MovePiece(move),
+        //            0,
+        //            int.MinValue,
+        //            int.MaxValue);
+        //    }
 
-            return values;
-        }
+        //    return values;
+        //}
         #endregion
 
 
@@ -60,7 +60,8 @@ namespace FrogsAndToadsCore
             int bestFrog)
         {
             FrogsAndToadsPosition resultingPosition;
-            List<int> possibleMoves = position.GetPossibleToadMoves();
+            //List<int> possibleMoves = position.GetPossibleToadMoves();
+            List<FrogsAndToadsMove> possibleMoves = position.GetPossibleToadMoves();
 
             if (possibleMoves.Count == 0)
             {
@@ -69,9 +70,11 @@ namespace FrogsAndToadsCore
 
 
             int bestvalue = int.MinValue;
-            foreach (int move in possibleMoves)
+            //foreach (int move in possibleMoves)
+            foreach(FrogsAndToadsMove move in possibleMoves)
             {
-                resultingPosition = position.MovePiece(move);
+                //resultingPosition = position.MovePiece(move);
+                resultingPosition = position.PlayMove(move);
                 bestvalue =
                     Math.Max(
                         bestvalue,
@@ -95,7 +98,8 @@ namespace FrogsAndToadsCore
             int bestFrog)
         {
             FrogsAndToadsPosition resultingPosition;
-            List<int> possibleMoves = position.GetPossibleFrogMoves();
+            //List<int> possibleMoves = position.GetPossibleFrogMoves();
+            List<FrogsAndToadsMove> possibleMoves = position.GetPossibleFrogMoves();
 
             if (possibleMoves.Count == 0)
             {
@@ -103,9 +107,11 @@ namespace FrogsAndToadsCore
             }
 
             int bestvalue = int.MaxValue;
-            foreach (int move in possibleMoves)
+            //foreach (int move in possibleMoves)
+            foreach(FrogsAndToadsMove move in possibleMoves)
             {
-                resultingPosition = position.MovePiece(move);
+                //resultingPosition = position.MovePiece(move);
+                resultingPosition = position.PlayMove(move);
                 bestvalue =
                     Math.Min(
                         bestvalue,
