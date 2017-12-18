@@ -3,14 +3,14 @@
     public class Try<T> where T: class
     {
         private static Try<T> _failureInstance 
-            = new Try<T>(default(T)) { IsFailure = true };
-
+            = new Try<T>();
 
         public static Try<T> Failure
             => _failureInstance;
 
+
         public static Try<T> Success(T value) 
-            => new Try<T>(value) { IsFailure = false };
+            => new Try<T>(value);
 
 
 
@@ -23,6 +23,13 @@
         protected Try(T value)
         {
             Value = value;
+            IsFailure = false;
+        }
+
+        protected Try()
+        {
+            Value = default(T);
+            IsFailure = true;
         }
         
     }

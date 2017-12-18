@@ -134,16 +134,17 @@ namespace FrogsAndToadsCore
             foreach (GamePosition option in playOptions)
             {
                 currentOption = option as FrogsAndToadsPosition;
-
-                //List<int> possibleResponses = currentOption.GetPossibleFrogMoves();
+                
                 List<FrogsAndToadsMove> possibleResponses = currentOption.GetPossibleFrogMoves();
 
                 int minimum = int.MaxValue;
                 foreach (FrogsAndToadsMove response in possibleResponses)
                 {
-                    int reResponseCount;
-                    //reResponseCount = currentOption.MovePiece(response).GetPossibleToadMoves1().Count;
-                    reResponseCount = currentOption.PlayMove(response).GetAllPossibleMoves().Count;
+                    int reResponseCount = 
+                        currentOption
+                        .PlayMove(response)
+                        .GetPossibleToadMoves()
+                        .Count;
 
                     if (reResponseCount < minimum)
                         minimum = reResponseCount;

@@ -70,10 +70,8 @@ namespace FrogsAndToadsCore
 
 
             int bestvalue = int.MinValue;
-            //foreach (int move in possibleMoves)
             foreach(FrogsAndToadsMove move in possibleMoves)
             {
-                //resultingPosition = position.MovePiece(move);
                 resultingPosition = position.PlayMove(move);
                 bestvalue =
                     Math.Max(
@@ -98,7 +96,6 @@ namespace FrogsAndToadsCore
             int bestFrog)
         {
             FrogsAndToadsPosition resultingPosition;
-            //List<int> possibleMoves = position.GetPossibleFrogMoves();
             List<FrogsAndToadsMove> possibleMoves = position.GetPossibleFrogMoves();
 
             if (possibleMoves.Count == 0)
@@ -107,10 +104,8 @@ namespace FrogsAndToadsCore
             }
 
             int bestvalue = int.MaxValue;
-            //foreach (int move in possibleMoves)
             foreach(FrogsAndToadsMove move in possibleMoves)
             {
-                //resultingPosition = position.MovePiece(move);
                 resultingPosition = position.PlayMove(move);
                 bestvalue =
                     Math.Min(

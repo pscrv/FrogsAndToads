@@ -4,8 +4,11 @@ namespace GameCore
 {
     public class AttemptPlay : Try<GamePosition>
     {
-        public static new AttemptPlay Failure 
-            => Try<GamePosition>.Failure as AttemptPlay;
+        private static AttemptPlay _failureInstance
+            = new AttemptPlay();
+
+        public static new AttemptPlay Failure
+            => _failureInstance;
 
         public static new AttemptPlay Success(GamePosition position)
             => new AttemptPlay(position);
@@ -13,6 +16,10 @@ namespace GameCore
 
         private AttemptPlay(GamePosition position)
             : base(position)
+        { }
+
+        private AttemptPlay()
+            : base ()
         { }
     }
 }

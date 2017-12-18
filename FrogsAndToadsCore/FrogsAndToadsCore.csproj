@@ -54,7 +54,6 @@
     <Compile Include="PlayChooser.cs" />
     <Compile Include="PositionEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestMove.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameCore\GameCore.csproj">
