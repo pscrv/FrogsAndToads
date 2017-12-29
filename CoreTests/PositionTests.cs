@@ -48,8 +48,6 @@ namespace CoreTests
         [TestMethod]
         public void StaticConstructor()
         {
-            // Will fail, when MakeInitialPosition is properly implemented
-
             position = FrogsAndToadsPosition.MakeInitialPosition();
             Assert.AreEqual("< T _ F >", position.ToString());
         }
@@ -180,6 +178,19 @@ namespace CoreTests
             Assert.IsTrue(_sources.Contains(3));
             Assert.IsTrue(_sources.Contains(5));
             Assert.IsTrue(_targets.Contains(1));
-            Assert.IsTrue(_targets.Contains(4));        }
+            Assert.IsTrue(_targets.Contains(4));
+        }
+
+        [TestMethod]
+        public void SubPosition()
+        {
+            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
+
+            Assert.AreEqual("< T >", position.SubPosition(0, 0).ToString());
+            Assert.AreEqual("< T T >", position.SubPosition(0, 1).ToString());
+            Assert.AreEqual("< T _ _ F >", position.SubPosition(1, 4).ToString());
+        }
+
+
     }
 }

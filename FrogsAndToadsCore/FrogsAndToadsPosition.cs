@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GameCore;
+using Utilities;
 
 namespace FrogsAndToadsCore
 {
@@ -34,6 +35,7 @@ namespace FrogsAndToadsCore
         {
             get => _track[index];
         }
+
 
         public override GamePosition Reverse
             => new FrogsAndToadsPosition(
@@ -118,8 +120,6 @@ namespace FrogsAndToadsCore
             return _targetIsFree(move.Target);
         }
 
-
-
         internal bool CanJumpPiece(int index)
         {
             if (index < 0 || index >= _track.Length)
@@ -150,6 +150,31 @@ namespace FrogsAndToadsCore
                 && _track[move.Source].CanJump(_track[moveTarget]);
         }
 
+        
+        internal List<Toad> GetToads()
+        {
+            List<Toad> result = new List<Toad>();
+            foreach (GamePiece piece in _track)
+            {
+                if (piece is Toad)
+                    result.Add(piece as Toad);
+            }
+
+            return result;
+        }
+
+        internal List<Frog> GetFrogs()
+        {
+            List<Frog> result = new List<Frog>();
+            foreach (GamePiece piece in _track)
+            {
+                if (piece is Frog)
+                    result.Add(piece as Frog);
+            }
+
+            return result;
+        }
+
 
         internal FrogsAndToadsPosition PlayMove(FrogsAndToadsMove move)
         {
@@ -159,38 +184,197 @@ namespace FrogsAndToadsCore
 
         internal List<FrogsAndToadsMove> GetAllPossibleMoves()
         {
-            return _getPossibleMoves1(x => true);
+            return _getPossibleMoves(x => true);
         }
 
         internal List<FrogsAndToadsMove> GetPossibleToadMoves()
         {
-            return _getPossibleMoves1(x => x is Toad);
+            return _getPossibleMoves(x => x is Toad);
         }
 
         internal List<FrogsAndToadsMove> GetPossibleFrogMoves()
         {
-            return _getPossibleMoves1(x => x is Frog);
+            return _getPossibleMoves(x => x is Frog);
+        }
+
+
+        internal FrogsAndToadsPosition SubPosition(int leftIndex, int rightIndex)
+        {
+            if (_locationIsInvalid(leftIndex))
+                throw new IndexOutOfRangeException("leftIndex");
+
+
+            if (_locationIsInvalid(rightIndex))
+                throw new IndexOutOfRangeException("rightIndex");
+
+            if (leftIndex > rightIndex)
+                throw new InvalidOperationException("leftIndex bigger than rightIndex");
+
+            int length = rightIndex - leftIndex + 1;
+            GamePiece[] result = new GamePiece[length];
+            Array.Copy(_track, leftIndex, result, 0, length);
+            return new FrogsAndToadsPosition(result);
+        }
+
+        public List<FrogsAndToadsPosition> GetSubPositions()
+        {
+            List<FrogsAndToadsPosition> result = new List<FrogsAndToadsPosition>();
+
+            Try<(int start, int end)> findDeadKnot = _getDeadKnot(this, 0);
+            if (findDeadKnot == Try<(int, int)>.Failure)
+            {
+                result.Add(this);
+                return result;
+            }
+
+            int knotStart = findDeadKnot.Value.start;
+            int knotEnd = findDeadKnot.Value.end;
+
+            if (knotStart > 0)
+            {
+                result.Add(SubPosition(0, findDeadKnot.Value.start - 1));
+            }
+
+            if (knotEnd < Length)
+            {
+                result.AddRange(
+                        SubPosition(findDeadKnot.Value.end + 1, Length - 1)
+                        .GetSubPositions());
+            }
+
+
+            return result;
         }
         #endregion
 
 
         #region private methods
-        private List<int> _getPossibleMoves(Predicate<GamePiece> pieceChooser)
+        private Try<(int start, int end)> _getDeadKnot(FrogsAndToadsPosition position, int offset)
         {
-            List<int> possibleMoves = new List<int>();
-            for (int i = 0; i < _track.Length; i++)
+            int start;
+            int deadStart;
+            int end;
+            int deadEnd;
+            int lastIndex = Length - 1;
+            
+
+            _setStartAtFirstToad();
+            if (start < 0)
+                return Try<(int, int)>.Failure;
+
+            _setEndAtEndOfKnot();
+            if (end < 0)
+                return Try<(int, int)>.Failure;
+
+            _findDeadStart();
+            if (deadStart < 0)
             {
-                if (pieceChooser(_track[i])
-                    && (CanMovePiece(i) || CanJumpPiece(i)))
+                if (end == lastIndex)
+                    return Try<(int, int)>.Failure;
+
+                return _getDeadKnot(position, end + 1);
+            }
+
+            _findDeadEnd();
+            if (deadEnd < 0)
+            {
+                if (end == lastIndex)
+                    return Try<(int, int)>.Failure;
+
+                return _getDeadKnot(position, end + 1);
+            }
+
+            return Try<(int, int)>.Success((deadStart, deadEnd));
+
+
+
+
+            void _setStartAtFirstToad()
+            {
+                for (start = offset; start < Length; start++)
                 {
-                    possibleMoves.Add(i);
+                    if (position[start] is Toad)
+                        return;
                 }
 
+                start = -1;
             }
-            return possibleMoves;
-        }
 
-        private List<FrogsAndToadsMove> _getPossibleMoves1(Predicate<GamePiece> pieceChooser)
+            void _setEndAtEndOfKnot()
+            {
+                for (end = start; end < Length; end++)
+                {
+                    if (position[end] is Space)
+                    {
+                        end--;
+                        return;
+                    }
+                }
+                
+                end = -1;
+            }
+
+            void _findDeadStart()
+            {
+                for (deadStart = start; deadStart < end; deadStart++)
+                {
+                    var i = deadStart;
+
+                    if (_isPossibleDeadStart())
+                        return;
+                }
+
+                deadStart = -1;
+            }
+
+            void _findDeadEnd()
+            {
+                for (deadEnd = end; deadEnd > deadStart; deadEnd--)
+                {
+                    var i = deadStart;
+                    var j = deadEnd;
+
+                    if (_isPossibleDeadEnd())
+                        return;
+                }
+
+                deadEnd = -1;
+            }
+            
+            bool _isPossibleDeadStart()
+            {
+                if (!(position[deadStart] is Toad))
+                    return false;
+
+                return (
+                    (deadStart == 0 
+                        && position[deadStart] is Toad)
+                    || 
+                    (deadStart > 0 
+                        && deadStart < lastIndex 
+                        && position[deadStart] is Toad 
+                        && position[deadStart + 1] is Toad));
+            }
+
+            bool _isPossibleDeadEnd()
+            {
+                if (!(position[deadEnd] is Frog))
+                    return false;
+
+                return (
+                    (deadEnd == lastIndex 
+                        && position[deadEnd] is Frog)
+                    ||
+                    (deadEnd < lastIndex
+                        && deadEnd > 0
+                        && position[deadEnd] is Frog
+                        && position[deadEnd - 1] is Frog));
+            }        
+        }
+        
+
+
+        private List<FrogsAndToadsMove> _getPossibleMoves(Predicate<GamePiece> pieceChooser)
         {
             GamePiece currentPiece;
             List<FrogsAndToadsMove> possibleMoves = new List<FrogsAndToadsMove>();
@@ -222,7 +406,10 @@ namespace FrogsAndToadsCore
 
             return possibleMoves;
         }
+        #endregion
 
+
+        #region private methods
         private bool _locationIsOccupied(int target)
         {
             return ! (_track[target] is Space);

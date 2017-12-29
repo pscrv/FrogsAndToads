@@ -1,6 +1,6 @@
 ﻿namespace Utilities
 {
-    public class Try<T> where T: class
+    public class Try<T> 
     {
         private static Try<T> _failureInstance 
             = new Try<T>();

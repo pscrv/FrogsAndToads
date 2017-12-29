@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GameCore;
+using Utilities;
 
 namespace FrogsAndToadsCore
 {
     public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator
     {
         public abstract int ToadEvaluation(FrogsAndToadsPosition position);
-        //public abstract Dictionary<int, int> ToadMoveEvaluations(FrogsAndToadsPosition position);
-
 
 
         public override int ToadEvaluation(GamePosition position)
@@ -32,23 +32,8 @@ namespace FrogsAndToadsCore
                 0,
                 int.MinValue,
                 int.MaxValue);
-        }
-     
-        //public override Dictionary<int, int> ToadMoveEvaluations(FrogsAndToadsPosition position)
-        //{
-        //    Dictionary<int, int> values = new Dictionary<int, int>();
-
-        //    foreach (int move in position.GetPossibleToadMoves())
-        //    {
-        //        values[move] = _evaluatePositionForFrog(
-        //            position.MovePiece(move),
-        //            0,
-        //            int.MinValue,
-        //            int.MaxValue);
-        //    }
-
-        //    return values;
-        //}
+        }    
+        
         #endregion
 
 
@@ -60,12 +45,12 @@ namespace FrogsAndToadsCore
             int bestFrog)
         {
             FrogsAndToadsPosition resultingPosition;
-            //List<int> possibleMoves = position.GetPossibleToadMoves();
             List<FrogsAndToadsMove> possibleMoves = position.GetPossibleToadMoves();
 
             if (possibleMoves.Count == 0)
             {
                 return _evaluateEndPositionForFrogs(position);
+                //return EvaluateEndPosition(position);
             }
 
 
@@ -101,6 +86,7 @@ namespace FrogsAndToadsCore
             if (possibleMoves.Count == 0)
             {
                 return _evaluateEndPositionForToads(position);
+                //return EvaluateEndPosition(position);
             }
 
             int bestvalue = int.MaxValue;
@@ -124,13 +110,47 @@ namespace FrogsAndToadsCore
 
         private int _evaluateEndPositionForToads(FrogsAndToadsPosition position)
         {
-            return position.GetPossibleToadMoves().Count;
+            return _toadValue(position);
         }
 
         private int _evaluateEndPositionForFrogs(FrogsAndToadsPosition position)
         {
-            return -position.GetPossibleFrogMoves().Count;
+            return _frogValue(position);
         }
+
+
+        public int EvaluateEndPosition(FrogsAndToadsPosition position)
+        {
+            List<FrogsAndToadsPosition> subPositions = position.GetSubPositions();
+            return subPositions.Sum(x => _toadValue(x) + _frogValue(x));
+        }
+
+        private int _toadValue(FrogsAndToadsPosition position)
+        {
+            int sum = 0;
+            int count = 0;
+            for (int i = 0; i < position.Length; i++)
+            {
+                if (position[i] is Toad)
+                {
+                    sum += position.Length - i - 1;
+                    count++;
+                }
+            }
+
+            for (int i = 1; i < count; i++)
+            {
+                sum -= i;
+            }
+
+            return sum;
+        }
+
+        private int _frogValue(FrogsAndToadsPosition position)
+        {
+            return -_toadValue(position.Reverse as FrogsAndToadsPosition);
+        }
+
         #endregion
 
     }
