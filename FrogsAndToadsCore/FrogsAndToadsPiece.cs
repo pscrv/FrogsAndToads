@@ -1,15 +1,14 @@
 ﻿namespace FrogsAndToadsCore
 {
 
-    public abstract class GamePiece
+    public abstract class FrogsAndToadsPiece
     {
         #region abstract
         internal abstract int Move { get; }
-        internal abstract GamePiece Converse { get; }
-        internal abstract bool CanJump(GamePiece otherPiece);
+        internal abstract FrogsAndToadsPiece Converse { get; }
+        internal abstract bool CanJump(FrogsAndToadsPiece otherPiece);
         protected abstract string _asString();
         #endregion
-
 
 
         #region overrides
@@ -22,7 +21,7 @@
 
 
 
-    public class Frog : GamePiece
+    public class Frog : FrogsAndToadsPiece
     {
         #region static
         private static Frog _instance = new Frog();
@@ -36,9 +35,9 @@
 
         #region GamePiece overrides
         internal override int Move => -1;
-        internal override GamePiece Converse => Toad.Instance;
+        internal override FrogsAndToadsPiece Converse => Toad.Instance;
 
-        internal override bool CanJump(GamePiece otherPiece)
+        internal override bool CanJump(FrogsAndToadsPiece otherPiece)
         {
             return otherPiece is Toad;
         }
@@ -52,7 +51,7 @@
 
 
 
-    public class Toad : GamePiece
+    public class Toad : FrogsAndToadsPiece
     {
         #region static
         private static Toad _instance = new Toad();
@@ -62,9 +61,9 @@
         #region GamePiece overrides
         internal override int Move => 1;
 
-        internal override GamePiece Converse => Frog.Instance;
+        internal override FrogsAndToadsPiece Converse => Frog.Instance;
 
-        internal override bool CanJump(GamePiece otherPiece)
+        internal override bool CanJump(FrogsAndToadsPiece otherPiece)
         {
             return otherPiece is Frog;
         }
@@ -78,7 +77,7 @@
 
 
 
-    public class Space : GamePiece
+    public class Space : FrogsAndToadsPiece
     {
         #region static
         private static Space _instance = new Space();
@@ -88,9 +87,9 @@
         #region GamePiece overrides
         internal override int Move => 0;
 
-        internal override GamePiece Converse => _instance;
+        internal override FrogsAndToadsPiece Converse => _instance;
 
-        internal override bool CanJump(GamePiece otherPiece)
+        internal override bool CanJump(FrogsAndToadsPiece otherPiece)
         {
             return false;
         }

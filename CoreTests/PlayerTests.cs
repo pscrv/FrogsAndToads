@@ -9,7 +9,7 @@ namespace CoreTests
     [TestClass]
     public class PlayerTests
     {
-        PlayChooser chooser;
+        FrogsAndToadsPlayChooser chooser;
         AttemptPlay result;
         FrogsAndToadsPosition position;
         FrogsAndToadsMove correctMove;

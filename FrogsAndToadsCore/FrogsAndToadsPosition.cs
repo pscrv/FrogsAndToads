@@ -23,7 +23,7 @@ namespace FrogsAndToadsCore
 
 
         #region private attributes
-        GamePiece[] _track;
+        FrogsAndToadsPiece[] _track;
         #endregion
 
 
@@ -31,7 +31,7 @@ namespace FrogsAndToadsCore
         #region properties       
         public int Length => _track.Length;
 
-        public GamePiece this[int index]
+        public FrogsAndToadsPiece this[int index]
         {
             get => _track[index];
         }
@@ -50,7 +50,7 @@ namespace FrogsAndToadsCore
         #region construction
         internal FrogsAndToadsPosition(int toadCount, int spaceCount, int frogCount)
         {
-            _track = new GamePiece[toadCount + spaceCount + frogCount];
+            _track = new FrogsAndToadsPiece[toadCount + spaceCount + frogCount];
 
             var toads = Enumerable.Repeat(Toad.Instance, toadCount).ToArray();
             var spaces = Enumerable.Repeat(Space.Instance, spaceCount).ToArray();
@@ -63,7 +63,7 @@ namespace FrogsAndToadsCore
 
         internal FrogsAndToadsPosition(string positionString)
         {
-            _track = new GamePiece[positionString.Length];
+            _track = new FrogsAndToadsPiece[positionString.Length];
             for (int i = 0; i < positionString.Length; i++)
             {
                 switch (positionString[i])
@@ -86,13 +86,13 @@ namespace FrogsAndToadsCore
             }
         }
 
-        private FrogsAndToadsPosition(GamePiece[] track)
+        private FrogsAndToadsPosition(FrogsAndToadsPiece[] track)
         {
-            _track = new GamePiece[track.Length];
+            _track = new FrogsAndToadsPiece[track.Length];
             Array.Copy(track, _track, track.Length);
         }
 
-        private FrogsAndToadsPosition(GamePiece[] track, FrogsAndToadsMove move)
+        private FrogsAndToadsPosition(FrogsAndToadsPiece[] track, FrogsAndToadsMove move)
             : this(track)
         {
             _track[move.Target] = _track[move.Source];
@@ -154,7 +154,7 @@ namespace FrogsAndToadsCore
         internal List<Toad> GetToads()
         {
             List<Toad> result = new List<Toad>();
-            foreach (GamePiece piece in _track)
+            foreach (FrogsAndToadsPiece piece in _track)
             {
                 if (piece is Toad)
                     result.Add(piece as Toad);
@@ -166,7 +166,7 @@ namespace FrogsAndToadsCore
         internal List<Frog> GetFrogs()
         {
             List<Frog> result = new List<Frog>();
-            foreach (GamePiece piece in _track)
+            foreach (FrogsAndToadsPiece piece in _track)
             {
                 if (piece is Frog)
                     result.Add(piece as Frog);
@@ -211,7 +211,7 @@ namespace FrogsAndToadsCore
                 throw new InvalidOperationException("leftIndex bigger than rightIndex");
 
             int length = rightIndex - leftIndex + 1;
-            GamePiece[] result = new GamePiece[length];
+            FrogsAndToadsPiece[] result = new FrogsAndToadsPiece[length];
             Array.Copy(_track, leftIndex, result, 0, length);
             return new FrogsAndToadsPosition(result);
         }
@@ -374,9 +374,9 @@ namespace FrogsAndToadsCore
         
 
 
-        private List<FrogsAndToadsMove> _getPossibleMoves(Predicate<GamePiece> pieceChooser)
+        private List<FrogsAndToadsMove> _getPossibleMoves(Predicate<FrogsAndToadsPiece> pieceChooser)
         {
-            GamePiece currentPiece;
+            FrogsAndToadsPiece currentPiece;
             List<FrogsAndToadsMove> possibleMoves = new List<FrogsAndToadsMove>();
             for (int source = 0; source < _track.Length; source++)
             {
@@ -415,7 +415,7 @@ namespace FrogsAndToadsCore
             return ! (_track[target] is Space);
         }
 
-        private bool _targetIsJumpable(int target, GamePiece piece)
+        private bool _targetIsJumpable(int target, FrogsAndToadsPiece piece)
         {
             return _track[target] == piece.Converse;
         }
@@ -427,7 +427,7 @@ namespace FrogsAndToadsCore
                 || location >= Length;
         }
 
-        private bool _isMovablePiece(GamePiece gamePiece)
+        private bool _isMovablePiece(FrogsAndToadsPiece gamePiece)
         {
             return gamePiece.Move != 0;
         }
@@ -449,7 +449,7 @@ namespace FrogsAndToadsCore
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("< ");
-            foreach (GamePiece gp in _track)
+            foreach (FrogsAndToadsPiece gp in _track)
             {
                 sb.Append(gp.ToString());
                 sb.Append(' ');               

@@ -24,19 +24,19 @@ namespace CoreTests
         {
             position = new FrogsAndToadsPosition(gameString1);
             evaluator = new MiniMaxEvaluator();
-            value = evaluator.ToadEvaluation(position);
+            value = evaluator.LeftEvaluation(position);
             Assert.AreEqual(2, value);
 
             position = new FrogsAndToadsPosition(gameString2);
             evaluator = new MiniMaxEvaluator();
-            value = evaluator.ToadEvaluation(position);
+            value = evaluator.LeftEvaluation(position);
             Assert.AreEqual(0, value);
-            value = evaluator.ToadEvaluation(position.Reverse as FrogsAndToadsPosition);
+            value = evaluator.LeftEvaluation(position.Reverse as FrogsAndToadsPosition);
             Assert.AreEqual(0, value);
 
             position = new FrogsAndToadsPosition(gameString3);
             evaluator = new MiniMaxEvaluator();
-            value = evaluator.ToadEvaluation(position);
+            value = evaluator.LeftEvaluation(position);
             Assert.AreEqual(2, value);
 
         }

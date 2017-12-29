@@ -10,8 +10,8 @@ namespace CoreTests
         //FrogsAndToadsPlayer toadPlayer = new FrogsAndToadsPlayer("Toad", new TrivialChooser(), Toad.Instance);
         //FrogsAndToadsPlayer frogPlayer = new FrogsAndToadsPlayer("Frog", new TrivialChooser(), Frog.Instance);
 
-        PlayChooser toadPlayer = new TrivialChooser("Toads");
-        PlayChooser frogPlayer = new TrivialChooser("Frogs");
+        FrogsAndToadsPlayChooser toadPlayer = new TrivialChooser("Toads");
+        FrogsAndToadsPlayChooser frogPlayer = new TrivialChooser("Frogs");
 
         
         [TestMethod]

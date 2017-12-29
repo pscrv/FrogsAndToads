@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameCore;
-using Utilities;
 
 namespace FrogsAndToadsCore
 {
@@ -11,7 +10,7 @@ namespace FrogsAndToadsCore
         public abstract int ToadEvaluation(FrogsAndToadsPosition position);
 
 
-        public override int ToadEvaluation(GamePosition position)
+        public override int LeftEvaluation(GamePosition position)
         {
             if (position is FrogsAndToadsPosition ftp)
                 return ToadEvaluation(ftp);
@@ -32,8 +31,16 @@ namespace FrogsAndToadsCore
                 0,
                 int.MinValue,
                 int.MaxValue);
-        }    
-        
+        }
+        #endregion
+
+
+        #region public
+        public int EvaluateEndPosition(FrogsAndToadsPosition position)
+        {
+            List<FrogsAndToadsPosition> subPositions = position.GetSubPositions();
+            return subPositions.Sum(x => _toadValue(x) + _frogValue(x));
+        }
         #endregion
 
 
@@ -69,8 +76,6 @@ namespace FrogsAndToadsCore
 
             return bestvalue;
         }
-
-
 
 
         private int _evaluatePositionForFrog(
@@ -117,12 +122,6 @@ namespace FrogsAndToadsCore
         }
 
 
-        public int EvaluateEndPosition(FrogsAndToadsPosition position)
-        {
-            List<FrogsAndToadsPosition> subPositions = position.GetSubPositions();
-            return subPositions.Sum(x => _toadValue(x) + _frogValue(x));
-        }
-
         private int _toadValue(FrogsAndToadsPosition position)
         {
             int sum = 0;
@@ -152,6 +151,4 @@ namespace FrogsAndToadsCore
         #endregion
 
     }
-
-
 }

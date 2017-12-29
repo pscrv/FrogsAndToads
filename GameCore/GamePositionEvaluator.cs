@@ -5,13 +5,13 @@ namespace GameCore
     public abstract class GamePositionEvaluator
     {
         #region abstract
-        public abstract int ToadEvaluation(GamePosition position);
+        public abstract int LeftEvaluation(GamePosition position);
         #endregion
 
 
-        public int FrogEvaluation(GamePosition position)
+        public int RightEvaluation(GamePosition position)
         {
-            return -ToadEvaluation(position.Reverse);
+            return -LeftEvaluation(position.Reverse);
         }
     }
 }

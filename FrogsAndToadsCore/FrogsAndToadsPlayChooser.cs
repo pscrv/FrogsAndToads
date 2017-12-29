@@ -7,7 +7,7 @@ using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class PlayChooser : GamePlayer
+    public abstract class FrogsAndToadsPlayChooser : GamePlayer
     {
         #region abstract
         internal abstract AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions);
@@ -16,7 +16,7 @@ namespace FrogsAndToadsCore
 
 
         #region construction
-        public PlayChooser(string label) 
+        public FrogsAndToadsPlayChooser(string label) 
             : base(label)
         { }
         #endregion
@@ -42,7 +42,7 @@ namespace FrogsAndToadsCore
 
 
 
-    public class TrivialChooser : PlayChooser
+    public class TrivialChooser : FrogsAndToadsPlayChooser
     {
         public TrivialChooser(string label) 
             : base(label)
@@ -59,7 +59,7 @@ namespace FrogsAndToadsCore
 
 
 
-    public class ConsoleChooser : PlayChooser
+    public class ConsoleChooser : FrogsAndToadsPlayChooser
     {
         public ConsoleChooser(string label) 
             : base(label)
@@ -114,7 +114,7 @@ namespace FrogsAndToadsCore
 
 
 
-    public class MiniMiniMaxChooser : PlayChooser
+    public class MiniMiniMaxChooser : FrogsAndToadsPlayChooser
     {
         public MiniMiniMaxChooser(string label) 
             : base(label)
@@ -164,7 +164,7 @@ namespace FrogsAndToadsCore
 
 
 
-    public class EvaluatingChooser : PlayChooser
+    public class EvaluatingChooser : FrogsAndToadsPlayChooser
     {
         #region private attributes
         private GamePositionEvaluator _evaluator;
@@ -185,7 +185,7 @@ namespace FrogsAndToadsCore
             GamePosition bestOption = null;
             foreach (GamePosition option in playOptions)
             {
-                optionValue = _evaluator.FrogEvaluation(option as FrogsAndToadsPosition);
+                optionValue = _evaluator.RightEvaluation(option as FrogsAndToadsPosition);
                 if (optionValue > bestValue)
                 {
                     bestValue = optionValue;

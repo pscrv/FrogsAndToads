@@ -13,14 +13,8 @@ namespace ConsoleUI
 
         static void Main(string[] args)
         {
-            //FrogsAndToadsGame game = new FrogsAndToadsGame(
-            //    new FrogsAndToadsPlayer("Toads", new ConsoleChooser(), Toad.Instance), 
-            //    new FrogsAndToadsPlayer("Frogs", new EvaluatingChooser(new MiniMaxEvaluator()), Frog.Instance),
-            //    __GameString__
-            //    );
-
-            PlayChooser _toadChooser = new ConsoleChooser("Toads");
-            PlayChooser _frogsChooser = new EvaluatingChooser("Frogs", new MiniMaxEvaluator());
+            FrogsAndToadsPlayChooser _toadChooser = new ConsoleChooser("Toads");
+            FrogsAndToadsPlayChooser _frogsChooser = new EvaluatingChooser("Frogs", new MiniMaxEvaluator());
             FrogsAndToadsGame game = new FrogsAndToadsGame(
                 _toadChooser,
                 _frogsChooser,

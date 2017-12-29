@@ -46,16 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cycle.cs" />
-    <Compile Include="DummyMain.cs" />
     <Compile Include="FrogsAndToadsGame.cs" />
     <Compile Include="FrogsAndToadsMove.cs" />
-    <Compile Include="FrogsAndToadsPlayer.cs" />
+    <Compile Include="FrogsAndToadsPiece.cs" />
+    <Compile Include="FrogsAndToadsPlayChooser.cs" />
     <Compile Include="FrogsAndToadsPosition.cs" />
     <Compile Include="FrogsAndToadsPositionEvaluator.cs" />
-    <Compile Include="GamePiece.cs" />
-    <Compile Include="PlayChoice.cs" />
-    <Compile Include="PlayChooser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -67,9 +63,6 @@
       <Project>{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
