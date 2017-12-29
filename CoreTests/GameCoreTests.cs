@@ -13,14 +13,14 @@ namespace CoreTests
     [TestClass]
     public class GameCoreTests
     {
-        private class Nim : Game
+        private class Nim : Game<NimPosition>
         {
             public Nim()
                 : base (new NimPlayer("Left"), new NimPlayer("Right"), new NimPosition(5))
             { }
 
 
-            public override IEnumerable<GamePosition> GetLeftMoves(GamePosition position)
+            public override IEnumerable<NimPosition> GetLeftMoves(NimPosition position)
             {
                 NimPosition nimPosition = position as NimPosition;
                 if (nimPosition == null)
@@ -63,7 +63,7 @@ namespace CoreTests
         }
 
 
-        private class NimPlayer : GamePlayer
+        private class NimPlayer : GamePlayer<NimPosition>
         {
             public NimPlayer(string label)
                 : base (label)
@@ -71,18 +71,18 @@ namespace CoreTests
             
 
 
-            public override AttemptPlay Play(IEnumerable<GamePosition> playOptions)
+            public override AttemptPlay<NimPosition> Play(IEnumerable<NimPosition> playOptions)
             {
                 foreach (GamePosition options in playOptions)
                 {
                     NimPosition nimPosition = options as NimPosition;
                     if (nimPosition == null)
-                        return AttemptPlay.Failure;
+                        return AttemptPlay<NimPosition>.Failure;
 
-                    return AttemptPlay.Success(nimPosition);
+                    return AttemptPlay<NimPosition>.Success(nimPosition);
                 }
 
-                return AttemptPlay.Failure;
+                return AttemptPlay<NimPosition>.Failure;
             }
         }
 
@@ -92,7 +92,7 @@ namespace CoreTests
         [TestMethod]
         public void PlayNim()
         {
-            Game nimGame = new Nim();
+            Game<NimPosition> nimGame = new Nim();
             nimGame.Play();
 
             Assert.AreEqual(2, nimGame.History.Count);

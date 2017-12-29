@@ -5,26 +5,26 @@ using Utilities;
 
 namespace GameCore
 {
-    public abstract class Game
+    public abstract class Game<T> where T : GamePosition
     {
         #region absract
-        public abstract IEnumerable<GamePosition> GetLeftMoves(GamePosition position);
+        public abstract IEnumerable<T> GetLeftMoves(T position);
         #endregion
 
 
         #region protected and private members
-        protected GamePosition _position;
-        protected GamePlayer _leftPlayer;
-        protected GamePlayer _rightPlayer;
-        protected List<GamePosition> _positionHistory;
+        protected T _position;
+        protected GamePlayer<T> _leftPlayer;
+        protected GamePlayer<T> _rightPlayer;
+        protected List<T> _positionHistory;
 
         private bool _gameIsOver;
-        private GamePlayer _winner;
+        private GamePlayer<T> _winner;
         #endregion
 
 
         #region public properties
-        public GamePosition Position
+        public T Position
         {
             get => _position;
             private set
@@ -34,23 +34,23 @@ namespace GameCore
             }
         }
 
-        public ReadOnlyCollection<GamePosition> History => _positionHistory.AsReadOnly();
-        public GamePlayer Winner => _winner;
+        public ReadOnlyCollection<T> History => _positionHistory.AsReadOnly();
+        public GamePlayer<T> Winner => _winner;
         public bool GameIsOver => _gameIsOver;
         #endregion
 
 
         #region construction
         public Game(
-            GamePlayer leftPlayer, 
-            GamePlayer rightPlayer, 
-            GamePosition initialPosition)
+            GamePlayer<T> leftPlayer, 
+            GamePlayer<T> rightPlayer, 
+            T initialPosition)
         {
             _leftPlayer = leftPlayer;
             _rightPlayer = rightPlayer;
             _gameIsOver = false;
             _position = initialPosition;
-            _positionHistory = new List<GamePosition> { _position };
+            _positionHistory = new List<T> { _position };
         }
         #endregion
 
@@ -87,15 +87,15 @@ namespace GameCore
 
         #region private methods
         private void _play(
-            GamePlayer activePlayer, 
-            GamePlayer inactivePlayer, 
+            GamePlayer<T> activePlayer, 
+            GamePlayer<T> inactivePlayer, 
             bool isLeftPlay)
         {
-            IEnumerable<GamePosition> options =
+            IEnumerable<T> options =
                 GetLeftMoves(_reverseIfRightPlay(Position, isLeftPlay));
 
-            AttemptPlay result = activePlayer.Play(options);
-            if (result == AttemptPlay.Failure)
+            AttemptPlay<T> result = activePlayer.Play(options);
+            if (result == AttemptPlay<T>.Failure)
             {
                 _gameIsOver = true;
                 _winner = inactivePlayer;
@@ -105,12 +105,12 @@ namespace GameCore
             Position = _reverseIfRightPlay(result.Value, isLeftPlay);
         }
 
-        GamePosition _reverseIfRightPlay(GamePosition position, bool isleftplay)
+        T _reverseIfRightPlay(T position, bool isleftplay)
         {
             return
                 isleftplay
                 ? position
-                : position.Reverse;
+                : (T)position.Reverse;
         }
         #endregion
     }    

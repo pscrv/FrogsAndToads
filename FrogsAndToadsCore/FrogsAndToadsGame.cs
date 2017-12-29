@@ -4,7 +4,7 @@ using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public class FrogsAndToadsGame : Game
+    public class FrogsAndToadsGame : Game<FrogsAndToadsPosition>
     {
 
         #region public properties
@@ -15,16 +15,16 @@ namespace FrogsAndToadsCore
 
         #region construction
         public FrogsAndToadsGame(
-            GamePlayer leftPlayer, 
-            GamePlayer rightPlayer, 
+            GamePlayer<FrogsAndToadsPosition> leftPlayer, 
+            GamePlayer<FrogsAndToadsPosition> rightPlayer, 
             FrogsAndToadsPosition initialPosition)
             : base(leftPlayer, rightPlayer, initialPosition)
         { }
 
 
         public FrogsAndToadsGame(
-            GamePlayer leftPlayer,
-            GamePlayer rightPlayer,
+            GamePlayer<FrogsAndToadsPosition> leftPlayer,
+            GamePlayer<FrogsAndToadsPosition> rightPlayer,
             string positionString)
             : base(leftPlayer, rightPlayer, new FrogsAndToadsPosition(positionString))
         { }
@@ -35,7 +35,7 @@ namespace FrogsAndToadsCore
 
 
         #region Game overrides
-        public override IEnumerable<GamePosition> GetLeftMoves(GamePosition position)
+        public override IEnumerable<FrogsAndToadsPosition> GetLeftMoves(FrogsAndToadsPosition position)
         {
             FrogsAndToadsPosition ftp = (position as FrogsAndToadsPosition);
             return ftp

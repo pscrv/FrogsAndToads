@@ -7,10 +7,10 @@ using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class FrogsAndToadsPlayChooser : GamePlayer
+    public abstract class FrogsAndToadsPlayChooser : GamePlayer<FrogsAndToadsPosition>
     {
         #region abstract
-        internal abstract AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions);
+        internal abstract AttemptPlay<FrogsAndToadsPosition> ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions);
         #endregion
 
 
@@ -24,14 +24,7 @@ namespace FrogsAndToadsCore
 
 
         #region GamePlayer
-        //public AttemptPlay ChoosePlay(IEnumerable<GamePosition> playOptions)
-        //{
-        //    IEnumerable<FrogsAndToadsPosition> options = 
-        //        playOptions.Select(x => x as FrogsAndToadsPosition);
-        //    return ChoosePlay(options);
-        //}
-
-        public override AttemptPlay Play(IEnumerable<GamePosition> playOptions)
+        public override AttemptPlay<FrogsAndToadsPosition> Play(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
             IEnumerable<FrogsAndToadsPosition> options =
                 playOptions.Select(x => x as FrogsAndToadsPosition);
@@ -48,12 +41,12 @@ namespace FrogsAndToadsCore
             : base(label)
         { }
 
-        internal override AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
+        internal override AttemptPlay<FrogsAndToadsPosition> ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
             return
                 playOptions.Count() == 0
-                ? AttemptPlay.Failure
-                : AttemptPlay.Success(playOptions.First());                    
+                ? AttemptPlay<FrogsAndToadsPosition>.Failure
+                : AttemptPlay<FrogsAndToadsPosition>.Success(playOptions.First());                    
         }        
     }
 
@@ -65,10 +58,10 @@ namespace FrogsAndToadsCore
             : base(label)
         { }
 
-        internal override AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
+        internal override AttemptPlay<FrogsAndToadsPosition> ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
             if (playOptions.Count() == 0)
-                return AttemptPlay.Failure;
+                return AttemptPlay<FrogsAndToadsPosition>.Failure;
 
             List<string> choices = playOptions.Select(x => x.ToString()).ToList();
             ConsoleColor resetColour = Console.ForegroundColor;
@@ -91,7 +84,7 @@ namespace FrogsAndToadsCore
 
             Console.ForegroundColor = resetColour;
 
-            return AttemptPlay.Success(playOptions.ToList()[result]);
+            return AttemptPlay<FrogsAndToadsPosition>.Success(playOptions.ToList()[result]);
 
 
 
@@ -120,20 +113,20 @@ namespace FrogsAndToadsCore
             : base(label)
         { }
 
-        internal override AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
+        internal override AttemptPlay<FrogsAndToadsPosition> ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
             if (playOptions.Count() == 0)
-                return AttemptPlay.Failure;
+                return AttemptPlay<FrogsAndToadsPosition>.Failure;
 
             if (playOptions.Count() == 1)
-                return AttemptPlay.Success(playOptions.First());
+                return AttemptPlay<FrogsAndToadsPosition>.Success(playOptions.First());
 
-            GamePosition bestOption = playOptions.First();
+            FrogsAndToadsPosition bestOption = playOptions.First();
             FrogsAndToadsPosition currentOption;
             int maximum = int.MinValue;
-            foreach (GamePosition option in playOptions)
+            foreach (FrogsAndToadsPosition option in playOptions)
             {
-                currentOption = option as FrogsAndToadsPosition;
+                currentOption = option;
                 
                 List<FrogsAndToadsMove> possibleResponses = currentOption.GetPossibleFrogMoves();
 
@@ -158,7 +151,7 @@ namespace FrogsAndToadsCore
 
             }
 
-            return AttemptPlay.Success(bestOption);
+            return AttemptPlay<FrogsAndToadsPosition>.Success(bestOption);
         }
     }
 
@@ -172,18 +165,18 @@ namespace FrogsAndToadsCore
 
 
         #region abstract overrides
-        internal override AttemptPlay ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
+        internal override AttemptPlay<FrogsAndToadsPosition> ChoosePlay(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
             if (playOptions.Count() == 0)
-                return AttemptPlay.Failure;
+                return AttemptPlay<FrogsAndToadsPosition>.Failure;
 
             if (playOptions.Count() == 1)
-                return AttemptPlay.Success(playOptions.First());
+                return AttemptPlay<FrogsAndToadsPosition>.Success(playOptions.First());
 
             int optionValue;
             int bestValue = int.MinValue;
-            GamePosition bestOption = null;
-            foreach (GamePosition option in playOptions)
+            FrogsAndToadsPosition bestOption = null;
+            foreach (FrogsAndToadsPosition option in playOptions)
             {
                 optionValue = _evaluator.RightEvaluation(option as FrogsAndToadsPosition);
                 if (optionValue > bestValue)
@@ -193,7 +186,7 @@ namespace FrogsAndToadsCore
                 }
             }            
 
-            return AttemptPlay.Success(bestOption);
+            return AttemptPlay<FrogsAndToadsPosition>.Success(bestOption);
         }
         
         #endregion

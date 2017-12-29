@@ -4,9 +4,9 @@ using Utilities;
 
 namespace GameCore
 {
-    public abstract class GamePlayer
+    public abstract class GamePlayer<T> where T : GamePosition
     {
-        public abstract AttemptPlay Play(IEnumerable<GamePosition> playOptions);
+        public abstract AttemptPlay<T> Play(IEnumerable<T> playOptions);
 
 
         public readonly string Label;
