@@ -22,7 +22,7 @@ namespace CoreTests
 
             public override IEnumerable<NimPosition> GetLeftMoves(NimPosition position)
             {
-                NimPosition nimPosition = position as NimPosition;
+                NimPosition nimPosition = position;
                 if (nimPosition == null)
                     throw new InvalidOperationException("position is not a NimPosition.");
 
@@ -73,9 +73,9 @@ namespace CoreTests
 
             public override AttemptPlay<NimPosition> Play(IEnumerable<NimPosition> playOptions)
             {
-                foreach (GamePosition options in playOptions)
+                foreach (NimPosition options in playOptions)
                 {
-                    NimPosition nimPosition = options as NimPosition;
+                    NimPosition nimPosition = options;
                     if (nimPosition == null)
                         return AttemptPlay<NimPosition>.Failure;
 

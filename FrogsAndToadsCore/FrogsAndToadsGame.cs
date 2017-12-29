@@ -37,7 +37,7 @@ namespace FrogsAndToadsCore
         #region Game overrides
         public override IEnumerable<FrogsAndToadsPosition> GetLeftMoves(FrogsAndToadsPosition position)
         {
-            FrogsAndToadsPosition ftp = (position as FrogsAndToadsPosition);
+            FrogsAndToadsPosition ftp = position;
             return ftp
                 .GetPossibleToadMoves()
                 .Select(x => ftp.PlayMove(x));
