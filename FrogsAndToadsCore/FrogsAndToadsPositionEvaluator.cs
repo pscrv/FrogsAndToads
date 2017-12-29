@@ -50,7 +50,6 @@ namespace FrogsAndToadsCore
             if (possibleMoves.Count == 0)
             {
                 return _evaluateEndPositionForFrogs(position);
-                //return EvaluateEndPosition(position);
             }
 
 
@@ -86,7 +85,6 @@ namespace FrogsAndToadsCore
             if (possibleMoves.Count == 0)
             {
                 return _evaluateEndPositionForToads(position);
-                //return EvaluateEndPosition(position);
             }
 
             int bestvalue = int.MaxValue;
