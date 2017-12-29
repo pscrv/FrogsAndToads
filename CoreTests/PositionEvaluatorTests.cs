@@ -16,7 +16,7 @@ namespace CoreTests
         string gameString3 = "TF__TF_";
 
         FrogsAndToadsPosition position;
-        GamePositionEvaluator evaluator;
+        FrogsAndToadsPositionEvaluator evaluator;
         int value;
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace CoreTests
             evaluator = new MiniMaxEvaluator();
             value = evaluator.LeftEvaluation(position);
             Assert.AreEqual(0, value);
-            value = evaluator.LeftEvaluation(position.Reverse);
+            value = evaluator.LeftEvaluation(position.Reverse as FrogsAndToadsPosition);
             Assert.AreEqual(0, value);
 
             position = new FrogsAndToadsPosition(gameString3);

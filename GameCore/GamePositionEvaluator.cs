@@ -2,16 +2,16 @@
 
 namespace GameCore
 {
-    public abstract class GamePositionEvaluator
+    public abstract class GamePositionEvaluator<T> where T : GamePosition
     {
         #region abstract
-        public abstract int LeftEvaluation(GamePosition position);
+        public abstract int LeftEvaluation(T position);
         #endregion
 
 
-        public int RightEvaluation(GamePosition position)
+        public int RightEvaluation(T position)
         {
-            return -LeftEvaluation(position.Reverse);
+            return -LeftEvaluation(position.Reverse as T);
         }
     }
 }

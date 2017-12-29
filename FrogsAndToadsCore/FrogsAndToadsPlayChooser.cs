@@ -143,7 +143,7 @@ namespace FrogsAndToadsCore
     public class EvaluatingChooser : FrogsAndToadsPlayChooser
     {
         #region private attributes
-        private GamePositionEvaluator _evaluator;
+        private GamePositionEvaluator<FrogsAndToadsPosition> _evaluator;
         #endregion
 
 
@@ -176,7 +176,7 @@ namespace FrogsAndToadsCore
 
 
 
-        public EvaluatingChooser(string label, GamePositionEvaluator evaluator)
+        public EvaluatingChooser(string label, GamePositionEvaluator<FrogsAndToadsPosition> evaluator)
             :base(label)
         {    _evaluator = evaluator;
         

@@ -5,12 +5,12 @@ using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator
+    public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator<FrogsAndToadsPosition>
     {
         public abstract int ToadEvaluation(FrogsAndToadsPosition position);
 
 
-        public override int LeftEvaluation(GamePosition position)
+        public override int LeftEvaluation(FrogsAndToadsPosition position)
         {
             if (position is FrogsAndToadsPosition ftp)
                 return ToadEvaluation(ftp);
