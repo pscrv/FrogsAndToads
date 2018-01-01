@@ -12,10 +12,7 @@ namespace FrogsAndToadsCore
 
         public override int LeftEvaluation(FrogsAndToadsPosition position)
         {
-            if (position is FrogsAndToadsPosition ftp)
-                return ToadEvaluation(ftp);
-
-            throw new ArgumentException("Can only evalute FrogsAndToadsPosition.");
+            return ToadEvaluation(position);
         }
     }
 

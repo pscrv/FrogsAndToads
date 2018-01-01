@@ -406,10 +406,9 @@ namespace FrogsAndToadsCore
 
             return possibleMoves;
         }
-        #endregion
 
 
-        #region private methods
+
         private bool _locationIsOccupied(int target)
         {
             return ! (_track[target] is Space);

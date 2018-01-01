@@ -1,14 +1,23 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
 
 using FrogsAndToadsCore;
-using System.Collections.Generic;
 
 namespace CoreTests
 {
     [TestClass]
     public class PositionTests
     {
+        FrogsAndToadsPosition position;
+        List<FrogsAndToadsMove> possibleMoves;
+        List<int> _sources => possibleMoves.Select(x => x.Source).ToList();
+        List<int> _targets => possibleMoves.Select(x => x.Target).ToList();
+        FrogsAndToadsMove _move;
+
+
+
         [TestMethod]
         public void Construction()
         {
@@ -39,9 +48,7 @@ namespace CoreTests
         [TestMethod]
         public void StaticConstructor()
         {
-            // Will fail, when MakeInitialPosition is properly implemented
-
-            FrogsAndToadsPosition position = FrogsAndToadsPosition.MakeInitialPosition();
+            position = FrogsAndToadsPosition.MakeInitialPosition();
             Assert.AreEqual("< T _ F >", position.ToString());
         }
 
@@ -49,7 +56,7 @@ namespace CoreTests
         [TestMethod]
         public void CanMovePiece()
         {
-            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
+            position = new FrogsAndToadsPosition(2, 2, 2);
 
             try
             {
@@ -79,75 +86,74 @@ namespace CoreTests
 
 
         [TestMethod]
-        public void MovePiece()
+        public void PlayMove()
         {
-            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
+            position = new FrogsAndToadsPosition(2, 2, 2);
 
-            try
-            {
-                int value = -1;
-                position =  position.MovePiece(value);
-                Assert.Fail($"Failed to throw an IndexOutOfRangeException for index {value}.");
-            }
-            catch (IndexOutOfRangeException)
-            { }
-
-            try
-            {
-                int value = 6;
-                position = position.MovePiece(value);
-                Assert.Fail($"Failed to throw an IndexOutOfRangeException for index {value}.");
-            }
-            catch (IndexOutOfRangeException)
-            { }
-
-
-            position = position.MovePiece(1);
+            _move = new FrogsAndToadsMove(1, 2);
+            position = position.PlayMove(_move);
             Assert.AreEqual("< T _ T _ F F >", position.ToString());
 
-            position = position.MovePiece(4);
+            _move = new FrogsAndToadsMove(4, 3);
+            position = position.PlayMove(_move);
             Assert.AreEqual("< T _ T F _ F >", position.ToString());
 
-            position = position.MovePiece(2);
+            _move = new FrogsAndToadsMove(2, 4);
+            position = position.PlayMove(_move);
             Assert.AreEqual("< T _ _ F T F >", position.ToString());
         }
+
+                
 
         [TestMethod]
         public void GetAllPossibleMoves()
         {
-            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
-
-            List<int> possibleMoves = position.GetAllPossibleMoves();
+            position = new FrogsAndToadsPosition(2, 2, 2);
+            
+            possibleMoves = position.GetAllPossibleMoves();
             Assert.AreEqual(2, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(1));
-            Assert.IsTrue(possibleMoves.Contains(4));
+            Assert.IsTrue(_sources.Contains(1));
+            Assert.IsTrue(_sources.Contains(4));
+            Assert.IsTrue(_targets.Contains(2));
+            Assert.IsTrue(_targets.Contains(3));
 
-            position = position.MovePiece(1);
-            position = position.MovePiece(4);
+            _move = new FrogsAndToadsMove(1, 2);
+            position = position.PlayMove(_move);
+
+            _move = new FrogsAndToadsMove(4, 3);
+            position = position.PlayMove(_move);
+
             possibleMoves = position.GetAllPossibleMoves();
             Assert.AreEqual(4, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(0));
-            Assert.IsTrue(possibleMoves.Contains(2));
-            Assert.IsTrue(possibleMoves.Contains(3));
-            Assert.IsTrue(possibleMoves.Contains(5));
+            Assert.IsTrue(_sources.Contains(0));
+            Assert.IsTrue(_sources.Contains(2));
+            Assert.IsTrue(_sources.Contains(3));
+            Assert.IsTrue(_sources.Contains(5));
+            Assert.IsTrue(_targets.Contains(1));
+            Assert.IsTrue(_targets.Contains(4));
         }
-
 
         [TestMethod]
         public void GetPossibleToadMoves()
         {
-            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
-
-            List<int> possibleMoves = position.GetPossibleToadMoves();
+            position = new FrogsAndToadsPosition(2, 2, 2);
+            possibleMoves = position.GetPossibleToadMoves();
             Assert.AreEqual(1, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(1));
+            Assert.IsTrue(_sources.Contains(1));
+            Assert.IsTrue(_targets.Contains(2));
 
-            position = position.MovePiece(1);
-            position = position.MovePiece(4);
+            _move = new FrogsAndToadsMove(1, 2);
+            position = position.PlayMove(_move);
+
+            _move = new FrogsAndToadsMove(4, 3);
+            position = position.PlayMove(_move);
+
             possibleMoves = position.GetPossibleToadMoves();
             Assert.AreEqual(2, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(0));
-            Assert.IsTrue(possibleMoves.Contains(2));
+            Assert.IsTrue(_sources.Contains(0));
+            Assert.IsTrue(_sources.Contains(2));
+            Assert.IsTrue(_targets.Contains(1));
+            Assert.IsTrue(_targets.Contains(4));
         }
 
 
@@ -156,16 +162,35 @@ namespace CoreTests
         {
             FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
 
-            List<int> possibleMoves = position.GetPossibleFrogMoves();
+            possibleMoves = position.GetPossibleFrogMoves();
             Assert.AreEqual(1, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(4));
+            Assert.IsTrue(_sources.Contains(4));
+            Assert.IsTrue(_targets.Contains(3));
 
-            position = position.MovePiece(1);
-            position = position.MovePiece(4);
+            _move = new FrogsAndToadsMove(1, 2);
+            position = position.PlayMove(_move);
+
+            _move = new FrogsAndToadsMove(4, 3);
+            position = position.PlayMove(_move);
+
             possibleMoves = position.GetPossibleFrogMoves();
             Assert.AreEqual(2, possibleMoves.Count);
-            Assert.IsTrue(possibleMoves.Contains(3));
-            Assert.IsTrue(possibleMoves.Contains(5));
+            Assert.IsTrue(_sources.Contains(3));
+            Assert.IsTrue(_sources.Contains(5));
+            Assert.IsTrue(_targets.Contains(1));
+            Assert.IsTrue(_targets.Contains(4));
         }
+
+        [TestMethod]
+        public void SubPosition()
+        {
+            FrogsAndToadsPosition position = new FrogsAndToadsPosition(2, 2, 2);
+
+            Assert.AreEqual("< T >", position.SubPosition(0, 0).ToString());
+            Assert.AreEqual("< T T >", position.SubPosition(0, 1).ToString());
+            Assert.AreEqual("< T _ _ F >", position.SubPosition(1, 4).ToString());
+        }
+
+
     }
 }
