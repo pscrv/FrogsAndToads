@@ -2,13 +2,13 @@
 
 namespace FrogsAndToadsCore
 {
-    public class FrogsAndToadsMove
+    internal class FrogsAndToadsMove
     {
-        public int Source { get; }
-        public int Target { get; }
+        internal int Source { get; }
+        internal int Target { get; }
 
         
-        public FrogsAndToadsMove(int source, int target)
+        internal FrogsAndToadsMove(int source, int target)
         {
             Source = source;
             Target = target;
