@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using GameCore;
 
 namespace FrogsAndToadsCore
@@ -9,7 +10,10 @@ namespace FrogsAndToadsCore
 
         #region public properties
         public string PositionString => _position.ToString();
-        public List<string> StringHistory => _positionHistory.Select(x => x.ToString()).ToList();
+        public List<string> StringHistory => 
+            _positionHistory
+            .Select(x => x.ToString())
+            .ToList();
         #endregion
 
 
@@ -28,8 +32,6 @@ namespace FrogsAndToadsCore
             string positionString)
             : base(leftPlayer, rightPlayer, new FrogsAndToadsPosition(positionString))
         { }
-
-
         #endregion
 
 
@@ -37,14 +39,16 @@ namespace FrogsAndToadsCore
         #region Game overrides
         public override IEnumerable<FrogsAndToadsPosition> GetLeftOptions(FrogsAndToadsPosition position)
         {
-            return position
+            return 
+                position
                 .GetPossibleToadMoves()
                 .Select(x => Position.PlayMove(x));
         }
 
         public override IEnumerable<FrogsAndToadsPosition> GetRightOptions(FrogsAndToadsPosition position)
         {
-            return position
+            return 
+                position
                 .GetPossibleFrogMoves()
                 .Select(x => Position.PlayMove(x));
         }

@@ -8,7 +8,5 @@ namespace GameCore
         public abstract int LeftEvaluation(T position);
         public abstract int RightEvaluation(T position);
         #endregion
-
-
     }
 }

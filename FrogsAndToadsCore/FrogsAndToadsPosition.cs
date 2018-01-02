@@ -46,7 +46,6 @@ namespace FrogsAndToadsCore
         #endregion
 
 
-
         #region construction
         internal FrogsAndToadsPosition(int toadCount, int spaceCount, int frogCount)
         {
@@ -61,8 +60,10 @@ namespace FrogsAndToadsCore
             Array.Copy(frogs, 0, _track, toadCount + spaceCount, frogCount);
         }
 
+
         internal FrogsAndToadsPosition(string positionString)
         {
+
             _track = new FrogsAndToadsPiece[positionString.Length];
             for (int i = 0; i < positionString.Length; i++)
             {
@@ -114,74 +115,12 @@ namespace FrogsAndToadsCore
             int moveTarget = index + _track[index].Move;
             return _targetIsFree(moveTarget);
         }
-
-        internal bool CanMovePiece(FrogsAndToadsMove move)
-        {
-            return _targetIsFree(move.Target);
-        }
-
-        internal bool CanJumpPiece(int index)
-        {
-            if (index < 0 || index >= _track.Length)
-                throw new IndexOutOfRangeException();
-
-            if (_track[index].Move == 0)
-                return false;
-
-            int moveTarget = index + _track[index].Move;
-            int jumpTarget = moveTarget + _track[index].Move;
-            return
-                _targetIsFree(jumpTarget)
-                && _track[index].CanJump(_track[moveTarget]);
-        }
-
-        internal bool CanJumpPiece(FrogsAndToadsMove move)
-        {
-            if (move.Source < 0 || move.Source >= _track.Length)
-                throw new IndexOutOfRangeException();
-
-            if (_track[move.Source].Move == 0)
-                return false;
-
-            int moveTarget = move.Source + _track[move.Source].Move;
-            int jumpTarget = moveTarget + _track[move.Source].Move;
-            return
-                _targetIsFree(jumpTarget)
-                && _track[move.Source].CanJump(_track[moveTarget]);
-        }
-
         
-        internal List<Toad> GetToads()
-        {
-            List<Toad> result = new List<Toad>();
-            foreach (FrogsAndToadsPiece piece in _track)
-            {
-                if (piece is Toad)
-                    result.Add(piece as Toad);
-            }
-
-            return result;
-        }
-
-        internal List<Frog> GetFrogs()
-        {
-            List<Frog> result = new List<Frog>();
-            foreach (FrogsAndToadsPiece piece in _track)
-            {
-                if (piece is Frog)
-                    result.Add(piece as Frog);
-            }
-
-            return result;
-        }
-
-
         internal FrogsAndToadsPosition PlayMove(FrogsAndToadsMove move)
         {
             return new FrogsAndToadsPosition(_track, move);
         }
-
-
+        
         internal List<FrogsAndToadsMove> GetAllPossibleMoves()
         {
             return _getPossibleMoves(x => true);
@@ -196,6 +135,7 @@ namespace FrogsAndToadsCore
         {
             return _getPossibleMoves(x => x is Frog);
         }
+
 
 
         internal FrogsAndToadsPosition SubPosition(int leftIndex, int rightIndex)
@@ -216,12 +156,12 @@ namespace FrogsAndToadsCore
             return new FrogsAndToadsPosition(result);
         }
 
-        public List<FrogsAndToadsPosition> GetSubPositions()
+        internal List<FrogsAndToadsPosition> GetSubPositions()
         {
             List<FrogsAndToadsPosition> result = new List<FrogsAndToadsPosition>();
 
-            Try<(int start, int end)> findDeadKnot = _getDeadKnot(this, 0);
-            if (findDeadKnot == Try<(int, int)>.Failure)
+            FindKnot findDeadKnot = _getDeadKnot(this, 0);
+            if (findDeadKnot == FindKnot.Failure)
             {
                 result.Add(this);
                 return result;
@@ -249,7 +189,7 @@ namespace FrogsAndToadsCore
 
 
         #region private methods
-        private Try<(int start, int end)> _getDeadKnot(FrogsAndToadsPosition position, int offset)
+        private FindKnot _getDeadKnot(FrogsAndToadsPosition position, int offset)
         {
             int start;
             int deadStart;
@@ -260,17 +200,17 @@ namespace FrogsAndToadsCore
 
             _setStartAtFirstToad();
             if (start < 0)
-                return Try<(int, int)>.Failure;
+                return FindKnot.Failure;
 
             _setEndAtEndOfKnot();
             if (end < 0)
-                return Try<(int, int)>.Failure;
+                return FindKnot.Failure;
 
             _findDeadStart();
             if (deadStart < 0)
             {
                 if (end == lastIndex)
-                    return Try<(int, int)>.Failure;
+                    return FindKnot.Failure;
 
                 return _getDeadKnot(position, end + 1);
             }
@@ -279,12 +219,12 @@ namespace FrogsAndToadsCore
             if (deadEnd < 0)
             {
                 if (end == lastIndex)
-                    return Try<(int, int)>.Failure;
+                    return FindKnot.Failure;
 
                 return _getDeadKnot(position, end + 1);
             }
 
-            return Try<(int, int)>.Success((deadStart, deadEnd));
+            return FindKnot.Success((deadStart, deadEnd));
 
 
 
@@ -398,9 +338,8 @@ namespace FrogsAndToadsCore
                     if (_locationIsOccupied(target))
                         continue;
 
-
-                    FrogsAndToadsMove move = new FrogsAndToadsMove(source, target);                    
-                    possibleMoves.Add(move);
+                  
+                    possibleMoves.Add(new FrogsAndToadsMove(source, target));
                 }
             }
 
@@ -455,6 +394,26 @@ namespace FrogsAndToadsCore
             }
             sb.Append(">");
             return sb.ToString();
+        }
+        #endregion
+
+
+
+        #region private classes
+        private class FindKnot : Try<(int start, int end)>
+        {
+            internal static FindKnot _failureInstance = new FindKnot();
+            internal static new FindKnot Failure => _failureInstance;
+            internal static new FindKnot Success((int start, int end) x)
+                => new FindKnot((x.start, x.end));
+
+            private FindKnot((int start, int end) x)
+                : base((x.start, x.end))
+            { }
+
+            private FindKnot()
+                : base()
+            { }
         }
         #endregion
     }
