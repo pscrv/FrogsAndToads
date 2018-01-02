@@ -23,13 +23,13 @@ namespace FrogsAndToadsCore
 
 
         #region private attributes
-        FrogsAndToadsPiece[] _track;
+        private FrogsAndToadsPiece[] _track;
         #endregion
 
 
 
-        #region properties       
-        public int Length => _track.Length;
+        #region internal properties       
+        internal int Length => _track.Length;
 
         internal FrogsAndToadsPiece this[int index]
         {
@@ -37,7 +37,7 @@ namespace FrogsAndToadsCore
         }
 
 
-        public FrogsAndToadsPosition Reverse
+        internal FrogsAndToadsPosition Reverse
             => new FrogsAndToadsPosition(
                 _track.Reverse()
                 .Select(x => x.Converse)
