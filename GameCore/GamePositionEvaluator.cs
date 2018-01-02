@@ -6,12 +6,9 @@ namespace GameCore
     {
         #region abstract
         public abstract int LeftEvaluation(T position);
+        public abstract int RightEvaluation(T position);
         #endregion
 
 
-        public int RightEvaluation(T position)
-        {
-            return -LeftEvaluation(position.Reverse as T);
-        }
     }
 }

@@ -8,11 +8,17 @@ namespace FrogsAndToadsCore
     public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator<FrogsAndToadsPosition>
     {
         public abstract int ToadEvaluation(FrogsAndToadsPosition position);
+        public abstract int FrogEvaluation(FrogsAndToadsPosition position);
 
 
         public override int LeftEvaluation(FrogsAndToadsPosition position)
         {
             return ToadEvaluation(position);
+        }
+
+        public override int RightEvaluation(FrogsAndToadsPosition position)
+        {
+            return FrogEvaluation(position);
         }
     }
 
@@ -28,6 +34,12 @@ namespace FrogsAndToadsCore
                 0,
                 int.MinValue,
                 int.MaxValue);
+        }
+
+
+        public override int FrogEvaluation(FrogsAndToadsPosition position)
+        {
+            return -ToadEvaluation(position.Reverse);
         }
         #endregion
 

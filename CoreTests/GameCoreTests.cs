@@ -20,7 +20,7 @@ namespace CoreTests
             { }
 
 
-            public override IEnumerable<NimPosition> GetLeftMoves(NimPosition position)
+            public override IEnumerable<NimPosition> GetLeftOptions(NimPosition position)
             {
                 NimPosition nimPosition = position;
                 if (nimPosition == null)
@@ -34,7 +34,12 @@ namespace CoreTests
 
                 return options;
             }
-           
+
+            public override IEnumerable<NimPosition> GetRightOptions(NimPosition position)
+            {
+                return GetLeftOptions(position);
+            }
+
         }
 
 
@@ -43,9 +48,7 @@ namespace CoreTests
             private int _size;
 
             public int Size => _size;
-
-            public override GamePosition Reverse => this;
-
+            
             public NimPosition(int size)
             {
                 _size = size;

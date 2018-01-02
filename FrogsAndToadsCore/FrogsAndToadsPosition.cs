@@ -37,7 +37,7 @@ namespace FrogsAndToadsCore
         }
 
 
-        public override GamePosition Reverse
+        public FrogsAndToadsPosition Reverse
             => new FrogsAndToadsPosition(
                 _track.Reverse()
                 .Select(x => x.Converse)

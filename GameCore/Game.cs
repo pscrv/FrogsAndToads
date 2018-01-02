@@ -8,7 +8,8 @@ namespace GameCore
     public abstract class Game<T> where T : GamePosition
     {
         #region absract
-        public abstract IEnumerable<T> GetLeftMoves(T position);
+        public abstract IEnumerable<T> GetLeftOptions(T position);
+        public abstract IEnumerable<T> GetRightOptions(T position);
         #endregion
 
 
@@ -92,7 +93,9 @@ namespace GameCore
             bool isLeftPlay)
         {
             IEnumerable<T> options =
-                GetLeftMoves(_reverseIfRightPlay(Position, isLeftPlay));
+                isLeftPlay ?
+                GetLeftOptions(Position) : 
+                GetRightOptions(Position);
 
             AttemptPlay<T> result = activePlayer.Play(options);
             if (result == AttemptPlay<T>.Failure)
@@ -102,16 +105,8 @@ namespace GameCore
                 return;
             }
 
-            Position = _reverseIfRightPlay(result.Value, isLeftPlay);
-        }
-
-        T _reverseIfRightPlay(T position, bool isleftplay)
-        {
-            return
-                isleftplay
-                ? position
-                : (T)position.Reverse;
-        }
+            Position = result.Value;
+        }       
         #endregion
     }    
 }
