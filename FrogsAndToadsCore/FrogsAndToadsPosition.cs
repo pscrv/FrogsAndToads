@@ -31,7 +31,7 @@ namespace FrogsAndToadsCore
         #region properties       
         public int Length => _track.Length;
 
-        public FrogsAndToadsPiece this[int index]
+        internal FrogsAndToadsPiece this[int index]
         {
             get => _track[index];
         }

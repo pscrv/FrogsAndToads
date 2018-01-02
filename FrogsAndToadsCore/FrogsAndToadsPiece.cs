@@ -1,7 +1,7 @@
 ﻿namespace FrogsAndToadsCore
 {
 
-    public abstract class FrogsAndToadsPiece
+    internal abstract class FrogsAndToadsPiece
     {
         #region abstract
         internal abstract int Move { get; }
@@ -21,7 +21,7 @@
 
 
 
-    public class Frog : FrogsAndToadsPiece
+    internal class Frog : FrogsAndToadsPiece
     {
         #region static
         private static Frog _instance = new Frog();
@@ -51,7 +51,7 @@
 
 
 
-    public class Toad : FrogsAndToadsPiece
+    internal class Toad : FrogsAndToadsPiece
     {
         #region static
         private static Toad _instance = new Toad();
@@ -77,7 +77,7 @@
 
 
 
-    public class Space : FrogsAndToadsPiece
+    internal class Space : FrogsAndToadsPiece
     {
         #region static
         private static Space _instance = new Space();
