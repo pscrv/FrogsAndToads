@@ -43,12 +43,14 @@ namespace FrogsAndToadsCore
 
         public override AttemptPlay<FrogsAndToadsPosition> Play(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
+            const ConsoleColor choiceColor = ConsoleColor.Yellow;
+
             if (playOptions.Count() == 0)
                 return AttemptPlay<FrogsAndToadsPosition>.Failure;
 
             List<string> choices = playOptions.Select(x => x.ToString()).ToList();
             ConsoleColor resetColour = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = choiceColor;
 
             string input;
             int result = -1;
@@ -68,10 +70,6 @@ namespace FrogsAndToadsCore
             Console.ForegroundColor = resetColour;
 
             return AttemptPlay<FrogsAndToadsPosition>.Success(playOptions.ToList()[result]);
-
-
-
-
         }
 
         private string ListToString<T>(List<T> list)
