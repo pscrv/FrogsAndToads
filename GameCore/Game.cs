@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Utilities;
 
 namespace GameCore
 {
@@ -67,46 +65,50 @@ namespace GameCore
 
         public void PlayRound()
         {
-            PlayLeftMove();
+            _play(_leftPlayer);
             if (GameIsOver)
                 return;
 
-            PlayRightMove();
+            _play(_rightPlayer);
+        }
+        #endregion
+
+
+
+        #region internal methods
+        internal void PlayLeftMove()
+        {
+            _play(_leftPlayer);
         }
 
-        public void PlayLeftMove()
+        internal void PlayRightMove()
         {
-            _play(_leftPlayer, _rightPlayer, true);
-        }
-
-        public void PlayRightMove()
-        {
-            _play(_rightPlayer, _leftPlayer, false);
+            _play(_rightPlayer);
         }
         #endregion
 
 
         #region private methods
         private void _play(
-            GamePlayer<T> activePlayer, 
-            GamePlayer<T> inactivePlayer, 
-            bool isLeftPlay)
+            GamePlayer<T> activePlayer)
         {
+            bool isLeftPlay = activePlayer == _leftPlayer;
+
             IEnumerable<T> options =
                 isLeftPlay ?
-                GetLeftOptions(Position) : 
+                GetLeftOptions(Position) :
                 GetRightOptions(Position);
 
             AttemptPlay<T> result = activePlayer.Play(options);
             if (result == AttemptPlay<T>.Failure)
             {
                 _gameIsOver = true;
-                _winner = inactivePlayer;
+                _winner = isLeftPlay ? _rightPlayer : _leftPlayer;
                 return;
             }
 
             Position = result.Value;
-        }       
+        }
         #endregion
     }    
 }
