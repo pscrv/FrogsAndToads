@@ -106,7 +106,7 @@ namespace GameCore
                 _winner = isLeftPlay ? _rightPlayer : _leftPlayer;
                 return;
             }
-
+            
             Position = result.Value;
         }
         #endregion

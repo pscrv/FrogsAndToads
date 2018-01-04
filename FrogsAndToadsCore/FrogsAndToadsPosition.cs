@@ -402,7 +402,7 @@ namespace FrogsAndToadsCore
         #region private classes
         private class FindKnot : Try<(int start, int end)>
         {
-            internal static FindKnot _failureInstance = new FindKnot();
+            private static FindKnot _failureInstance = new FindKnot();
             internal static new FindKnot Failure => _failureInstance;
             internal static new FindKnot Success((int start, int end) x)
                 => new FindKnot((x.start, x.end));

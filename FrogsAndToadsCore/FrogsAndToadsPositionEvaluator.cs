@@ -7,8 +7,8 @@ namespace FrogsAndToadsCore
 {
     public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator<FrogsAndToadsPosition>
     {
-        public abstract int ToadEvaluation(FrogsAndToadsPosition position);
-        public abstract int FrogEvaluation(FrogsAndToadsPosition position);
+        internal abstract int ToadEvaluation(FrogsAndToadsPosition position);
+        internal abstract int FrogEvaluation(FrogsAndToadsPosition position);
 
 
         public override int LeftEvaluation(FrogsAndToadsPosition position)
@@ -27,7 +27,7 @@ namespace FrogsAndToadsCore
     public class MiniMaxEvaluator : FrogsAndToadsPositionEvaluator
     {
         #region abstract overrides
-        public override int ToadEvaluation(FrogsAndToadsPosition position)
+        internal override int ToadEvaluation(FrogsAndToadsPosition position)
         {
             return _evaluatePositionForToad(
                 position,
@@ -37,7 +37,7 @@ namespace FrogsAndToadsCore
         }
 
 
-        public override int FrogEvaluation(FrogsAndToadsPosition position)
+        internal override int FrogEvaluation(FrogsAndToadsPosition position)
         {
             return -ToadEvaluation(position.Reverse);
         }
@@ -45,10 +45,11 @@ namespace FrogsAndToadsCore
 
 
         #region public
-        public int EvaluateEndPosition(FrogsAndToadsPosition position)
+        internal int EvaluateEndPosition(FrogsAndToadsPosition position)
         {
             List<FrogsAndToadsPosition> subPositions = position.GetSubPositions();
-            return subPositions.Sum(x => _toadValue(x) + _frogValue(x));
+            return subPositions.Sum(
+                x => _evaluateEndPositionForToads(x) + _evaluateEndPositionForFrogs(x));
         }
         #endregion
 
@@ -118,20 +119,8 @@ namespace FrogsAndToadsCore
             return bestvalue;
         }
 
-
-
+        
         private int _evaluateEndPositionForToads(FrogsAndToadsPosition position)
-        {
-            return _toadValue(position);
-        }
-
-        private int _evaluateEndPositionForFrogs(FrogsAndToadsPosition position)
-        {
-            return _frogValue(position);
-        }
-
-
-        private int _toadValue(FrogsAndToadsPosition position)
         {
             int sum = 0;
             int count = 0;
@@ -152,9 +141,9 @@ namespace FrogsAndToadsCore
             return sum;
         }
 
-        private int _frogValue(FrogsAndToadsPosition position)
+        private int _evaluateEndPositionForFrogs(FrogsAndToadsPosition position)
         {
-            return -_toadValue(position.Reverse as FrogsAndToadsPosition);
+            return -_evaluateEndPositionForToads(position.Reverse as FrogsAndToadsPosition);
         }
 
         #endregion
