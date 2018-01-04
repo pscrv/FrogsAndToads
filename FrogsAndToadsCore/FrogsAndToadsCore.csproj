@@ -59,6 +59,10 @@
       <Project>{D1A878CE-4F82-4B04-854F-59D2DD22C81A}</Project>
       <Name>GameCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Monads\Monads.csproj">
+      <Project>{43de8fec-5165-4de0-b3b8-40fc7b70bd03}</Project>
+      <Name>Monads</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{BA2A6C8E-E743-4CE5-9F0D-2A1BEF0D938F}</Project>
       <Name>Utilities</Name>

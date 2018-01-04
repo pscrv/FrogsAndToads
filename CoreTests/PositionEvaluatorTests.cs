@@ -14,6 +14,8 @@ namespace CoreTests
         string gameString1 = "T___";
         string gameString2 = "T_F";
         string gameString3 = "TF__TF_";
+        string gameString4 = "TF_T_";
+        string gameString5 = "_F_TF";
 
         FrogsAndToadsPosition position;
         FrogsAndToadsPositionEvaluator evaluator;
@@ -38,6 +40,16 @@ namespace CoreTests
             evaluator = new MiniMaxEvaluator();
             value = evaluator.LeftEvaluation(position);
             Assert.AreEqual(2, value);
+
+            position = new FrogsAndToadsPosition(gameString4);
+            evaluator = new MiniMaxEvaluator();
+            value = evaluator.LeftEvaluation(position);
+            Assert.AreEqual(3, value);
+
+            position = new FrogsAndToadsPosition(gameString5);
+            evaluator = new MiniMaxEvaluator();
+            value = evaluator.RightEvaluation(position);
+            Assert.AreEqual(-3, value);
 
         }
 

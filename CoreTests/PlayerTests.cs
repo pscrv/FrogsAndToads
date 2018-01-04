@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FrogsAndToadsCore;
-using GameCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using GameCore;
+using FrogsAndToadsCore;
+using Monads;
 
 namespace CoreTests
 {
@@ -10,7 +12,7 @@ namespace CoreTests
     public class PlayerTests
     {
         FrogsAndToadsPlayChooser chooser;
-        AttemptPlay<FrogsAndToadsPosition> result;
+        Maybe<FrogsAndToadsPosition> result;
         FrogsAndToadsPosition position;
         FrogsAndToadsMove correctMove;
         

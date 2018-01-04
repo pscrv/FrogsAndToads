@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GameCore;
-using Utilities;
+using Monads;
 
 namespace FrogsAndToadsCore
 {
@@ -160,8 +160,8 @@ namespace FrogsAndToadsCore
         {
             List<FrogsAndToadsPosition> result = new List<FrogsAndToadsPosition>();
 
-            FindKnot findDeadKnot = _getDeadKnot(this, 0);
-            if (findDeadKnot == FindKnot.Failure)
+            Maybe<(int start, int end)> findDeadKnot = _getDeadKnot(this, 0);
+            if (!findDeadKnot.HasValue)
             {
                 result.Add(this);
                 return result;
@@ -189,7 +189,7 @@ namespace FrogsAndToadsCore
 
 
         #region private methods
-        private FindKnot _getDeadKnot(FrogsAndToadsPosition position, int offset)
+        private Maybe<(int start, int end)> _getDeadKnot(FrogsAndToadsPosition position, int offset)
         {
             int start;
             int deadStart;
@@ -200,17 +200,17 @@ namespace FrogsAndToadsCore
 
             _setStartAtFirstToad();
             if (start < 0)
-                return FindKnot.Failure;
+                return Maybe<(int, int)>.Nothing();
 
             _setEndAtEndOfKnot();
             if (end < 0)
-                return FindKnot.Failure;
+                return Maybe<(int, int)>.Nothing();
 
             _findDeadStart();
             if (deadStart < 0)
             {
                 if (end == lastIndex)
-                    return FindKnot.Failure;
+                    return Maybe<(int, int)>.Nothing();
 
                 return _getDeadKnot(position, end + 1);
             }
@@ -219,12 +219,12 @@ namespace FrogsAndToadsCore
             if (deadEnd < 0)
             {
                 if (end == lastIndex)
-                    return FindKnot.Failure;
+                    return Maybe<(int, int)>.Nothing();
 
                 return _getDeadKnot(position, end + 1);
             }
 
-            return FindKnot.Success((deadStart, deadEnd));
+            return (deadStart, deadEnd).ToMaybe();
 
 
 
@@ -400,21 +400,22 @@ namespace FrogsAndToadsCore
 
 
         #region private classes
-        private class FindKnot : Try<(int start, int end)>
-        {
-            private static FindKnot _failureInstance = new FindKnot();
-            internal static new FindKnot Failure => _failureInstance;
-            internal static new FindKnot Success((int start, int end) x)
-                => new FindKnot((x.start, x.end));
+        //private class FindKnot : Try<(int start, int end)>
+        //{
+        //    private static FindKnot _failureInstance = new FindKnot();
+        //    internal static new FindKnot Failure => _failureInstance;
+        //    internal static new FindKnot Success((int start, int end) x)
+        //        => new FindKnot((x.start, x.end));
 
-            private FindKnot((int start, int end) x)
-                : base((x.start, x.end))
-            { }
+        //    private FindKnot((int start, int end) x)
+        //        : base((x.start, x.end))
+        //    { }
 
-            private FindKnot()
-                : base()
-            { }
-        }
+        //    private FindKnot()
+        //        : base()
+        //    { }
+        //}
+        
         #endregion
     }
 }

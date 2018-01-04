@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Monads;
 
 namespace GameCore
 {
@@ -99,8 +100,8 @@ namespace GameCore
                 GetLeftOptions(Position) :
                 GetRightOptions(Position);
 
-            AttemptPlay<T> result = activePlayer.Play(options);
-            if (result == AttemptPlay<T>.Failure)
+            Maybe<T> result = activePlayer.Play(options);
+            if (!result.HasValue)
             {
                 _gameIsOver = true;
                 _winner = isLeftPlay ? _rightPlayer : _leftPlayer;

@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using GameCore;
 using Utilities;
+using Monads;
+using System.Linq;
 
 namespace CoreTests
 {
@@ -56,12 +58,12 @@ namespace CoreTests
 
 
 
-            internal Try<GamePosition> Remove(int numberToRemove)
+            internal Maybe<GamePosition> Remove(int numberToRemove)
             {
                 if (numberToRemove > _size)
-                    return Try<GamePosition>.Failure;
+                    return Maybe<GamePosition>.Nothing();
 
-                return Try<GamePosition>.Success(new NimPosition(_size - 1));
+                return Maybe<GamePosition>.Some(new NimPosition(_size - 1));
             }
         }
 
@@ -74,18 +76,12 @@ namespace CoreTests
             
 
 
-            public override AttemptPlay<NimPosition> Play(IEnumerable<NimPosition> playOptions)
+            public override Maybe<NimPosition> Play(IEnumerable<NimPosition> playOptions)
             {
-                foreach (NimPosition options in playOptions)
-                {
-                    NimPosition nimPosition = options;
-                    if (nimPosition == null)
-                        return AttemptPlay<NimPosition>.Failure;
-
-                    return AttemptPlay<NimPosition>.Success(nimPosition);
-                }
-
-                return AttemptPlay<NimPosition>.Failure;
+                if (playOptions.Count() == 0)
+                    return Maybe<NimPosition>.Nothing();
+                
+                return playOptions.First().ToMaybe();
             }
         }
 
