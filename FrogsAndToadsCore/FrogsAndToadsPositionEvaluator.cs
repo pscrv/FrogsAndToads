@@ -39,18 +39,41 @@ namespace FrogsAndToadsCore
 
         internal override int FrogEvaluation(FrogsAndToadsPosition position)
         {
-            return -ToadEvaluation(position.Reverse);
+            return _evaluatePositionForFrog(
+                position,
+                0,
+                int.MinValue,
+                int.MaxValue);
         }
         #endregion
 
 
-        #region public
-        internal int EvaluateEndPosition(FrogsAndToadsPosition position)
+        #region internal
+        internal int EvaluateEndPositionForToads(FrogsAndToadsPosition position)
         {
             List<FrogsAndToadsPosition> subPositions = position.GetSubPositions();
             return subPositions.Sum(
-                x => _evaluateEndPositionForToads(x) + _evaluateEndPositionForFrogs(x));
+                x => _evaluateEndPositionForToads(x));
         }
+
+        internal int EvaluateEndPositionForFrogs(FrogsAndToadsPosition position)
+        {
+            return -EvaluateEndPositionForToads(position.Reverse);
+        }
+
+        internal List<(FrogsAndToadsMove move, int value)> EvaluateToadMoves(FrogsAndToadsPosition position)
+        {
+            List<(FrogsAndToadsMove, int)> result = new List<(FrogsAndToadsMove, int)>();
+
+            foreach (FrogsAndToadsMove move in position.GetPossibleToadMoves())
+            {
+                FrogsAndToadsPosition resultingPosition = position.PlayMove(move);
+                result.Add((move, FrogEvaluation(resultingPosition)));
+            }
+
+            return result;
+        }
+
         #endregion
 
 
@@ -66,7 +89,7 @@ namespace FrogsAndToadsCore
 
             if (possibleMoves.Count == 0)
             {
-                return _evaluateEndPositionForFrogs(position);
+                return EvaluateEndPositionForFrogs(position);
             }
 
 
@@ -99,7 +122,7 @@ namespace FrogsAndToadsCore
 
             if (possibleMoves.Count == 0)
             {
-                return _evaluateEndPositionForToads(position);
+                return EvaluateEndPositionForToads(position);
             }
 
             int bestvalue = int.MaxValue;
@@ -120,8 +143,16 @@ namespace FrogsAndToadsCore
         }
 
         
-        private int _evaluateEndPositionForToads(FrogsAndToadsPosition position)
+
+        private int _evaluateSimpleEndPosition(FrogsAndToadsPosition position)
         {
+            return
+                EvaluateEndPositionForToads(position)
+                + EvaluateEndPositionForFrogs(position);
+        }
+
+        private int _evaluateEndPositionForToads(FrogsAndToadsPosition position)
+        {            
             int sum = 0;
             int count = 0;
             for (int i = 0; i < position.Length; i++)
@@ -140,12 +171,6 @@ namespace FrogsAndToadsCore
 
             return sum;
         }
-
-        private int _evaluateEndPositionForFrogs(FrogsAndToadsPosition position)
-        {
-            return -_evaluateEndPositionForToads(position.Reverse as FrogsAndToadsPosition);
-        }
-
         #endregion
 
     }

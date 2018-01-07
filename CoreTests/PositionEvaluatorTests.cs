@@ -16,6 +16,7 @@ namespace CoreTests
         string gameString3 = "TF__TF_";
         string gameString4 = "TF_T_";
         string gameString5 = "_F_TF";
+        string gameString6 = "TF_T_F";
 
         FrogsAndToadsPosition position;
         FrogsAndToadsPositionEvaluator evaluator;
@@ -50,7 +51,24 @@ namespace CoreTests
             evaluator = new MiniMaxEvaluator();
             value = evaluator.RightEvaluation(position);
             Assert.AreEqual(-3, value);
+        }
 
+
+        [TestMethod]
+        public void EvaluateToadMoves()
+        {
+            position = new FrogsAndToadsPosition(gameString6);
+            MiniMaxEvaluator evaluator = new MiniMaxEvaluator();
+            var x = evaluator.EvaluateToadMoves(position);
+            Assert.AreEqual(2, x.Count);
+            Assert.AreEqual(-2, x.First().value);
+            Assert.AreEqual(1, x.Skip(1).First().value);
+
+            position = position.PlayMove(new FrogsAndToadsMove(0, 2));
+            x = evaluator.EvaluateToadMoves(position.Reverse);
+            Assert.AreEqual(2, x.Count);
+            Assert.AreEqual(2, x.First().value);
+            Assert.AreEqual(-1, x.Skip(1).First().value);
         }
 
 
@@ -59,7 +77,7 @@ namespace CoreTests
         {
             List<FrogsAndToadsPosition> subPositions;
 
-            position = new FrogsAndToadsPosition(gameString3);
+            position = new FrogsAndToadsPosition("TF__TF_");
             subPositions = position.GetSubPositions();
             Assert.AreEqual("< T F _ _ T F _ >", subPositions.First().ToString());
 
@@ -82,14 +100,16 @@ namespace CoreTests
         public void EvaluateEndPosition()
         {
             MiniMaxEvaluator evaluator = new MiniMaxEvaluator();
-            position = new FrogsAndToadsPosition(gameString3);            
-            Assert.AreEqual(2, evaluator.EvaluateEndPosition(position));
+            position = new FrogsAndToadsPosition("TT__");
+            Assert.AreEqual(4, evaluator.EvaluateEndPositionForToads(position));
 
-            position = new FrogsAndToadsPosition("T__TTFF___F");
-            Assert.AreEqual(-1, evaluator.EvaluateEndPosition(position));
+            position = new FrogsAndToadsPosition("__F_F______");
+            Assert.AreEqual(-5, evaluator.EvaluateEndPositionForFrogs(position));
 
-            position = new FrogsAndToadsPosition("TFTFF__TTFF_TF_T___TTFTFFFFTTF_FT");
-            Assert.AreEqual(0 + (8 - 2) + (6 - 5), evaluator.EvaluateEndPosition(position));
+            position = new FrogsAndToadsPosition("TFTFF__TTFF___T_T___TTFTFFFF_TTT___");
+            int result = evaluator.EvaluateEndPositionForToads(position);
+            Assert.AreEqual(0 + 7 + 9, result);
         }
+        
     }
 }

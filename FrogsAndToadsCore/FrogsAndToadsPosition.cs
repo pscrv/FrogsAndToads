@@ -31,6 +31,10 @@ namespace FrogsAndToadsCore
         #region internal properties       
         internal int Length => _track.Length;
 
+
+        internal int ToadCount => _track.Count(x => x is Toad);
+        internal int FrogCount => _track.Count(x => x is Frog);
+
         internal FrogsAndToadsPiece this[int index]
         {
             get => _track[index];
@@ -175,7 +179,7 @@ namespace FrogsAndToadsCore
                 result.Add(SubPosition(0, findDeadKnot.Value.start - 1));
             }
 
-            if (knotEnd < Length)
+            if (knotEnd < Length - 1)
             {
                 result.AddRange(
                         SubPosition(findDeadKnot.Value.end + 1, Length - 1)
@@ -203,8 +207,8 @@ namespace FrogsAndToadsCore
                 return Maybe<(int, int)>.Nothing();
 
             _setEndAtEndOfKnot();
-            if (end < 0)
-                return Maybe<(int, int)>.Nothing();
+            //if (end < 0)
+            //    return Maybe<(int, int)>.Nothing();
 
             _findDeadStart();
             if (deadStart < 0)
@@ -242,7 +246,7 @@ namespace FrogsAndToadsCore
 
             void _setEndAtEndOfKnot()
             {
-                for (end = start; end < Length; end++)
+                for (end = start + 1; end < Length; end++)
                 {
                     if (position[end] is Space)
                     {
@@ -251,7 +255,7 @@ namespace FrogsAndToadsCore
                     }
                 }
                 
-                end = -1;
+                end = Length - 1;
             }
 
             void _findDeadStart()
