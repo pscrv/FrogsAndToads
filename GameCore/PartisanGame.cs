@@ -4,7 +4,7 @@ using Monads;
 
 namespace GameCore
 {
-    public abstract class Game<T> where T : GamePosition
+    public abstract class PartisanGame<T> where T : PartisanGamePosition
     {
         #region absract
         public abstract IEnumerable<T> GetLeftOptions(T position);
@@ -14,12 +14,12 @@ namespace GameCore
 
         #region protected and private members
         protected T _position;
-        protected GamePlayer<T> _leftPlayer;
-        protected GamePlayer<T> _rightPlayer;
+        protected PartisanGamePlayer<T> _leftPlayer;
+        protected PartisanGamePlayer<T> _rightPlayer;
         protected List<T> _positionHistory;
 
         private bool _gameIsOver;
-        private GamePlayer<T> _winner;
+        private PartisanGamePlayer<T> _winner;
         #endregion
 
 
@@ -35,15 +35,15 @@ namespace GameCore
         }
 
         public ReadOnlyCollection<T> History => _positionHistory.AsReadOnly();
-        public GamePlayer<T> Winner => _winner;
+        public PartisanGamePlayer<T> Winner => _winner;
         public bool GameIsOver => _gameIsOver;
         #endregion
 
 
         #region construction
-        public Game(
-            GamePlayer<T> leftPlayer, 
-            GamePlayer<T> rightPlayer, 
+        public PartisanGame(
+            PartisanGamePlayer<T> leftPlayer,
+            PartisanGamePlayer<T> rightPlayer,
             T initialPosition)
         {
             _leftPlayer = leftPlayer;
@@ -58,7 +58,7 @@ namespace GameCore
         #region public methods
         public void Play()
         {
-            while (! _gameIsOver)
+            while (!_gameIsOver)
             {
                 PlayRound();
             }
@@ -66,49 +66,49 @@ namespace GameCore
 
         public void PlayRound()
         {
-            _play(_leftPlayer);
+            PlayLeft();
             if (GameIsOver)
                 return;
 
-            _play(_rightPlayer);
+            PlayRight();
         }
         #endregion
+
 
 
 
         #region internal methods
-        internal void PlayLeftMove()
+        internal void PlayLeft()
         {
-            _play(_leftPlayer);
-        }
+            IEnumerable<T> options = GetLeftOptions(Position);
 
-        internal void PlayRightMove()
-        {
-            _play(_rightPlayer);
-        }
-        #endregion
+            Maybe<T> result = _leftPlayer.PlayLeft(options);
 
-
-        #region private methods
-        private void _play(
-            GamePlayer<T> activePlayer)
-        {
-            bool isLeftPlay = activePlayer == _leftPlayer;
-
-            IEnumerable<T> options =
-                isLeftPlay ?
-                GetLeftOptions(Position) :
-                GetRightOptions(Position);
-
-            Maybe<T> result = activePlayer.Play(options);
-            if (!result.HasValue)
+            if (result.HasValue)
             {
-                _gameIsOver = true;
-                _winner = isLeftPlay ? _rightPlayer : _leftPlayer;
+                Position = result.Value;
                 return;
             }
-            
-            Position = result.Value;
+
+            _gameIsOver = true;
+            _winner = _rightPlayer;
+        }
+
+
+        internal void PlayRight()
+        {
+            IEnumerable<T> options = GetRightOptions(Position);
+
+            Maybe<T> result = _rightPlayer.PlayRight(options);
+            if (result.HasValue)
+            {
+                Position = result.Value;
+                return;
+            }
+
+            _gameIsOver = true;
+            _winner = _leftPlayer;
+
         }
         #endregion
     }

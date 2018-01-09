@@ -76,6 +76,24 @@ namespace MonadTests
         }
 
         [TestMethod]
+        public void Select()
+        {
+            intMaybe = 7.ToMaybe();
+
+            stringMaybe = intMaybe.Select<int, string>(null);
+            Assert.IsFalse(stringMaybe.HasValue);
+            Assert.AreEqual(default(string), stringMaybe.Value);
+            Assert.AreEqual("select was null", stringMaybe.Explanation);
+
+
+            stringMaybe = intMaybe.Select<int, string>(
+                x => (3 * x).ToString());
+            Assert.IsTrue(stringMaybe.HasValue);
+            Assert.AreEqual("21", stringMaybe.Value);
+            Assert.AreEqual("ok", stringMaybe.Explanation);
+        }
+
+        [TestMethod]
         public void SelectMany()
         {
             intMaybe = 7.ToMaybe();

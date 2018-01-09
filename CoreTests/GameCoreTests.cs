@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using GameCore;
-using Utilities;
 using Monads;
 using System.Linq;
 

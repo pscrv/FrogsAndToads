@@ -83,7 +83,24 @@ namespace Monads
 
             return Maybe<U>.Nothing();
         }
-    }
+   
 
+        public static Maybe<T> Select<S, T>(
+              this Maybe<S> source,
+              Func<S, T> select)
+        {
+
+            if (select == null)
+                return Maybe<T>.Nothing($"{nameof(select)} was null");
+
+            if(source.HasValue)
+                return
+                    select(source.Value)
+                    .ToMaybe();
+
+            return Maybe<T>.Nothing();
+        }
+
+    }
 }
     

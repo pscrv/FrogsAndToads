@@ -48,7 +48,6 @@ namespace ConsoleUI
         static void PlayInTurns(FrogsAndToadsGame game)
         {
             while (! game.GameIsOver)
-            //foreach (FrogsAndToadsPosition position in game.GameMoves())
             {
                 Console.WriteLine();
                 Console.WriteLine($"   current position is {game.Position}");

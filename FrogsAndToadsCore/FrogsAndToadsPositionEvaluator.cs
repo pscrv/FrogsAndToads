@@ -5,7 +5,7 @@ using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator<FrogsAndToadsPosition>
+    public abstract class FrogsAndToadsPositionEvaluator : PartisanGamePositionEvaluator<FrogsAndToadsPosition>
     {
         internal abstract int ToadEvaluation(FrogsAndToadsPosition position);
         internal abstract int FrogEvaluation(FrogsAndToadsPosition position);
@@ -58,7 +58,7 @@ namespace FrogsAndToadsCore
 
         internal int EvaluateEndPositionForFrogs(FrogsAndToadsPosition position)
         {
-            return -EvaluateEndPositionForToads(position.Reverse);
+            return -EvaluateEndPositionForToads(position.Reverse());
         }
 
         internal List<(FrogsAndToadsMove move, int value)> EvaluateToadMoves(FrogsAndToadsPosition position)

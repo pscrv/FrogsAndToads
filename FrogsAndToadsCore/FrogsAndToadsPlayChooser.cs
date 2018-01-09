@@ -8,7 +8,7 @@ using Monads;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class FrogsAndToadsPlayChooser : GamePlayer<FrogsAndToadsPosition>
+    public abstract class FrogsAndToadsPlayChooser : PartisanGamePlayer<FrogsAndToadsPosition>
     {
         #region construction
         public FrogsAndToadsPlayChooser(string label) 
@@ -25,13 +25,18 @@ namespace FrogsAndToadsCore
             : base(label)
         { }
 
-        public override Maybe<FrogsAndToadsPosition> Play(IEnumerable<FrogsAndToadsPosition> playOptions)
+        public override Maybe<FrogsAndToadsPosition> PlayLeft(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
             return
                 playOptions.Count() == 0
                 ? Maybe<FrogsAndToadsPosition>.Nothing()
                 : playOptions.First().ToMaybe();                    
-        }        
+        }
+
+        public override Maybe<FrogsAndToadsPosition> PlayRight(IEnumerable<FrogsAndToadsPosition> playOptions)
+        {
+            return PlayLeft(playOptions);
+        }
     }
 
 
@@ -42,7 +47,7 @@ namespace FrogsAndToadsCore
             : base(label)
         { }
 
-        public override Maybe<FrogsAndToadsPosition> Play(IEnumerable<FrogsAndToadsPosition> playOptions)
+        public override Maybe<FrogsAndToadsPosition> PlayLeft(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
             const ConsoleColor choiceColor = ConsoleColor.Yellow;
 
@@ -73,6 +78,11 @@ namespace FrogsAndToadsCore
             return playOptions.ToList()[result].ToMaybe();
         }
 
+        public override Maybe<FrogsAndToadsPosition> PlayRight(IEnumerable<FrogsAndToadsPosition> playOptions)
+        {
+            return PlayLeft(playOptions);
+        }
+
         private string ListToString<T>(List<T> list)
         {
             StringBuilder sb = new StringBuilder();
@@ -89,13 +99,35 @@ namespace FrogsAndToadsCore
 
 
 
-    public class MiniMiniMaxChooser : FrogsAndToadsPlayChooser
+    public abstract class SymmetricChooser : FrogsAndToadsPlayChooser
+    {
+        public SymmetricChooser(string label) 
+            : base(label)
+        { }
+
+
+        public override Maybe<FrogsAndToadsPosition> PlayRight(IEnumerable<FrogsAndToadsPosition> playOptions)
+        {
+            var reversedOptions =
+                from x in playOptions
+                select x.Reverse();
+
+            var bestOption = PlayLeft(reversedOptions);
+
+            return
+                from x in bestOption
+                select x.Reverse();
+        }
+    }
+
+
+    public class MiniMiniMaxChooser : SymmetricChooser
     {
         public MiniMiniMaxChooser(string label) 
             : base(label)
         { }
 
-        public override Maybe<FrogsAndToadsPosition> Play(IEnumerable<FrogsAndToadsPosition> playOptions)
+        public override Maybe<FrogsAndToadsPosition> PlayLeft(IEnumerable<FrogsAndToadsPosition> playOptions)
         {
             if (playOptions.Count() == 0)
                 return Maybe<FrogsAndToadsPosition>.Nothing();
@@ -135,19 +167,26 @@ namespace FrogsAndToadsCore
 
             return bestOption.ToMaybe();
         }
+        
     }
 
 
 
-    public class EvaluatingChooser : FrogsAndToadsPlayChooser
+    public class EvaluatingChooser : SymmetricChooser
     {
+        public EvaluatingChooser(string label, PartisanGamePositionEvaluator<FrogsAndToadsPosition> evaluator)
+            :base(label)
+        {
+            _evaluator = evaluator;        
+        }
+
         #region private attributes
-        private GamePositionEvaluator<FrogsAndToadsPosition> _evaluator;
+        private PartisanGamePositionEvaluator<FrogsAndToadsPosition> _evaluator;
         #endregion
 
 
         #region abstract overrides
-        public override Maybe<FrogsAndToadsPosition> Play(IEnumerable<FrogsAndToadsPosition> playOptions)
+        public override Maybe<FrogsAndToadsPosition> PlayLeft(IEnumerable<FrogsAndToadsPosition> playOptions)
         {              
 
             if (playOptions.Count() == 0)
@@ -171,17 +210,6 @@ namespace FrogsAndToadsCore
 
             return bestOption.ToMaybe();
         }
-        
         #endregion
-
-
-
-        public EvaluatingChooser(string label, GamePositionEvaluator<FrogsAndToadsPosition> evaluator)
-            :base(label)
-        {    _evaluator = evaluator;
-        
-        }
-        
-        
     }
 }

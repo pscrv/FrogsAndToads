@@ -34,17 +34,17 @@ namespace CoreTests
             chooser = new MiniMiniMaxChooser("");
             position = new FrogsAndToadsPosition("T_TF_F");
 
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(2, 4);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
 
             position = new FrogsAndToadsPosition("T_TT_F");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(3, 4);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
 
             position = new FrogsAndToadsPosition("T__TF_");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(0, 1);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
         }
@@ -56,49 +56,49 @@ namespace CoreTests
             chooser = new EvaluatingChooser("", new MiniMaxEvaluator());
 
             position = new FrogsAndToadsPosition("T___");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(0, 1);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
 
 
             position = new FrogsAndToadsPosition("T_T_");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(0, 1);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
 
 
             position = new FrogsAndToadsPosition("T_T_F");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(2, 3);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
 
 
             position = new FrogsAndToadsPosition("TF_TF_TF__TF");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(0, 2);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
        
 
             position = new FrogsAndToadsPosition("T___");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(0, 1);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
 
 
             position = new FrogsAndToadsPosition("T_T_");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(0, 1);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
 
 
             position = new FrogsAndToadsPosition("T_T_F");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(2, 3);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
 
 
             position = new FrogsAndToadsPosition("TF_TF_TF__TF");
-            result = chooser.Play(_options);
+            result = chooser.PlayLeft(_options);
             correctMove = new FrogsAndToadsMove(0, 2);
             Assert.AreEqual(position.PlayMove(correctMove).ToString(), result.Value.ToString());
         }

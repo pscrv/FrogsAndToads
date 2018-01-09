@@ -7,7 +7,7 @@ using Monads;
 
 namespace FrogsAndToadsCore
 {
-    public class FrogsAndToadsPosition : GamePosition
+    public class FrogsAndToadsPosition : PartisanGamePosition
     {
         #region static
         internal static FrogsAndToadsPosition MakeInitialPosition()
@@ -27,7 +27,6 @@ namespace FrogsAndToadsCore
         #endregion
 
 
-
         #region internal properties       
         internal int Length => _track.Length;
 
@@ -41,12 +40,13 @@ namespace FrogsAndToadsCore
         }
 
 
-        internal FrogsAndToadsPosition Reverse
-            => new FrogsAndToadsPosition(
+        internal FrogsAndToadsPosition Reverse()
+        { 
+            return new FrogsAndToadsPosition(
                 _track.Reverse()
                 .Select(x => x.Converse)
                 .ToArray());
-
+        }       
         #endregion
 
 
@@ -382,8 +382,7 @@ namespace FrogsAndToadsCore
                 && _track[target] is Space;
         }
         #endregion
-
-
+                
 
 
         #region overrides

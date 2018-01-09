@@ -34,7 +34,7 @@ namespace CoreTests
             evaluator = new MiniMaxEvaluator();
             value = evaluator.LeftEvaluation(position);
             Assert.AreEqual(0, value);
-            value = evaluator.LeftEvaluation(position.Reverse as FrogsAndToadsPosition);
+            value = evaluator.LeftEvaluation(position.Reverse() as FrogsAndToadsPosition);
             Assert.AreEqual(0, value);
 
             position = new FrogsAndToadsPosition(gameString3);
@@ -65,7 +65,7 @@ namespace CoreTests
             Assert.AreEqual(1, x.Skip(1).First().value);
 
             position = position.PlayMove(new FrogsAndToadsMove(0, 2));
-            x = evaluator.EvaluateToadMoves(position.Reverse);
+            x = evaluator.EvaluateToadMoves(position.Reverse());
             Assert.AreEqual(2, x.Count);
             Assert.AreEqual(2, x.First().value);
             Assert.AreEqual(-1, x.Skip(1).First().value);

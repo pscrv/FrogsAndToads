@@ -1,20 +1,22 @@
-﻿using FrogsAndToadsCore;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using FrogsAndToadsCore;
+using GameCore;
 
 namespace CoreTests
 {
     [TestClass]
-    public class GameTests
+    public class PartisanGameTests
     {
         FrogsAndToadsPlayChooser toadPlayer = new TrivialChooser("Toads");
         FrogsAndToadsPlayChooser frogPlayer = new TrivialChooser("Frogs");
 
-        
+
         [TestMethod]
         public void Play()
         {
-            FrogsAndToadsGame game = new FrogsAndToadsGame(toadPlayer, frogPlayer, "T_F"); 
+            FrogsAndToadsGame game = new FrogsAndToadsGame(toadPlayer, frogPlayer, "T_F");
             game.Play();
 
             Assert.AreEqual(4, game.History.Count);
@@ -23,23 +25,5 @@ namespace CoreTests
             Assert.AreEqual("< F T _ >", game.History[2].ToString());
             Assert.AreEqual("< F _ T >", game.History[3].ToString());
         }
-
-        [TestMethod]
-        public void PlayOneMove()
-        {
-            FrogsAndToadsGame game = new FrogsAndToadsGame(toadPlayer, frogPlayer, "T_F");
-            Assert.AreEqual("< T _ F >", game.PositionString);
-
-            game.PlayLeft();
-            Assert.AreEqual("< _ T F >", game.PositionString);
-
-            game.PlayRight();
-            Assert.AreEqual("< F T _ >", game.PositionString);
-
-            game.PlayLeft();
-            Assert.AreEqual("< F _ T >", game.PositionString);
-        }
-
-        
     }
 }

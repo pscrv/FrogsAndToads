@@ -5,7 +5,7 @@ using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public class FrogsAndToadsGame : Game<FrogsAndToadsPosition>
+    public class FrogsAndToadsGame : PartisanGame<FrogsAndToadsPosition>
     {
 
         #region public properties
@@ -19,16 +19,16 @@ namespace FrogsAndToadsCore
 
         #region construction
         public FrogsAndToadsGame(
-            GamePlayer<FrogsAndToadsPosition> leftPlayer, 
-            GamePlayer<FrogsAndToadsPosition> rightPlayer, 
+            PartisanGamePlayer<FrogsAndToadsPosition> leftPlayer, 
+            PartisanGamePlayer<FrogsAndToadsPosition> rightPlayer, 
             FrogsAndToadsPosition initialPosition)
             : base(leftPlayer, rightPlayer, initialPosition)
         { }
 
 
         public FrogsAndToadsGame(
-            GamePlayer<FrogsAndToadsPosition> leftPlayer,
-            GamePlayer<FrogsAndToadsPosition> rightPlayer,
+            PartisanGamePlayer<FrogsAndToadsPosition> leftPlayer,
+            PartisanGamePlayer<FrogsAndToadsPosition> rightPlayer,
             string positionString)
             : base(leftPlayer, rightPlayer, new FrogsAndToadsPosition(positionString))
         { }
