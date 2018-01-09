@@ -47,7 +47,6 @@
     <Compile Include="GamePlayer.cs" />
     <Compile Include="GamePosition.cs" />
     <Compile Include="GamePositionEvaluator.cs" />
-    <Compile Include="PartisanGamePositionEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

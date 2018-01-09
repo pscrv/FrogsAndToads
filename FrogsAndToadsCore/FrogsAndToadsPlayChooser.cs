@@ -174,14 +174,14 @@ namespace FrogsAndToadsCore
 
     public class EvaluatingChooser : SymmetricChooser
     {
-        public EvaluatingChooser(string label, PartisanGamePositionEvaluator<FrogsAndToadsPosition> evaluator)
+        public EvaluatingChooser(string label, GamePositionEvaluator<FrogsAndToadsPosition> evaluator)
             :base(label)
         {
             _evaluator = evaluator;        
         }
 
         #region private attributes
-        private PartisanGamePositionEvaluator<FrogsAndToadsPosition> _evaluator;
+        private GamePositionEvaluator<FrogsAndToadsPosition> _evaluator;
         #endregion
 
 

@@ -79,15 +79,15 @@ namespace GameCore
 
         #region internal methods
         internal void PlayLeft() =>
-            _play(_leftPlayer.PlayLeft(GetLeftOptions(Position)));
+            _play(_leftPlayer.PlayLeft(GetLeftOptions(Position)), _rightPlayer);
 
         internal void PlayRight() =>
-            _play(_rightPlayer.PlayRight(GetRightOptions(Position)));
+            _play(_rightPlayer.PlayRight(GetRightOptions(Position)), _leftPlayer);
         #endregion
 
 
         #region private methods
-        private void _play(Maybe<T> selection)
+        private void _play(Maybe<T> selection, GamePlayer<T> inactivePlayer)
         {
             if (selection is Maybe<T> newPosition
                 && newPosition.HasValue)
@@ -97,7 +97,7 @@ namespace GameCore
             }
 
             _gameIsOver = true;
-            _winner = _leftPlayer;
+            _winner = inactivePlayer;
         }
         #endregion
     }

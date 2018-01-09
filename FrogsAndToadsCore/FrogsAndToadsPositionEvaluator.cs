@@ -5,7 +5,7 @@ using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class FrogsAndToadsPositionEvaluator : PartisanGamePositionEvaluator<FrogsAndToadsPosition>
+    public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator<FrogsAndToadsPosition>
     {
         internal abstract int ToadEvaluation(FrogsAndToadsPosition position);
         internal abstract int FrogEvaluation(FrogsAndToadsPosition position);
