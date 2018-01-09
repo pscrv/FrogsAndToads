@@ -1,6 +1,6 @@
 ﻿namespace GameCore
 {
-    public abstract class PartisanGamePositionEvaluator<T> where T : PartisanGamePosition
+    public abstract class PartisanGamePositionEvaluator<T> where T : GamePosition
     {
         #region abstract
         public abstract int LeftEvaluation(T position);

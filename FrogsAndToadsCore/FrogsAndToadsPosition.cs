@@ -7,7 +7,7 @@ using Monads;
 
 namespace FrogsAndToadsCore
 {
-    public class FrogsAndToadsPosition : PartisanGamePosition
+    public class FrogsAndToadsPosition : GamePosition
     {
         #region static
         internal static FrogsAndToadsPosition MakeInitialPosition()

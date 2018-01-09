@@ -5,7 +5,7 @@ using Monads;
 
 namespace GameCore
 {
-    public abstract class PartisanGame<T> where T : PartisanGamePosition
+    public abstract class PartisanGame<T> where T : GamePosition
     {
         #region absract
         public abstract IEnumerable<T> GetLeftOptions(T position);
