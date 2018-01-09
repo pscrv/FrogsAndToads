@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Monads;
 
@@ -78,37 +79,26 @@ namespace GameCore
 
 
         #region internal methods
-        internal void PlayLeft()
-        {
-            IEnumerable<T> options = GetLeftOptions(Position);
+        internal void PlayLeft() =>
+            _play(_leftPlayer.PlayLeft(GetLeftOptions(Position)));
 
-            Maybe<T> result = _leftPlayer.PlayLeft(options);
+        internal void PlayRight() =>
+            _play(_rightPlayer.PlayRight(GetRightOptions(Position)));
+        #endregion
 
-            if (result.HasValue)
+
+        #region private methods
+        private void _play(Maybe<T> selection)
+        { 
+            if (selection is Maybe<T> newPosition
+                && newPosition.HasValue)
             {
-                Position = result.Value;
-                return;
-            }
-
-            _gameIsOver = true;
-            _winner = _rightPlayer;
-        }
-
-
-        internal void PlayRight()
-        {
-            IEnumerable<T> options = GetRightOptions(Position);
-
-            Maybe<T> result = _rightPlayer.PlayRight(options);
-            if (result.HasValue)
-            {
-                Position = result.Value;
+                Position = newPosition.Value;
                 return;
             }
 
             _gameIsOver = true;
             _winner = _leftPlayer;
-
         }
         #endregion
     }
