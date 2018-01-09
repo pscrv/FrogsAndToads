@@ -75,12 +75,17 @@ namespace CoreTests
             
 
 
-            public override Maybe<NimPosition> Play(IEnumerable<NimPosition> playOptions)
+            public override Maybe<NimPosition> PlayLeft(IEnumerable<NimPosition> playOptions)
             {
                 if (playOptions.Count() == 0)
                     return Maybe<NimPosition>.Nothing();
                 
                 return playOptions.First().ToMaybe();
+            }
+
+            public override Maybe<NimPosition> PlayRight(IEnumerable<NimPosition> playOptions)
+            {
+                return PlayLeft(playOptions);
             }
         }
 

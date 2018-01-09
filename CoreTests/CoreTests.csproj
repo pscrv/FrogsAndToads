@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="GameCoreTests.cs" />
     <Compile Include="GameTests.cs" />
-    <Compile Include="PartisanGameTests.cs" />
     <Compile Include="PlayerTests.cs" />
     <Compile Include="PositionEvaluatorTests.cs" />
     <Compile Include="PositionTests.cs" />

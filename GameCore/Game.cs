@@ -58,7 +58,7 @@ namespace GameCore
         #region public methods
         public void Play()
         {
-            while (! _gameIsOver)
+            while (!_gameIsOver)
             {
                 PlayRound();
             }
@@ -66,49 +66,38 @@ namespace GameCore
 
         public void PlayRound()
         {
-            _play(_leftPlayer);
+            PlayLeft();
             if (GameIsOver)
                 return;
 
-            _play(_rightPlayer);
+            PlayRight();
         }
         #endregion
+
 
 
 
         #region internal methods
-        internal void PlayLeftMove()
-        {
-            _play(_leftPlayer);
-        }
+        internal void PlayLeft() =>
+            _play(_leftPlayer.PlayLeft(GetLeftOptions(Position)));
 
-        internal void PlayRightMove()
-        {
-            _play(_rightPlayer);
-        }
+        internal void PlayRight() =>
+            _play(_rightPlayer.PlayRight(GetRightOptions(Position)));
         #endregion
 
 
         #region private methods
-        private void _play(
-            GamePlayer<T> activePlayer)
+        private void _play(Maybe<T> selection)
         {
-            bool isLeftPlay = activePlayer == _leftPlayer;
-
-            IEnumerable<T> options =
-                isLeftPlay ?
-                GetLeftOptions(Position) :
-                GetRightOptions(Position);
-
-            Maybe<T> result = activePlayer.Play(options);
-            if (!result.HasValue)
+            if (selection is Maybe<T> newPosition
+                && newPosition.HasValue)
             {
-                _gameIsOver = true;
-                _winner = isLeftPlay ? _rightPlayer : _leftPlayer;
+                Position = newPosition.Value;
                 return;
             }
-            
-            Position = result.Value;
+
+            _gameIsOver = true;
+            _winner = _leftPlayer;
         }
         #endregion
     }

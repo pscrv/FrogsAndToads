@@ -8,7 +8,7 @@ using Monads;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class FrogsAndToadsPlayChooser : PartisanGamePlayer<FrogsAndToadsPosition>
+    public abstract class FrogsAndToadsPlayChooser : GamePlayer<FrogsAndToadsPosition>
     {
         #region construction
         public FrogsAndToadsPlayChooser(string label) 
