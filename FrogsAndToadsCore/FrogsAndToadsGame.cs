@@ -38,20 +38,14 @@ namespace FrogsAndToadsCore
 
         #region Game overrides
         public override IEnumerable<FrogsAndToadsPosition> GetLeftOptions(FrogsAndToadsPosition position)
-        {
-            return 
-                position
-                .GetPossibleToadMoves()
-                .Select(x => Position.PlayMove(x));
-        }
+            => from x in position.GetPossibleToadMoves()
+               select Position.PlayMove(x);
+        
 
         public override IEnumerable<FrogsAndToadsPosition> GetRightOptions(FrogsAndToadsPosition position)
-        {
-            return 
-                position
-                .GetPossibleFrogMoves()
-                .Select(x => Position.PlayMove(x));
-        }
+            => from x in position.GetPossibleFrogMoves()
+               select Position.PlayMove(x);
+        
         #endregion
     }
 }
