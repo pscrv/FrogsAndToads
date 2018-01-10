@@ -35,18 +35,11 @@ namespace FrogsAndToadsCore
         internal int FrogCount => _track.Count(x => x is Frog);
 
         internal FrogsAndToadsPiece this[int index]
-        {
-            get => _track[index];
-        }
+            => _track[index];
 
 
         internal FrogsAndToadsPosition Reverse()
-        { 
-            return new FrogsAndToadsPosition(
-                _track.Reverse()
-                .Select(x => x.Converse)
-                .ToArray());
-        }       
+            => new FrogsAndToadsPosition(_reverseTrack());
         #endregion
 
 
@@ -109,15 +102,12 @@ namespace FrogsAndToadsCore
         #region internal methods
         internal bool CanMovePiece(int index)
         {
-            if (index < 0 || index >= _track.Length)
+            if (_locationIsInvalid(index))
                 throw new IndexOutOfRangeException();
-
-
-            if (_track[index].Move == 0)
-                return false;
-
-            int moveTarget = index + _track[index].Move;
-            return _targetIsFree(moveTarget);
+            
+            return 
+                _isMovablePiece(_track[index]) 
+                &&_targetIsFree(index + _track[index].Move);
         }
         
         internal FrogsAndToadsPosition PlayMove(FrogsAndToadsMove move)
@@ -139,7 +129,6 @@ namespace FrogsAndToadsCore
         {
             return _getPossibleMoves(x => x is Frog);
         }
-
 
 
         internal FrogsAndToadsPosition SubPosition(int leftIndex, int rightIndex)
@@ -193,6 +182,15 @@ namespace FrogsAndToadsCore
 
 
         #region private methods
+        private FrogsAndToadsPiece[] _reverseTrack()
+        {
+            return 
+                (from x in _track.Reverse()
+                 select x.Converse)
+                 .ToArray();
+        }
+
+
         private Maybe<(int start, int end)> _getDeadKnot(FrogsAndToadsPosition position, int offset)
         {
             int start;
@@ -317,7 +315,6 @@ namespace FrogsAndToadsCore
         }
         
 
-
         private List<FrogsAndToadsMove> _getPossibleMoves(Predicate<FrogsAndToadsPiece> pieceChooser)
         {
             FrogsAndToadsPiece currentPiece;
@@ -349,38 +346,24 @@ namespace FrogsAndToadsCore
 
             return possibleMoves;
         }
-
-
-
-        private bool _locationIsOccupied(int target)
-        {
-            return ! (_track[target] is Space);
-        }
-
-        private bool _targetIsJumpable(int target, FrogsAndToadsPiece piece)
-        {
-            return _track[target] == piece.Converse;
-        }
+        
 
         private bool _locationIsInvalid(int location)
-        {
-            return 
-                location < 0
-                || location >= Length;
-        }
+            => location < 0 || location >= Length;
+
+        private bool _locationIsOccupied(int target)
+            => ! (_track[target] is Space);
+
+        private bool _targetIsJumpable(int target, FrogsAndToadsPiece piece)
+            => _track[target] == piece.Converse;
 
         private bool _isMovablePiece(FrogsAndToadsPiece gamePiece)
-        {
-            return gamePiece.Move != 0;
-        }
+            => gamePiece.Move != 0;
 
         private bool _targetIsFree(int target)
-        {
-            return 
-                target >= 0
-                && target < _track.Length
-                && _track[target] is Space;
-        }
+            => target >= 0
+               && target < _track.Length
+               && _track[target] is Space;
         #endregion
                 
 
@@ -399,26 +382,6 @@ namespace FrogsAndToadsCore
             return sb.ToString();
         }
         #endregion
-
-
-
-        #region private classes
-        //private class FindKnot : Try<(int start, int end)>
-        //{
-        //    private static FindKnot _failureInstance = new FindKnot();
-        //    internal static new FindKnot Failure => _failureInstance;
-        //    internal static new FindKnot Success((int start, int end) x)
-        //        => new FindKnot((x.start, x.end));
-
-        //    private FindKnot((int start, int end) x)
-        //        : base((x.start, x.end))
-        //    { }
-
-        //    private FindKnot()
-        //        : base()
-        //    { }
-        //}
         
-        #endregion
     }
 }
