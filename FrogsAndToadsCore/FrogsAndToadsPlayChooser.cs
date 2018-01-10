@@ -185,7 +185,7 @@ namespace FrogsAndToadsCore
         #endregion
 
 
-        #region abstract overrides
+        #region SymmetricChooser overrides
         public override Maybe<FrogsAndToadsPosition> PlayLeft(IEnumerable<FrogsAndToadsPosition> playOptions)
         {              
 

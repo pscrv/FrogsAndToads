@@ -26,7 +26,7 @@ namespace FrogsAndToadsCore
 
     public class MiniMaxEvaluator : FrogsAndToadsPositionEvaluator
     {
-        #region abstract overrides
+        #region FrogAndToadsPositionEvaluator overrides
         internal override int ToadEvaluation(FrogsAndToadsPosition position)
         {
             return _evaluatePositionForToad(
@@ -51,9 +51,10 @@ namespace FrogsAndToadsCore
         #region internal
         internal int EvaluateEndPositionForToads(FrogsAndToadsPosition position)
         {
-            List<FrogsAndToadsPosition> subPositions = position.GetSubPositions();
-            return subPositions.Sum(
-                x => _evaluateEndPositionForToads(x));
+            return 
+                position
+                .GetSubPositions()
+                .Sum(x => _evaluateEndPositionForToads(x));
         }
 
         internal int EvaluateEndPositionForFrogs(FrogsAndToadsPosition position)
@@ -63,15 +64,10 @@ namespace FrogsAndToadsCore
 
         internal List<(FrogsAndToadsMove move, int value)> EvaluateToadMoves(FrogsAndToadsPosition position)
         {
-            List<(FrogsAndToadsMove, int)> result = new List<(FrogsAndToadsMove, int)>();
-
-            foreach (FrogsAndToadsMove move in position.GetPossibleToadMoves())
-            {
-                FrogsAndToadsPosition resultingPosition = position.PlayMove(move);
-                result.Add((move, FrogEvaluation(resultingPosition)));
-            }
-
-            return result;
+            return
+                (from move in position.GetPossibleToadMoves()
+                 select (move, FrogEvaluation(position.PlayMove(move))))
+                 .ToList();
         }
 
         #endregion
@@ -143,13 +139,6 @@ namespace FrogsAndToadsCore
         }
 
         
-
-        private int _evaluateSimpleEndPosition(FrogsAndToadsPosition position)
-        {
-            return
-                EvaluateEndPositionForToads(position)
-                + EvaluateEndPositionForFrogs(position);
-        }
 
         private int _evaluateEndPositionForToads(FrogsAndToadsPosition position)
         {            
