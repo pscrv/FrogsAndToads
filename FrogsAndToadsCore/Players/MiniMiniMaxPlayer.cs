@@ -10,47 +10,15 @@ namespace FrogsAndToadsCore
             : base(label)
         { }
 
-        public override Maybe<FrogsAndToadsPosition> PlayLeft(IEnumerable<FrogsAndToadsPosition> playOptions)
+
+        #region SymmetricPlayer overrides
+        protected override int _getOptionValue(FrogsAndToadsPosition position)
         {
-            if (playOptions.Count() == 0)
-                return Maybe<FrogsAndToadsPosition>.Nothing();
-
-            if (playOptions.Count() == 1)
-                return playOptions.First().ToMaybe();
-
-            FrogsAndToadsPosition bestOption = playOptions.First();
-            FrogsAndToadsPosition currentOption;
-            int maximum = int.MinValue;
-            foreach (FrogsAndToadsPosition option in playOptions)
-            {
-                currentOption = option;
-                
-                List<FrogsAndToadsMove> possibleResponses = currentOption.GetPossibleFrogMoves();
-
-                int minimum = int.MaxValue;
-                foreach (FrogsAndToadsMove response in possibleResponses)
-                {
-                    int reResponseCount = 
-                        currentOption
-                        .PlayMove(response)
-                        .GetPossibleToadMoves()
-                        .Count;
-
-                    if (reResponseCount < minimum)
-                        minimum = reResponseCount;
-                }
-
-                if (minimum > maximum)
-                {
-                    maximum = minimum;
-                    bestOption = option;
-                }
-
-            }
-
-            return bestOption.ToMaybe();
+            return
+                position
+                .GetPossibleFrogMoves() 
+                .Min(x => position.PlayMove(x).GetPossibleToadMoves().Count);
         }
-
-        
+        #endregion
     }
 }
