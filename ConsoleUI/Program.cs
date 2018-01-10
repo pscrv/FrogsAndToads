@@ -14,8 +14,8 @@ namespace ConsoleUI
 
         static void Main(string[] args)
         {
-            FrogsAndToadsPlayChooser _toadChooser = new ConsoleChooser("Toads");
-            FrogsAndToadsPlayChooser _frogsChooser = new EvaluatingChooser("Frogs", new MiniMaxEvaluator());
+            FrogsAndToadsPlayer _toadChooser = new ConsolePlayer("Toads");
+            FrogsAndToadsPlayer _frogsChooser = new EvaluatingPlayer("Frogs", new MiniMaxEvaluator());
             FrogsAndToadsGame game = new FrogsAndToadsGame(
                 _toadChooser,
                 _frogsChooser,

@@ -7,8 +7,8 @@ namespace CoreTests
     [TestClass]
     public class GameTests
     {
-        FrogsAndToadsPlayChooser toadPlayer = new TrivialChooser("Toads");
-        FrogsAndToadsPlayChooser frogPlayer = new TrivialChooser("Frogs");
+        FrogsAndToadsPlayer toadPlayer = new TrivialPlayer("Toads");
+        FrogsAndToadsPlayer frogPlayer = new TrivialPlayer("Frogs");
 
         
         [TestMethod]

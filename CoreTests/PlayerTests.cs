@@ -11,7 +11,7 @@ namespace CoreTests
     [TestClass]
     public class PlayerTests
     {
-        FrogsAndToadsPlayChooser chooser;
+        FrogsAndToadsPlayer chooser;
         Maybe<FrogsAndToadsPosition> result;
         FrogsAndToadsPosition position;
         FrogsAndToadsMove correctMove;
@@ -31,7 +31,7 @@ namespace CoreTests
         [TestMethod]
         public void MiniMiniMax()
         {
-            chooser = new MiniMiniMaxChooser("");
+            chooser = new MiniMiniMaxPlayer("");
             position = new FrogsAndToadsPosition("T_TF_F");
 
             result = chooser.PlayLeft(_options);
@@ -53,7 +53,7 @@ namespace CoreTests
         [TestMethod]
         public void MiniMax()
         {
-            chooser = new EvaluatingChooser("", new MiniMaxEvaluator());
+            chooser = new EvaluatingPlayer("", new MiniMaxEvaluator());
 
             position = new FrogsAndToadsPosition("T___");
             result = chooser.PlayLeft(_options);
