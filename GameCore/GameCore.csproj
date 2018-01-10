@@ -54,10 +54,6 @@
       <Project>{43de8fec-5165-4de0-b3b8-40fc7b70bd03}</Project>
       <Name>Monads</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Project>{ba2a6c8e-e743-4ce5-9f0d-2a1bef0d938f}</Project>
-      <Name>Utilities</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
