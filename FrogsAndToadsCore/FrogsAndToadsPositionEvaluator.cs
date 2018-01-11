@@ -6,28 +6,14 @@ using GameCore;
 namespace FrogsAndToadsCore
 {
     public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator<FrogsAndToadsPosition>
-    {
-        internal abstract int ToadEvaluation(FrogsAndToadsPosition position);
-        internal abstract int FrogEvaluation(FrogsAndToadsPosition position);
-
-
-        public override int LeftEvaluation(FrogsAndToadsPosition position)
-        {
-            return ToadEvaluation(position);
-        }
-
-        public override int RightEvaluation(FrogsAndToadsPosition position)
-        {
-            return FrogEvaluation(position);
-        }
-    }
+    { }
 
 
 
     public class MiniMaxEvaluator : FrogsAndToadsPositionEvaluator
     {
         #region FrogAndToadsPositionEvaluator overrides
-        internal override int ToadEvaluation(FrogsAndToadsPosition position)
+        public override int LeftEvaluation(FrogsAndToadsPosition position)
         {
             return _evaluatePositionForToad(
                 position,
@@ -37,7 +23,7 @@ namespace FrogsAndToadsCore
         }
 
 
-        internal override int FrogEvaluation(FrogsAndToadsPosition position)
+        public override int RightEvaluation(FrogsAndToadsPosition position)
         {
             return _evaluatePositionForFrog(
                 position,
@@ -66,7 +52,7 @@ namespace FrogsAndToadsCore
         {
             return
                 (from move in position.GetPossibleToadMoves()
-                 select (move, FrogEvaluation(position.PlayMove(move))))
+                 select (move, RightEvaluation(position.PlayMove(move))))
                  .ToList();
         }
 

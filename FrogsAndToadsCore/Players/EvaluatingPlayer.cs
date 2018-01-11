@@ -20,14 +20,10 @@ namespace FrogsAndToadsCore
 
 
         #region SymmetricChooser overrides
-
         protected override int _getOptionValue(FrogsAndToadsPosition option)
         {
             return _evaluator.RightEvaluation(option);
         }
-
-
-
         #endregion
     }
 }
