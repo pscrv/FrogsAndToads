@@ -151,27 +151,29 @@ namespace FrogsAndToadsCore
 
         internal List<FrogsAndToadsPosition> GetSubPositions()
         {
-            List<FrogsAndToadsPosition> result = new List<FrogsAndToadsPosition>();
+            List <FrogsAndToadsPosition> result = new List<FrogsAndToadsPosition>();
 
-            Maybe<(int start, int end)> findDeadKnot = _getDeadKnot(this, 0);
-            if (!findDeadKnot.HasValue)
+            KnotFinder finder = new KnotFinder(_track);
+            Maybe<(int start, int end)> maybeDeadKnot = finder.FirstDeadKnot;
+            
+            if (!maybeDeadKnot.HasValue)
             {
                 result.Add(this);
                 return result;
             }
 
-            int knotStart = findDeadKnot.Value.start;
-            int knotEnd = findDeadKnot.Value.end;
+            int knotStart = maybeDeadKnot.Value.start;
+            int knotEnd = maybeDeadKnot.Value.end;
 
             if (knotStart > 0)
             {
-                result.Add(SubPosition(0, findDeadKnot.Value.start - 1));
+                result.Add(SubPosition(0, maybeDeadKnot.Value.start - 1));
             }
 
             if (knotEnd < Length - 1)
             {
                 result.AddRange(
-                        SubPosition(findDeadKnot.Value.end + 1, Length - 1)
+                        SubPosition(maybeDeadKnot.Value.end + 1, Length - 1)
                         .GetSubPositions());
             }
 
@@ -191,129 +193,6 @@ namespace FrogsAndToadsCore
         }
 
 
-        private Maybe<(int start, int end)> _getDeadKnot(FrogsAndToadsPosition position, int offset)
-        {
-            int start;
-            int deadStart;
-            int end;
-            int deadEnd;
-            int lastIndex = Length - 1;
-            
-
-            _setStartAtFirstToad();
-            if (start < 0)
-                return Maybe<(int, int)>.Nothing();
-
-            _setEndAtEndOfKnot();
-            //if (end < 0)
-            //    return Maybe<(int, int)>.Nothing();
-
-            _findDeadStart();
-            if (deadStart < 0)
-            {
-                if (end == lastIndex)
-                    return Maybe<(int, int)>.Nothing();
-
-                return _getDeadKnot(position, end + 1);
-            }
-
-            _findDeadEnd();
-            if (deadEnd < 0)
-            {
-                if (end == lastIndex)
-                    return Maybe<(int, int)>.Nothing();
-
-                return _getDeadKnot(position, end + 1);
-            }
-
-            return (deadStart, deadEnd).ToMaybe();
-
-
-
-
-            void _setStartAtFirstToad()
-            {
-                for (start = offset; start < Length; start++)
-                {
-                    if (position[start] is Toad)
-                        return;
-                }
-
-                start = -1;
-            }
-
-            void _setEndAtEndOfKnot()
-            {
-                for (end = start + 1; end < Length; end++)
-                {
-                    if (position[end] is Space)
-                    {
-                        end--;
-                        return;
-                    }
-                }
-                
-                end = Length - 1;
-            }
-
-            void _findDeadStart()
-            {
-                for (deadStart = start; deadStart < end; deadStart++)
-                {
-                    var i = deadStart;
-
-                    if (_isPossibleDeadStart())
-                        return;
-                }
-
-                deadStart = -1;
-            }
-
-            void _findDeadEnd()
-            {
-                for (deadEnd = end; deadEnd > deadStart; deadEnd--)
-                {
-                    var i = deadStart;
-                    var j = deadEnd;
-
-                    if (_isPossibleDeadEnd())
-                        return;
-                }
-
-                deadEnd = -1;
-            }
-            
-            bool _isPossibleDeadStart()
-            {
-                if (!(position[deadStart] is Toad))
-                    return false;
-
-                return (
-                    (deadStart == 0 
-                        && position[deadStart] is Toad)
-                    || 
-                    (deadStart > 0 
-                        && deadStart < lastIndex 
-                        && position[deadStart] is Toad 
-                        && position[deadStart + 1] is Toad));
-            }
-
-            bool _isPossibleDeadEnd()
-            {
-                if (!(position[deadEnd] is Frog))
-                    return false;
-
-                return (
-                    (deadEnd == lastIndex 
-                        && position[deadEnd] is Frog)
-                    ||
-                    (deadEnd < lastIndex
-                        && deadEnd > 0
-                        && position[deadEnd] is Frog
-                        && position[deadEnd - 1] is Frog));
-            }        
-        }
-        
 
         private List<FrogsAndToadsMove> _getPossibleMoves(Predicate<FrogsAndToadsPiece> pieceChooser)
         {

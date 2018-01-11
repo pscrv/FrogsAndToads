@@ -54,6 +54,7 @@
     <Compile Include="FrogsAndToadsPosition.cs" />
     <Compile Include="FrogsAndToadsPositionEvaluator.cs" />
     <Compile Include="Players\MiniMiniMaxPlayer.cs" />
+    <Compile Include="Position\KnotFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Players\SymmetricPlayer.cs" />
   </ItemGroup>
@@ -67,8 +68,6 @@
       <Name>Monads</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Position\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
