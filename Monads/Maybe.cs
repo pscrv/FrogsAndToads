@@ -100,6 +100,18 @@ namespace Monads
             return Maybe<T>.Nothing();
         }       
 
+        
+        public static Maybe<T> Where<T>(this Maybe<T> source, Predicate<T> predicate)
+        {
+            if (predicate == null)
+                return Maybe<T>.Nothing($"{nameof(predicate)} was null");
+
+            if (source.HasValue && predicate(source.Value))
+                return source;
+
+            return Maybe<T>.Nothing();
+        }
+
     }
 }
     
