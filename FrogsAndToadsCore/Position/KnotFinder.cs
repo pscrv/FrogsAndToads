@@ -31,11 +31,6 @@ namespace FrogsAndToadsCore
                 from knotstart in _getFirstToadIndex(offset)
                 from knotend in _getEndOfKnot(knotstart)
                 select (knotstart, knotend);
-
-            Maybe<int> searchFurther =
-                from x in pseudoKnot
-                where x.end < _track.Length - 1
-                select x.end + 1;
             
             FirstDeadKnot =
                 from knot in pseudoKnot
@@ -45,6 +40,12 @@ namespace FrogsAndToadsCore
             
             if (FirstDeadKnot.HasValue)
                 return;
+
+
+            Maybe<int> searchFurther =
+                from x in pseudoKnot
+                where x.end < _track.Length - 1
+                select x.end + 1;
 
             if (searchFurther.HasValue)
                 _findFirstDeadKnot(searchFurther.Value );

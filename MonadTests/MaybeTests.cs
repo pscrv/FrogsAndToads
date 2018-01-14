@@ -177,6 +177,36 @@ namespace MonadTests
             Assert.AreEqual(default(string), stringMaybe.Value);
             Assert.AreEqual("value was null", stringMaybe.Explanation);
         }
+
+
+        [TestMethod]
+        public void Where()
+        {
+            intMaybe = divide(Maybe<int>.Nothing());
+            Assert.IsFalse(intMaybe.HasValue);
+            Assert.AreEqual("created from nothing", intMaybe.Explanation);
+            Assert.AreEqual(default(int), intMaybe.Value);
+
+            intMaybe = divide(7.ToMaybe());
+            Assert.IsFalse(intMaybe.HasValue);
+            Assert.AreEqual("created from nothing", intMaybe.Explanation);
+            Assert.AreEqual(default(int), intMaybe.Value);
+
+            int testValue = 6;
+            intMaybe = divide((2 * testValue).ToMaybe());
+            Assert.IsTrue(intMaybe.HasValue);
+            Assert.AreEqual("ok", intMaybe.Explanation);
+            Assert.AreEqual(testValue, intMaybe.Value);
+
+            Maybe<int> divide(Maybe<int> source)
+            {
+                return
+                    from x in source
+                    where x % 2 == 0
+                    select x / 2;
+            }
+
+        }
     }
 }
  
