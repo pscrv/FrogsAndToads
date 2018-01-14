@@ -5,7 +5,7 @@ namespace Monads
     public struct Maybe<T>
     {
         public static Maybe<T> Nothing() => 
-            Nothing("Created from Nothing");
+            Nothing("created from nothing");
 
         public static Maybe<T> Nothing(string explanation) =>
             new Maybe<T>(default(T), false, explanation);
@@ -98,17 +98,7 @@ namespace Monads
                     .ToMaybe();
 
             return Maybe<T>.Nothing();
-        }
-        
-        
-        //public static Maybe<(S, T)> Pair<S, T> (this Maybe<S> first, Maybe<T> second)
-        //{
-        //    if (first.HasValue && second.HasValue)
-        //        return (first.Value, second.Value).ToMaybe();
-
-        //    return Maybe<(S, T)>.Nothing();
-        //}
-
+        }       
 
     }
 }

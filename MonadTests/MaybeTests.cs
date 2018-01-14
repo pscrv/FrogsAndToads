@@ -17,7 +17,7 @@ namespace MonadTests
             intMaybe = Maybe<int>.Nothing();
             Assert.IsFalse(intMaybe.HasValue);
             Assert.AreEqual(default(int), intMaybe.Value);
-            Assert.AreEqual("Created from Nothing", intMaybe.Explanation);
+            Assert.AreEqual("created from nothing", intMaybe.Explanation);
         }
 
         [TestMethod]
@@ -76,6 +76,15 @@ namespace MonadTests
         }
 
         [TestMethod]
+        public void BindToNothing()
+        {
+            intMaybe = 7.ToMaybe();
+            stringMaybe = intMaybe.Bind(x => Maybe<string>.Nothing());
+            Assert.IsFalse(stringMaybe.HasValue);
+            Assert.AreEqual(default(string), stringMaybe.Value);
+        }
+
+        [TestMethod]
         public void Select()
         {
             intMaybe = 7.ToMaybe();
@@ -91,6 +100,12 @@ namespace MonadTests
             Assert.IsTrue(stringMaybe.HasValue);
             Assert.AreEqual("21", stringMaybe.Value);
             Assert.AreEqual("ok", stringMaybe.Explanation);
+
+            stringMaybe = intMaybe.Select<int, string>(
+                x => null);
+            Assert.IsFalse(stringMaybe.HasValue);
+            Assert.AreEqual(default(string), stringMaybe.Value);
+            Assert.AreEqual("value was null", stringMaybe.Explanation);
         }
 
         [TestMethod]
@@ -130,6 +145,13 @@ namespace MonadTests
             Assert.AreEqual("714", stringMaybe.Value);
             Assert.AreEqual("ok", stringMaybe.Explanation);
 
+            stringMaybe = intMaybe.SelectMany<int, int, string>(
+                x => Maybe<int>.Nothing(),
+                (x, y) => x.ToString() + y.ToString()
+                );
+            Assert.IsFalse(stringMaybe.HasValue);
+            Assert.AreEqual(default(string), stringMaybe.Value);
+            Assert.AreEqual("created from nothing", stringMaybe.Explanation);
         }
 
         [TestMethod]
@@ -155,27 +177,6 @@ namespace MonadTests
             Assert.AreEqual(default(string), stringMaybe.Value);
             Assert.AreEqual("value was null", stringMaybe.Explanation);
         }
-
-
-        //[TestMethod]
-        //public void Pair()
-        //{
-        //    Maybe<int> a = 1.ToMaybe();
-        //    Maybe<int> b = 2.ToMaybe();
-        //    Maybe<int> n = Maybe<int>.Nothing();
-
-        //    var x = a.Pair(b);
-        //    var y = a.Pair(n);
-        //    var z = n.Pair(a);
-
-        //    Assert.IsTrue(x.HasValue);
-        //    Assert.AreEqual(a.Value, x.Value.Item1);
-        //    Assert.AreEqual(b.Value, x.Value.Item2);
-
-        //    Assert.IsFalse(y.HasValue);
-        //    Assert.IsFalse(z.HasValue);
-            
-        //}
     }
 }
  
