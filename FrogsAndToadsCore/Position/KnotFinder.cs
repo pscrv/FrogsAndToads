@@ -104,36 +104,27 @@ namespace FrogsAndToadsCore
 
         bool _isPossibleDeadStart(int deadStart)
         {
-            if (!(_track[deadStart] is Toad))
-                return false;
-
-            return (
+            return 
                 (deadStart == 0
-                    && _track[deadStart] is Toad)
+                    && _track[0] is Toad)
                 ||
                 (deadStart > 0
                     && deadStart < _track.Length - 1
                     && _track[deadStart] is Toad
-                    && _track[deadStart + 1] is Toad));
+                    && _track[deadStart + 1] is Toad);
         }
 
         bool _isPossibleDeadEnd(int deadEnd)
-        {
-            if (!(_track[deadEnd] is Frog))
-                return false;
-                 
-            return (
+        {                 
+            return
                 (deadEnd == _track.Length - 1
                     && _track[deadEnd] is Frog)
                 ||
                 (deadEnd < _track.Length -1
                     && deadEnd > 0
                     && _track[deadEnd] is Frog
-                    && _track[deadEnd - 1] is Frog));
+                    && _track[deadEnd - 1] is Frog);
         }
         #endregion
-
-
-
     }
 }
