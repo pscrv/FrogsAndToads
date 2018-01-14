@@ -27,92 +27,84 @@ namespace FrogsAndToadsCore
         #region private methods
         private void _findFirstDeadKnot(int offset)
         {
+            FirstDeadKnot = Maybe<(int, int)>.Nothing();
             int lastIndex = _track.Length - 1;
             
-            int start = _getFirstToadIndex(offset);
-            if (start < 0)
-            {
-                FirstDeadKnot = Maybe<(int, int)>.Nothing();
-                return;
-            }
+            Maybe<(int start, int end)> pseudoKnot =
+                from x in _getFirstToadIndex(offset)
+                from y in _getEndOfKnot(x)
+                select (x, y);
 
-            int end =_getEndOfKnot(start);
-
-            int deadStart = _findDeadStart(start, end);
-            if (deadStart < 0)
+            if (pseudoKnot.HasValue)
             {
-                if (end == lastIndex)
-                {
-                    FirstDeadKnot = Maybe<(int, int)>.Nothing();
+                FirstDeadKnot =
+                    from x in _findDeadStart(pseudoKnot)
+                    from y in _findDeadEnd(pseudoKnot, x)
+                    select (x, y);
+
+                if (FirstDeadKnot.HasValue 
+                    || pseudoKnot.Value.end >= lastIndex)
                     return;
-                }
 
-                _findFirstDeadKnot(end + 1);
-                return;
+                _findFirstDeadKnot(pseudoKnot.Value.end + 1);
             }
-
-            int deadEnd =_findDeadEnd(deadStart, end);
-            if (deadEnd < 0)
-            {
-                if (end == lastIndex)
-                {
-                    FirstDeadKnot = Maybe<(int, int)>.Nothing();
-                    return;
-                }
-
-                _findFirstDeadKnot(end + 1);
-                return;
-            }
-
-            FirstDeadKnot = (deadStart, deadEnd).ToMaybe();
         }
 
 
 
-        int _getFirstToadIndex(int offset)
+        Maybe<int> _getFirstToadIndex(int offset)
         {
             for (int start = offset; start < _track.Length; start++)
             {
                 if (_track[start] is Toad)
-                    return start;
+                    return start.ToMaybe();
             }
 
-            return -1;
+            return Maybe<int>.Nothing();
         }
 
-        int _getEndOfKnot(int start)
-        {
+        Maybe<int> _getEndOfKnot(int start)
+        { 
+            if (! (_track[start] is Toad))
+                return Maybe<int>.Nothing();
+                       
             for (int end = start + 1; end < _track.Length; end++)
             {
                 if (_track[end] is Space)
                 {
-                    return end - 1;
+                    return (end - 1).ToMaybe();
                 }
             }
 
-            return _track.Length - 1;
+            return (_track.Length - 1).ToMaybe();
         }
 
-        int _findDeadStart(int start, int end)
+        Maybe<int> _findDeadStart(Maybe<(int start, int end)> knot)
         {
-            for (int deadStart = start; deadStart < end; deadStart++)
+            if (knot.HasValue)
             {
-                if (_isPossibleDeadStart(deadStart))
-                    return deadStart;
+                for (int deadStart = knot.Value.start; deadStart <= knot.Value.end; deadStart++)
+                {
+                    if (_isPossibleDeadStart(deadStart))
+                        return deadStart.ToMaybe();
+                }
             }
 
-            return -1;
+            return Maybe<int>.Nothing();
         }
 
-        int _findDeadEnd(int deadStart, int end)
+        Maybe<int> _findDeadEnd(Maybe<(int start, int end)> knot, int deadStart)
         {
-            for (int deadEnd = end; deadEnd > deadStart; deadEnd--)
+            if (knot.HasValue)
             {
-                if (_isPossibleDeadEnd(deadEnd))
-                    return deadEnd;
+                for (int deadEnd = knot.Value.end; deadEnd > deadStart; deadEnd--)
+                {
+                    if (_isPossibleDeadEnd(deadEnd))
+                        return deadEnd.ToMaybe();
+                }
             }
 
-            return -1;
+            return Maybe<int>.Nothing();
         }
 
         bool _isPossibleDeadStart(int deadStart)

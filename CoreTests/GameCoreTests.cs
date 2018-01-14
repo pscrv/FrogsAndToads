@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 using GameCore;
 using Monads;
-using System.Linq;
 
 namespace CoreTests
 {

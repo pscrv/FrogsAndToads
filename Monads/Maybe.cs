@@ -63,6 +63,7 @@ namespace Monads
             return Maybe<T>.Nothing();
         }
 
+
         public static Maybe<U> SelectMany<S, T, U>(
             this Maybe<S> source, 
             Func<S, Maybe<T>> lift, 
@@ -73,15 +74,14 @@ namespace Monads
 
             if (lift == null)
                 return Maybe<U>.Nothing($"{nameof(lift)} was null");
-
-            if (source.HasValue)
-                return
-                    select(
-                        source.Value,
-                        source.Bind(lift).Value)
-                        .ToMaybe();
-
-            return Maybe<U>.Nothing();
+            
+            return
+                    source
+                    .Bind(
+                        sourceValue => lift(sourceValue)
+                        .Bind(
+                            liftValue => select(sourceValue, liftValue).ToMaybe()));
+            
         }
    
 
@@ -89,7 +89,6 @@ namespace Monads
               this Maybe<S> source,
               Func<S, T> select)
         {
-
             if (select == null)
                 return Maybe<T>.Nothing($"{nameof(select)} was null");
 
@@ -100,6 +99,16 @@ namespace Monads
 
             return Maybe<T>.Nothing();
         }
+        
+        
+        //public static Maybe<(S, T)> Pair<S, T> (this Maybe<S> first, Maybe<T> second)
+        //{
+        //    if (first.HasValue && second.HasValue)
+        //        return (first.Value, second.Value).ToMaybe();
+
+        //    return Maybe<(S, T)>.Nothing();
+        //}
+
 
     }
 }

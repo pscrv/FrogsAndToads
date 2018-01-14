@@ -155,6 +155,27 @@ namespace MonadTests
             Assert.AreEqual(default(string), stringMaybe.Value);
             Assert.AreEqual("value was null", stringMaybe.Explanation);
         }
+
+
+        //[TestMethod]
+        //public void Pair()
+        //{
+        //    Maybe<int> a = 1.ToMaybe();
+        //    Maybe<int> b = 2.ToMaybe();
+        //    Maybe<int> n = Maybe<int>.Nothing();
+
+        //    var x = a.Pair(b);
+        //    var y = a.Pair(n);
+        //    var z = n.Pair(a);
+
+        //    Assert.IsTrue(x.HasValue);
+        //    Assert.AreEqual(a.Value, x.Value.Item1);
+        //    Assert.AreEqual(b.Value, x.Value.Item2);
+
+        //    Assert.IsFalse(y.HasValue);
+        //    Assert.IsFalse(z.HasValue);
+            
+        //}
     }
 }
  
