@@ -5,7 +5,8 @@ namespace ConsoleUI
 {
     class Program
     {
-        const string __GameString__ = "TF__TF_TF__TF";
+        const string __GameString__ = "TF_TF_TF__TF";
+        //const string __GameString__ = "TF__TF_TF__TF";
         //const string __GameString__ = "TF__TF_";
         //const string __GameString__ = "T_T_F";
         //const string __GameString__ = "TF_T_F";

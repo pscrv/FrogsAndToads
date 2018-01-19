@@ -7,7 +7,7 @@ using Monads;
 
 namespace FrogsAndToadsCore
 {
-    public class FrogsAndToadsPosition : GamePosition
+    public sealed class FrogsAndToadsPosition : GamePosition, IEquatable<FrogsAndToadsPosition>
     {
         #region static
         internal static FrogsAndToadsPosition MakeInitialPosition()
@@ -261,6 +261,32 @@ namespace FrogsAndToadsCore
             return sb.ToString();
         }
         #endregion
-        
+
+        #region IEquatable
+        public bool Equals(FrogsAndToadsPosition other)
+        {
+            if (other == null)
+                return false;
+
+            return this.ToString() == other.ToString();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (ReferenceEquals(null, other))
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            return this.Equals(other as FrogsAndToadsPosition);
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
+        #endregion
+
     }
 }

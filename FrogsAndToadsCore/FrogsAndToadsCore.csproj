@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Evaluation\Cache.cs" />
+    <Compile Include="Evaluation\EvaluationRecord.cs" />
+    <Compile Include="EvalutationCache.cs" />
+    <Compile Include="Evaluation\MoveRecord.cs" />
     <Compile Include="Players\EvaluatingPlayer.cs" />
     <Compile Include="FrogsAndToadsGame.cs" />
     <Compile Include="FrogsAndToadsMove.cs" />

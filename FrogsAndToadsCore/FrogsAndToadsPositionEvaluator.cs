@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameCore;
+using Monads;
 
 namespace FrogsAndToadsCore
 {
@@ -12,6 +13,11 @@ namespace FrogsAndToadsCore
 
     public class MiniMaxEvaluator : FrogsAndToadsPositionEvaluator
     {
+        //private EvalutationCache _cache = new EvalutationCache();
+        private PositionEvaluationCache _cache = new PositionEvaluationCache();
+
+
+
         #region FrogAndToadsPositionEvaluator overrides
         public override int LeftEvaluation(FrogsAndToadsPosition position)
         {
@@ -60,36 +66,46 @@ namespace FrogsAndToadsCore
 
 
         #region private
+        private enum ToadFrog { Toad, Frog }
+
+        private delegate int _evaluator(FrogsAndToadsPosition position, int depth, int bestToad, int bestFrog);
+        private delegate int _bestValueUpdater(int oldBestValue, int newValue);
+        private delegate (int bestToad, int bestFrog) _bestPairUpdater(int bestValue);
+
+
+
         private int _evaluatePositionForToad(
             FrogsAndToadsPosition position, 
             int depth, 
             int bestToad, 
             int bestFrog)
         {
-            FrogsAndToadsPosition resultingPosition;
-            List<FrogsAndToadsMove> possibleMoves = position.GetPossibleToadMoves();
 
-            if (possibleMoves.Count == 0)
-            {
+            (Maybe<EvaluationRecord> toad, Maybe<EvaluationRecord> frog) cached = _cache.Lookup(position);
+            if (cached.toad.HasValue && cached.toad.Value.IsComplete)
+                    return (cached.toad.Value.Value);
+            
+            MoveRecord moveRecord = new MoveRecord(
+                position.GetPossibleToadMoves(),
+                int.MinValue,
+                cached.toad);
+
+            if (moveRecord.NoPossibleMoves)
                 return EvaluateEndPositionForFrogs(position);
-            }
+
+            EvaluationRecord record = _updateEvaluation(
+                position,
+                moveRecord,
+                depth,
+                bestToad,
+                bestFrog,
+                _evaluatePositionForFrog,
+                (x, y) => Math.Max(x, y),
+                x => (Math.Min(bestToad, x), bestFrog));
 
 
-            int bestvalue = int.MinValue;
-            foreach(FrogsAndToadsMove move in possibleMoves)
-            {
-                resultingPosition = position.PlayMove(move);
-                bestvalue =
-                    Math.Max(
-                        bestvalue,
-                        _evaluatePositionForFrog(resultingPosition, depth + 1, bestToad, bestFrog)
-                        );
-                bestToad = Math.Max(bestToad, bestvalue);
-                if (bestToad > bestFrog)
-                    break;
-            }
-
-            return bestvalue;
+            _cache.Store(position, (record.ToMaybe(), cached.frog));
+            return record.Value;
         }
 
 
@@ -99,32 +115,75 @@ namespace FrogsAndToadsCore
             int bestToad, 
             int bestFrog)
         {
-            FrogsAndToadsPosition resultingPosition;
-            List<FrogsAndToadsMove> possibleMoves = position.GetPossibleFrogMoves();
+            (Maybe<EvaluationRecord> toad, Maybe<EvaluationRecord> frog) cached = _cache.Lookup(position);
+            if (cached.frog.HasValue && cached.frog.Value.IsComplete)
+                    return (cached.frog.Value.Value);
+            
+            MoveRecord moveRecord = new MoveRecord(
+                position.GetPossibleFrogMoves(), 
+                int.MaxValue,
+                cached.frog);
 
-            if (possibleMoves.Count == 0)
-            {
+            if (moveRecord.NoPossibleMoves)
                 return EvaluateEndPositionForToads(position);
-            }
 
-            int bestvalue = int.MaxValue;
-            foreach(FrogsAndToadsMove move in possibleMoves)
+
+            EvaluationRecord record = _updateEvaluation(
+                position,
+                moveRecord,
+                depth,
+                bestToad,
+                bestFrog,
+                _evaluatePositionForToad,
+                (x, y) => Math.Min(x, y),
+                x => (bestToad, Math.Min(x, bestFrog)));
+            
+            _cache.Store(position, (cached.toad, record.ToMaybe()));
+            return record.Value;
+        }
+
+        private EvaluationRecord _updateEvaluation(
+            FrogsAndToadsPosition position,
+            MoveRecord moveRecord,
+            int depth,
+            int bestToad,
+            int bestFrog,
+            _evaluator nextEvaluator,
+            _bestValueUpdater bestValueUpdater,
+            _bestPairUpdater bestPairUpdater)
+        {
+            int moveEvaluationcount = 0;
+            int bestValue = moveRecord.BestValueSoFar;
+            FrogsAndToadsPosition resultingPosition;
+            List<FrogsAndToadsMove> evaluatedMoves = 
+                new List<FrogsAndToadsMove>(moveRecord.EvaluatedMoves);
+
+            foreach (FrogsAndToadsMove move in moveRecord.MovesToEvaluate)
             {
+                moveEvaluationcount++;
+                evaluatedMoves.Add(move);
                 resultingPosition = position.PlayMove(move);
-                bestvalue =
-                    Math.Min(
-                        bestvalue,
-                        _evaluatePositionForToad(resultingPosition, depth + 1, bestToad, bestFrog)
+                
+                bestValue =
+                    bestValueUpdater(
+                        bestValue,
+                        nextEvaluator(resultingPosition, depth + 1, bestToad, bestFrog)
                         );
-                bestFrog = Math.Min(bestFrog, bestvalue);
+
+                (bestToad, bestFrog) = bestPairUpdater(bestValue);                               
+
                 if (bestToad > bestFrog)
                     break;
             }
 
-            return bestvalue;
+            return
+                (moveEvaluationcount == moveRecord.MovesToEvaluate.Count
+                ? new EvaluationRecord(bestValue)
+                : new EvaluationRecord(bestValue, evaluatedMoves));
         }
-
         
+
+
 
         private int _evaluateEndPositionForToads(FrogsAndToadsPosition position)
         {            
