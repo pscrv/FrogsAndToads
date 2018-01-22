@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EvaluationData.cs" />
     <Compile Include="Evaluation\Cache.cs" />
     <Compile Include="Evaluation\EvaluationRecord.cs" />
     <Compile Include="EvalutationCache.cs" />
