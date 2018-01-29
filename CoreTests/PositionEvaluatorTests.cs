@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-using GameCore;
 using FrogsAndToadsCore;
 using System.Linq;
 
@@ -19,7 +17,7 @@ namespace CoreTests1
         string gameString6 = "TF_T_F";
 
         FrogsAndToadsPosition position;
-        FrogsAndToadsPositionEvaluator evaluator;
+        MiniMaxEvaluator evaluator;
         int value;
 
         [TestMethod]
@@ -101,13 +99,13 @@ namespace CoreTests1
         {
             MiniMaxEvaluator evaluator = new MiniMaxEvaluator();
             position = new FrogsAndToadsPosition("TT__");
-            Assert.AreEqual(4, evaluator.EvaluateEndPositionForToads(position));
+            Assert.AreEqual(4, evaluator.EvaluateEndPositionForLeft(position));
 
             position = new FrogsAndToadsPosition("__F_F______");
-            Assert.AreEqual(-5, evaluator.EvaluateEndPositionForFrogs(position));
+            Assert.AreEqual(-5, evaluator.EvaluateEndPositionForRight(position));
 
             position = new FrogsAndToadsPosition("TFTFF__TTFF___T_T___TTFTFFFF_TTT___");
-            int result = evaluator.EvaluateEndPositionForToads(position);
+            int result = evaluator.EvaluateEndPositionForLeft(position);
             Assert.AreEqual(0 + 7 + 9, result);
         }
         

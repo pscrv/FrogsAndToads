@@ -6,21 +6,13 @@ using Monads;
 
 namespace FrogsAndToadsCore
 {
-    public abstract class FrogsAndToadsPositionEvaluator : GamePositionEvaluator<FrogsAndToadsPosition>
-    { }
-
-
-
-    public class MiniMaxEvaluator : FrogsAndToadsPositionEvaluator
+    public class MiniMaxEvaluator : MiniMaxEvaluator<FrogsAndToadsPosition>
     {
-        private PositionEvaluationCache _cache = new PositionEvaluationCache();
-
-
-        #region FrogAndToadsPositionEvaluator overrides
+        #region MiniMaxEvaluator overrides
         public override int LeftEvaluation(FrogsAndToadsPosition position)
         {
-            return _evaluatePositionForToad(
-                new EvaluationData(
+            return _evaluatePositionForToads(
+                new GameCore.EvaluationData<FrogsAndToadsPosition>(
                     position,
                     0,
                     int.MinValue,
@@ -30,18 +22,16 @@ namespace FrogsAndToadsCore
 
         public override int RightEvaluation(FrogsAndToadsPosition position)
         {
-            return _evaluatePositionForFrog(
-                new EvaluationData(
+            return _evaluatePositionForFrogs(
+                new EvaluationData<FrogsAndToadsPosition>(
                     position,
                     0,
                     int.MinValue,
                     int.MaxValue));
         }
-        #endregion
 
 
-        #region internal
-        internal int EvaluateEndPositionForToads(FrogsAndToadsPosition position)
+        public override int EvaluateEndPositionForLeft(FrogsAndToadsPosition position)
         {
             return 
                 position
@@ -49,11 +39,16 @@ namespace FrogsAndToadsCore
                 .Sum(x => _evaluateEndPositionForToads(x));
         }
 
-        internal int EvaluateEndPositionForFrogs(FrogsAndToadsPosition position)
-        {
-            return -EvaluateEndPositionForToads(position.Reverse());
-        }
 
+        public override int EvaluateEndPositionForRight(FrogsAndToadsPosition position)
+        {
+            return -EvaluateEndPositionForLeft(position.Reverse());
+        }
+        #endregion
+
+
+
+        #region internal methods
         internal List<(FrogsAndToadsMove move, int value)> EvaluateToadMoves(FrogsAndToadsPosition position)
         {
             return
@@ -66,32 +61,40 @@ namespace FrogsAndToadsCore
 
 
         #region private
-        private delegate int _evaluator(EvaluationData evaluationData);
+        private delegate int _evaluator(EvaluationData<FrogsAndToadsPosition> evaluationData);
         private delegate int _bestValueUpdater(int oldBestValue, int newValue);
         private delegate (int bestToad, int bestFrog) _bestPairUpdater(int bestValue);
 
 
-        private int _evaluatePositionForToad(EvaluationData evaluationData)
+
+        protected override int _evaluatePositionForLeft(
+            EvaluationData<FrogsAndToadsPosition> ed)
+            => _evaluatePositionForToads(ed);
+
+        private int _evaluatePositionForToads(
+            EvaluationData<FrogsAndToadsPosition> evaluationData)
         {
-            (Maybe<EvaluationRecord> toad, Maybe<EvaluationRecord> frog) cached 
+            (Maybe<EvaluationRecord<FrogsAndToadsPosition>> toad, Maybe<EvaluationRecord<FrogsAndToadsPosition>> frog) cached 
                 = _cache.Lookup(evaluationData.Position);
             if (cached.toad.HasValue && cached.toad.Value.IsComplete)
                     return (cached.toad.Value.Value);
-            
-            MoveRecord moveRecord = new MoveRecord(
-                evaluationData.Position.GetPossibleToadMoves(),
-                int.MinValue,
-                cached.toad);
 
-            if (moveRecord.NoPossibleMoves)
-                return EvaluateEndPositionForFrogs(evaluationData.Position);
+            OptionRecord<FrogsAndToadsPosition> optionRecord = 
+                new OptionRecord<FrogsAndToadsPosition>(
+                    evaluationData.Position.GetLeftOptions(),
+                    int.MinValue,
+                    cached.toad
+                    );
 
-            EvaluationRecord record = _updateEvaluation(
+            if (optionRecord.NoPossibleMoves)
+                return EvaluateEndPositionForRight(evaluationData.Position);
+
+            EvaluationRecord<FrogsAndToadsPosition> record = _updateEvaluation(
                 evaluationData,
-                moveRecord,
-                _evaluatePositionForFrog,
+                optionRecord,
+                _evaluatePositionForFrogs,
                 (x, y) => Math.Max(x, y),
-                x => (Math.Min(evaluationData.BestToad, x), evaluationData.BestFrog));
+                x => (Math.Max(evaluationData.BestLeft, x), evaluationData.BestRight));
 
 
             _cache.Store(evaluationData.Position, (record.ToMaybe(), cached.frog));
@@ -99,27 +102,30 @@ namespace FrogsAndToadsCore
         }
 
 
-        private int _evaluatePositionForFrog(EvaluationData evaluationData)
+        private int _evaluatePositionForFrogs(EvaluationData<FrogsAndToadsPosition> evaluationData)
         {
-            (Maybe<EvaluationRecord> toad, Maybe<EvaluationRecord> frog) cached = 
+            (Maybe<EvaluationRecord<FrogsAndToadsPosition>> toad, Maybe<EvaluationRecord<FrogsAndToadsPosition>> frog) cached = 
                 _cache.Lookup(evaluationData.Position);
             if (cached.frog.HasValue && cached.frog.Value.IsComplete)
                     return (cached.frog.Value.Value);
-            
-            MoveRecord moveRecord = new MoveRecord(
-                evaluationData.Position.GetPossibleFrogMoves(), 
-                int.MaxValue,
-                cached.frog);
 
-            if (moveRecord.NoPossibleMoves)
-                return EvaluateEndPositionForToads(evaluationData.Position);
+
+            OptionRecord<FrogsAndToadsPosition> optionRecord =
+                new OptionRecord<FrogsAndToadsPosition>(
+                    evaluationData.Position.GetLeftOptions(),
+                    int.MaxValue,
+                    cached.frog
+                    );
+
+            if (optionRecord.NoPossibleMoves)
+                return EvaluateEndPositionForLeft(evaluationData.Position);
             
-            EvaluationRecord record = _updateEvaluation(
+            EvaluationRecord<FrogsAndToadsPosition> record = _updateEvaluation(
                 evaluationData,
-                moveRecord,
-                _evaluatePositionForToad,
+                optionRecord,
+                _evaluatePositionForToads,
                 (x, y) => Math.Min(x, y),
-                x => (evaluationData.BestToad, Math.Min(x, evaluationData.BestFrog)));
+                x => (evaluationData.BestLeft, Math.Min(x, evaluationData.BestRight)));
             
             _cache.Store(evaluationData.Position, (cached.toad, record.ToMaybe()));
             return record.Value;
@@ -127,33 +133,31 @@ namespace FrogsAndToadsCore
 
 
 
-        private EvaluationRecord _updateEvaluation(
-            EvaluationData evaluationData,
-            MoveRecord moveRecord,
+        private EvaluationRecord<FrogsAndToadsPosition> _updateEvaluation(
+            EvaluationData<FrogsAndToadsPosition> evaluationData,
+            OptionRecord<FrogsAndToadsPosition> optionRecord,
             _evaluator nextEvaluator,
             _bestValueUpdater bestValueUpdater,
             _bestPairUpdater bestPairUpdater)
         {
-            FrogsAndToadsPosition resultingPosition;
-            EvaluationData resultingEvaluationData;
+            EvaluationData<FrogsAndToadsPosition> resultingEvaluationData;
 
-            int bestToad = evaluationData.BestToad;
-            int bestFrog = evaluationData.BestFrog;
-            int moveEvaluationcount = 0;
-            int bestValue = moveRecord.BestValueSoFar;
-            List<FrogsAndToadsMove> evaluatedMoves =
-                moveRecord.EvaluatedMoves;
+            int bestToad = evaluationData.BestLeft;
+            int bestFrog = evaluationData.BestRight;
+            int optionEvaluationcount = 0;
+            int bestValue = optionRecord.BestValueSoFar;
+            List<FrogsAndToadsPosition> evaluatedOptions =
+                optionRecord.EvaluatedOptions;
 
-            foreach (FrogsAndToadsMove move in moveRecord.MovesToEvaluate)
+            foreach (FrogsAndToadsPosition option in optionRecord.OptionsToEvaluate)
             {
-                moveEvaluationcount++;
-                evaluatedMoves.Add(move);
-                resultingPosition = evaluationData.Position.PlayMove(move);
-                resultingEvaluationData = new EvaluationData(
-                    resultingPosition,
+                optionEvaluationcount++;
+                evaluatedOptions.Add(option);
+                resultingEvaluationData = new EvaluationData<FrogsAndToadsPosition>(
+                    option,
                     evaluationData.Depth + 1,
-                    evaluationData.BestToad,
-                    evaluationData.BestFrog);
+                    evaluationData.BestLeft,
+                    evaluationData.BestRight);
                 
                 bestValue =
                     bestValueUpdater(
@@ -166,9 +170,9 @@ namespace FrogsAndToadsCore
             }
 
             return
-                (moveEvaluationcount == moveRecord.MovesToEvaluate.Count
-                ? new EvaluationRecord(bestValue)
-                : new EvaluationRecord(bestValue, evaluatedMoves));
+                (optionEvaluationcount == optionRecord.OptionsToEvaluate.Count
+                ? new EvaluationRecord<FrogsAndToadsPosition>(bestValue)
+                : new EvaluationRecord<FrogsAndToadsPosition>(bestValue, evaluatedOptions));
         }
         
 

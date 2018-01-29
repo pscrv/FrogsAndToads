@@ -43,10 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Evaluation\Cache.cs" />
+    <Compile Include="Evaluation\EvaluationData.cs" />
+    <Compile Include="Evaluation\EvaluationRecord.cs" />
+    <Compile Include="Evaluation\OptionRecord.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePlayer.cs" />
     <Compile Include="GamePosition.cs" />
-    <Compile Include="GamePositionEvaluator.cs" />
+    <Compile Include="Evaluation\GamePositionEvaluator.cs" />
     <Compile Include="GameValue\GameValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,5 +60,6 @@
       <Name>Monads</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

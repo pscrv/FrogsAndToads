@@ -131,6 +131,17 @@ namespace FrogsAndToadsCore
         }
 
 
+        internal List<FrogsAndToadsPosition> GetLeftOptions()
+        {
+            return GetPossibleToadMoves().Select(x => PlayMove(x)).ToList();
+        }
+
+        internal List<FrogsAndToadsPosition> GetRightOptions()
+        {
+            return GetPossibleFrogMoves().Select(x => PlayMove(x)).ToList();
+        }
+
+
         internal FrogsAndToadsPosition SubPosition(int leftIndex, int rightIndex)
         {
             if (_locationIsInvalid(leftIndex))
