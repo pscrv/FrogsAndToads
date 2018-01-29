@@ -94,7 +94,7 @@ namespace FrogsAndToadsCore
                 optionRecord,
                 _evaluatePositionForFrogs,
                 (x, y) => Math.Max(x, y),
-                x => (Math.Max(evaluationData.BestLeft, x), evaluationData.BestRight));
+                x => (Math.Min(evaluationData.BestLeft, x), evaluationData.BestRight));
 
 
             _cache.Store(evaluationData.Position, (record.ToMaybe(), cached.frog));
