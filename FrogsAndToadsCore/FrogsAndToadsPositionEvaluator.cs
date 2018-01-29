@@ -112,7 +112,7 @@ namespace FrogsAndToadsCore
 
             OptionRecord<FrogsAndToadsPosition> optionRecord =
                 new OptionRecord<FrogsAndToadsPosition>(
-                    evaluationData.Position.GetLeftOptions(),
+                    evaluationData.Position.GetRightOptions(),
                     int.MaxValue,
                     cached.frog
                     );
