@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using GameCore;
 using Monads;
 
@@ -23,7 +23,6 @@ namespace FrogsAndToadsCore
             return -EvaluateEndPositionForLeft(position.Reverse());
         }
         #endregion
-
 
 
         #region internal methods
