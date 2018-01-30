@@ -25,8 +25,8 @@
 
     public class EvaluationData<GP> where GP : GamePosition
     {
-        public readonly int Depth;
         public readonly GP Position;
+        public readonly int Depth;
         public readonly int BestLeft;
         public readonly int BestRight;
 

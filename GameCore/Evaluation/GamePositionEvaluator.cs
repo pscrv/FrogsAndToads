@@ -22,8 +22,7 @@ namespace GameCore
         protected PositionEvaluationCache _cache = new PositionEvaluationCache();
 
 
-
-
+        #region GamePositionEvaluator
         public override int LeftEvaluation(GP position)
         {
             return _evaluateForLeft(
@@ -44,19 +43,17 @@ namespace GameCore
                     int.MinValue,
                     int.MaxValue));
         }
+        #endregion
 
 
 
-
-
-
+        #region private methods
         private delegate int _evaluator(EvaluationData<GP> evaluationData);
         private delegate int _bestValueUpdater(int oldBestValue, int newValue);
         private delegate (int bestToad, int bestFrog) _bestPairUpdater(int bestValue);
 
 
-        private int _evaluateForLeft(
-            EvaluationData<GP> evaluationData)
+        private int _evaluateForLeft(EvaluationData<GP> evaluationData)
         {
             (Maybe<EvaluationRecord> toad, Maybe<EvaluationRecord> frog) cached
                 = _cache.Lookup(evaluationData.Position);
@@ -65,7 +62,7 @@ namespace GameCore
 
             OptionRecord optionRecord =
                 new OptionRecord(
-                    evaluationData.Position.GetLeftOptions().Select(x => x as GP),
+                    evaluationData.Position.GetLeftOptions(),
                     int.MinValue,
                     cached.toad
                     );
@@ -86,7 +83,6 @@ namespace GameCore
         }
 
 
-
         private int _evaluateForRight(EvaluationData<GP> evaluationData)
         {
             (Maybe<EvaluationRecord> toad, Maybe<EvaluationRecord> frog) cached =
@@ -97,7 +93,7 @@ namespace GameCore
 
             OptionRecord optionRecord =
                 new OptionRecord(
-                    evaluationData.Position.GetRightOptions().Select(x => x as GP),
+                    evaluationData.Position.GetRightOptions(),
                     int.MaxValue,
                     cached.frog
                     );
@@ -115,8 +111,7 @@ namespace GameCore
             _cache.Store(evaluationData.Position, (cached.toad, record.ToMaybe()));
             return record.Value;
         }
-
-
+        
 
         private EvaluationRecord _updateEvaluation(
             EvaluationData<GP> evaluationData,
@@ -159,9 +154,6 @@ namespace GameCore
                 ? new EvaluationRecord(bestValue)
                 : new EvaluationRecord(bestValue, evaluatedOptions));
         }
-
-
-
-
+        #endregion
     }
 }

@@ -39,13 +39,4 @@ namespace GameCore
         protected override (Maybe<EvaluationRecord> left, Maybe<EvaluationRecord> right) _defaultReturnValue
             => (Maybe<EvaluationRecord>.Nothing(), Maybe<EvaluationRecord>.Nothing());
     }
-
-
-    public class PositionEvaluationCache<GP> 
-        : Cache<GamePosition, (Maybe<EvaluationRecord<GP>> left, Maybe<EvaluationRecord<GP>> right)>
-    where GP : GamePosition
-    {
-        protected override (Maybe<EvaluationRecord<GP>> left, Maybe<EvaluationRecord<GP>> right) _defaultReturnValue 
-            => (Maybe<EvaluationRecord<GP>>.Nothing(), Maybe<EvaluationRecord<GP>>.Nothing());
-    }
 }

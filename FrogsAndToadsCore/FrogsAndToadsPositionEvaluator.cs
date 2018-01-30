@@ -9,8 +9,6 @@ namespace FrogsAndToadsCore
     public class MiniMaxEvaluator : MiniMaxEvaluator<FrogsAndToadsPosition>
     {
         #region MiniMaxEvaluator overrides
-
-
         public override int EvaluateEndPositionForLeft(FrogsAndToadsPosition position)
         {
             return 
@@ -40,8 +38,7 @@ namespace FrogsAndToadsCore
         #endregion
 
 
-        #region private
-
+        #region private methods
         private int _evaluateEndPositionForToads(FrogsAndToadsPosition position)
         {            
             int sum = 0;
