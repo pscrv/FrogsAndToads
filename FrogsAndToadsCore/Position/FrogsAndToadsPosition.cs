@@ -131,16 +131,6 @@ namespace FrogsAndToadsCore
         }
 
 
-        internal List<FrogsAndToadsPosition> GetLeftOptions()
-        {
-            return GetPossibleToadMoves().Select(x => PlayMove(x)).ToList();
-        }
-
-        internal List<FrogsAndToadsPosition> GetRightOptions()
-        {
-            return GetPossibleFrogMoves().Select(x => PlayMove(x)).ToList();
-        }
-
 
         internal FrogsAndToadsPosition SubPosition(int leftIndex, int rightIndex)
         {
@@ -255,23 +245,24 @@ namespace FrogsAndToadsCore
                && target < _track.Length
                && _track[target] is Space;
         #endregion
-                
 
 
-        #region overrides
-        public override string ToString()
+        #region GamePosition
+        public override IEnumerable<GamePosition> GetLeftOptions()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("< ");
-            foreach (FrogsAndToadsPiece gp in _track)
-            {
-                sb.Append(gp.ToString());
-                sb.Append(' ');               
-            }
-            sb.Append(">");
-            return sb.ToString();
+            return GetPossibleToadMoves()
+                .Select(x => PlayMove(x));
         }
+
+        public override IEnumerable<GamePosition> GetRightOptions()
+        {
+            return GetPossibleFrogMoves()
+                .Select(x => PlayMove(x));
+        }
+
+
         #endregion
+
 
         #region IEquatable
         public bool Equals(FrogsAndToadsPosition other)
@@ -299,5 +290,20 @@ namespace FrogsAndToadsCore
         }
         #endregion
 
+
+        #region overrides
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("< ");
+            foreach (FrogsAndToadsPiece gp in _track)
+            {
+                sb.Append(gp.ToString());
+                sb.Append(' ');               
+            }
+            sb.Append(">");
+            return sb.ToString();
+        }
+        #endregion
     }
 }

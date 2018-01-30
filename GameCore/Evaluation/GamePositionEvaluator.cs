@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Monads;
 
 namespace GameCore
 {
@@ -21,15 +24,144 @@ namespace GameCore
 
 
 
-        protected abstract int _evaluatePositionForLeft(EvaluationData<GP> ed);
         public override int LeftEvaluation(GP position)
         {
-            return _evaluatePositionForLeft(
+            return _evaluateForLeft(
                 new EvaluationData<GP>(
                     position,
                     0,
                     int.MinValue,
                     int.MaxValue));
         }
+    
+
+        public override int RightEvaluation(GP position)
+        {
+            return _evaluateForRight(
+                new EvaluationData<GP>(
+                    position,
+                    0,
+                    int.MinValue,
+                    int.MaxValue));
+        }
+
+
+
+
+
+
+        private delegate int _evaluator(EvaluationData<GP> evaluationData);
+        private delegate int _bestValueUpdater(int oldBestValue, int newValue);
+        private delegate (int bestToad, int bestFrog) _bestPairUpdater(int bestValue);
+
+
+        private int _evaluateForLeft(
+            EvaluationData<GP> evaluationData)
+        {
+            (Maybe<EvaluationRecord<GP>> toad, Maybe<EvaluationRecord<GP>> frog) cached
+                = _cache.Lookup(evaluationData.Position);
+            if (cached.toad.HasValue && cached.toad.Value.IsComplete)
+                return (cached.toad.Value.Value);
+
+            OptionRecord<GP> optionRecord =
+                new OptionRecord<GP>(
+                    evaluationData.Position.GetLeftOptions().Select(x => x as GP),
+                    int.MinValue,
+                    cached.toad
+                    );
+
+            if (optionRecord.NoPossibleMoves)
+                return EvaluateEndPositionForRight(evaluationData.Position);
+
+            EvaluationRecord<GP> record = _updateEvaluation(
+                evaluationData,
+                optionRecord,
+                _evaluateForRight,
+                (x, y) => Math.Max(x, y),
+                x => (Math.Min(evaluationData.BestLeft, x), evaluationData.BestRight));
+
+
+            _cache.Store(evaluationData.Position, (record.ToMaybe(), cached.frog));
+            return record.Value;
+        }
+
+
+
+        private int _evaluateForRight(EvaluationData<GP> evaluationData)
+        {
+            (Maybe<EvaluationRecord<GP>> toad, Maybe<EvaluationRecord<GP>> frog) cached =
+                _cache.Lookup(evaluationData.Position);
+            if (cached.frog.HasValue && cached.frog.Value.IsComplete)
+                return (cached.frog.Value.Value);
+
+
+            OptionRecord<GP> optionRecord =
+                new OptionRecord<GP>(
+                    evaluationData.Position.GetRightOptions().Select(x => x as GP),
+                    int.MaxValue,
+                    cached.frog
+                    );
+
+            if (optionRecord.NoPossibleMoves)
+                return EvaluateEndPositionForLeft(evaluationData.Position);
+
+            EvaluationRecord<GP> record = _updateEvaluation(
+                evaluationData,
+                optionRecord,
+                _evaluateForLeft,
+                (x, y) => Math.Min(x, y),
+                x => (evaluationData.BestLeft, Math.Min(x, evaluationData.BestRight)));
+
+            _cache.Store(evaluationData.Position, (cached.toad, record.ToMaybe()));
+            return record.Value;
+        }
+
+
+
+        private EvaluationRecord<GP> _updateEvaluation(
+            EvaluationData<GP> evaluationData,
+            OptionRecord<GP> optionRecord,
+            _evaluator nextEvaluator,
+            _bestValueUpdater bestValueUpdater,
+            _bestPairUpdater bestPairUpdater)
+        {
+            EvaluationData<GP> resultingEvaluationData;
+
+            int bestToad = evaluationData.BestLeft;
+            int bestFrog = evaluationData.BestRight;
+            int optionEvaluationcount = 0;
+            int bestValue = optionRecord.BestValueSoFar;
+            List<GP> evaluatedOptions =
+                optionRecord.EvaluatedOptions;
+
+            foreach (GP option in optionRecord.OptionsToEvaluate)
+            {
+                optionEvaluationcount++;
+                evaluatedOptions.Add(option);
+                resultingEvaluationData = new EvaluationData<GP>(
+                    option,
+                    evaluationData.Depth + 1,
+                    evaluationData.BestLeft,
+                    evaluationData.BestRight);
+
+                bestValue =
+                    bestValueUpdater(
+                        bestValue,
+                        nextEvaluator(resultingEvaluationData));
+
+                (bestToad, bestFrog) = bestPairUpdater(bestValue);
+                if (bestToad > bestFrog)
+                    break;
+            }
+
+            return
+                (optionEvaluationcount == optionRecord.OptionsToEvaluate.Count
+                ? new EvaluationRecord<GP>(bestValue)
+                : new EvaluationRecord<GP>(bestValue, evaluatedOptions));
+        }
+
+
+
+
     }
 }

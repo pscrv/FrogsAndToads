@@ -61,6 +61,19 @@ namespace CoreTests1
 
                 return Maybe<GamePosition>.Some(new NimPosition(_size - 1));
             }
+
+
+
+            // just for now
+            public override IEnumerable<GamePosition> GetLeftOptions()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IEnumerable<GamePosition> GetRightOptions()
+            {
+                throw new NotImplementedException();
+            }
         }
 
 
