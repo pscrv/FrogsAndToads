@@ -19,7 +19,7 @@ namespace GameCore
 
     public abstract class MiniMaxEvaluator<GP> : GamePositionEvaluator<GP> where GP : GamePosition
     {
-        protected PositionEvaluationCache<GP> _cache = new PositionEvaluationCache<GP>();
+        protected PositionEvaluationCache _cache = new PositionEvaluationCache();
 
 
 
@@ -58,13 +58,13 @@ namespace GameCore
         private int _evaluateForLeft(
             EvaluationData<GP> evaluationData)
         {
-            (Maybe<EvaluationRecord<GP>> toad, Maybe<EvaluationRecord<GP>> frog) cached
+            (Maybe<EvaluationRecord> toad, Maybe<EvaluationRecord> frog) cached
                 = _cache.Lookup(evaluationData.Position);
             if (cached.toad.HasValue && cached.toad.Value.IsComplete)
                 return (cached.toad.Value.Value);
 
-            OptionRecord<GP> optionRecord =
-                new OptionRecord<GP>(
+            OptionRecord optionRecord =
+                new OptionRecord(
                     evaluationData.Position.GetLeftOptions().Select(x => x as GP),
                     int.MinValue,
                     cached.toad
@@ -73,7 +73,7 @@ namespace GameCore
             if (optionRecord.NoPossibleMoves)
                 return EvaluateEndPositionForRight(evaluationData.Position);
 
-            EvaluationRecord<GP> record = _updateEvaluation(
+            EvaluationRecord record = _updateEvaluation(
                 evaluationData,
                 optionRecord,
                 _evaluateForRight,
@@ -89,14 +89,14 @@ namespace GameCore
 
         private int _evaluateForRight(EvaluationData<GP> evaluationData)
         {
-            (Maybe<EvaluationRecord<GP>> toad, Maybe<EvaluationRecord<GP>> frog) cached =
+            (Maybe<EvaluationRecord> toad, Maybe<EvaluationRecord> frog) cached =
                 _cache.Lookup(evaluationData.Position);
             if (cached.frog.HasValue && cached.frog.Value.IsComplete)
                 return (cached.frog.Value.Value);
 
 
-            OptionRecord<GP> optionRecord =
-                new OptionRecord<GP>(
+            OptionRecord optionRecord =
+                new OptionRecord(
                     evaluationData.Position.GetRightOptions().Select(x => x as GP),
                     int.MaxValue,
                     cached.frog
@@ -105,7 +105,7 @@ namespace GameCore
             if (optionRecord.NoPossibleMoves)
                 return EvaluateEndPositionForLeft(evaluationData.Position);
 
-            EvaluationRecord<GP> record = _updateEvaluation(
+            EvaluationRecord record = _updateEvaluation(
                 evaluationData,
                 optionRecord,
                 _evaluateForLeft,
@@ -118,9 +118,9 @@ namespace GameCore
 
 
 
-        private EvaluationRecord<GP> _updateEvaluation(
+        private EvaluationRecord _updateEvaluation(
             EvaluationData<GP> evaluationData,
-            OptionRecord<GP> optionRecord,
+            OptionRecord optionRecord,
             _evaluator nextEvaluator,
             _bestValueUpdater bestValueUpdater,
             _bestPairUpdater bestPairUpdater)
@@ -131,7 +131,7 @@ namespace GameCore
             int bestFrog = evaluationData.BestRight;
             int optionEvaluationcount = 0;
             int bestValue = optionRecord.BestValueSoFar;
-            List<GP> evaluatedOptions =
+            List<GamePosition> evaluatedOptions =
                 optionRecord.EvaluatedOptions;
 
             foreach (GP option in optionRecord.OptionsToEvaluate)
@@ -156,8 +156,8 @@ namespace GameCore
 
             return
                 (optionEvaluationcount == optionRecord.OptionsToEvaluate.Count
-                ? new EvaluationRecord<GP>(bestValue)
-                : new EvaluationRecord<GP>(bestValue, evaluatedOptions));
+                ? new EvaluationRecord(bestValue)
+                : new EvaluationRecord(bestValue, evaluatedOptions));
         }
 
 

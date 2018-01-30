@@ -18,7 +18,7 @@ namespace GameCore
         public OptionRecord(
             IEnumerable<GamePosition> possibleMoves,
             int bestsofar,
-            Maybe<EvaluationRecord<GamePosition>> record
+            Maybe<EvaluationRecord> record
             )
         {
             Options = possibleMoves.ToList();
