@@ -63,8 +63,7 @@ namespace CoreTests1
             }
 
 
-
-            // just for now
+            
             public override IEnumerable<GamePosition> GetLeftOptions()
             {
                 throw new NotImplementedException();

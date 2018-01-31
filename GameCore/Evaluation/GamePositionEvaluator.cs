@@ -17,7 +17,7 @@ namespace GameCore
 
 
 
-    public abstract class MiniMaxEvaluator<GP> : GamePositionEvaluator<GP> where GP : GamePosition
+    public abstract class MiniMaxEvaluator<GP> : GamePositionEvaluator<GP> where GP : GamePosition, IEquatable<GP>
     {
         protected PositionEvaluationCache _cache = new PositionEvaluationCache();
 

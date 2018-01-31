@@ -268,7 +268,7 @@ namespace FrogsAndToadsCore
         #region IEquatable
         public bool Equals(FrogsAndToadsPosition other)
         {
-            if (other == null)
+            if (ReferenceEquals(other, null))
                 return false;
 
             return this.ToString() == other.ToString();
