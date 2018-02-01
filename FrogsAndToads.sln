@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleUI", "ConsoleUI\Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCore", "GameCore\GameCore.csproj", "{D1A878CE-4F82-4B04-854F-59D2DD22C81A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonadTests", "MonadTests\MonadTests.csproj", "{1A75B667-277D-4058-B3F7-B653EC5B4717}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monads", "Monads\Monads.csproj", "{43DE8FEC-5165-4DE0-B3B8-40FC7B70BD03}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameValueTests", "GameValueTests\GameValueTests.csproj", "{6641549F-21A0-4E48-BE66-ADDC68915E47}"
@@ -19,10 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoughtsAndCrossesCore", "NoughtsAndCrossesCore\NoughtsAndCrossesCore.csproj", "{8ACDB835-730E-4BAB-AB52-A1F3DE93A149}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoughtsAndCrossesTests", "NoughtsAndCrossesTests\NoughtsAndCrossesTests.csproj", "{A98BCF4B-0411-4626-9BE9-28BEE6B5F380}"
+EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -40,10 +37,6 @@ Global
 		{D1A878CE-4F82-4B04-854F-59D2DD22C81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1A878CE-4F82-4B04-854F-59D2DD22C81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1A878CE-4F82-4B04-854F-59D2DD22C81A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A75B667-277D-4058-B3F7-B653EC5B4717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A75B667-277D-4058-B3F7-B653EC5B4717}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A75B667-277D-4058-B3F7-B653EC5B4717}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A75B667-277D-4058-B3F7-B653EC5B4717}.Release|Any CPU.Build.0 = Release|Any CPU
 		{43DE8FEC-5165-4DE0-B3B8-40FC7B70BD03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{43DE8FEC-5165-4DE0-B3B8-40FC7B70BD03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43DE8FEC-5165-4DE0-B3B8-40FC7B70BD03}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,9 +53,19 @@ Global
 		{8ACDB835-730E-4BAB-AB52-A1F3DE93A149}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ACDB835-730E-4BAB-AB52-A1F3DE93A149}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8ACDB835-730E-4BAB-AB52-A1F3DE93A149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A98BCF4B-0411-4626-9BE9-28BEE6B5F380}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A98BCF4B-0411-4626-9BE9-28BEE6B5F380}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A98BCF4B-0411-4626-9BE9-28BEE6B5F380}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A98BCF4B-0411-4626-9BE9-28BEE6B5F380}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
