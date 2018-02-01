@@ -52,6 +52,7 @@
     <Compile Include="GamePosition.cs" />
     <Compile Include="Evaluation\GamePositionEvaluator.cs" />
     <Compile Include="GameValue\GameValue.cs" />
+    <Compile Include="IReversibleGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

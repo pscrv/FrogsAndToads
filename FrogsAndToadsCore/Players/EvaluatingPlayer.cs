@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using GameCore;
-using Monads;
+﻿using GameCore;
 
 namespace FrogsAndToadsCore
 {
-    public class EvaluatingPlayer : SymmetricPlayer
+    public class EvaluatingPlayer : SymmetricEvaluatingPlayer<FrogsAndToadsPosition>
     {
         public EvaluatingPlayer(string label, GamePositionEvaluator<FrogsAndToadsPosition> evaluator)
             :base(label)

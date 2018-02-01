@@ -8,7 +8,7 @@ using Monads;
 
 namespace FrogsAndToadsCore
 {
-    public sealed class FrogsAndToadsPosition : GamePosition, IEquatable<FrogsAndToadsPosition>
+    public sealed class FrogsAndToadsPosition : GamePosition, IReversibleGame<FrogsAndToadsPosition>, IEquatable<FrogsAndToadsPosition>
     {
         #region static
         internal static FrogsAndToadsPosition MakeInitialPosition()
@@ -37,12 +37,7 @@ namespace FrogsAndToadsCore
 
         internal FrogsAndToadsPiece this[int index]
             => _track[index];
-
-
-        internal FrogsAndToadsPosition Reverse()
-            => new FrogsAndToadsPosition(_reverseTrack());
         #endregion
-
 
         #region construction
         internal FrogsAndToadsPosition(int toadCount, int spaceCount, int frogCount)
@@ -263,6 +258,13 @@ namespace FrogsAndToadsCore
 
 
         #endregion
+
+
+        #region IReversibleGame
+        public FrogsAndToadsPosition Reverse()
+            => new FrogsAndToadsPosition(_reverseTrack());
+        #endregion
+
 
 
         #region IEquatable

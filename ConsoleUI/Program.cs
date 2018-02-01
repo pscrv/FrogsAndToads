@@ -1,5 +1,7 @@
 ﻿using System;
+
 using FrogsAndToadsCore;
+using GameCore;
 
 namespace ConsoleUI
 {
@@ -15,8 +17,8 @@ namespace ConsoleUI
 
         static void Main(string[] args)
         {
-            FrogsAndToadsPlayer _toadChooser = new ConsolePlayer("Toads");
-            FrogsAndToadsPlayer _frogsChooser = new EvaluatingPlayer("Frogs", new MiniMaxEvaluator());
+            GamePlayer<FrogsAndToadsPosition> _toadChooser = new ConsolePlayer("Toads");
+            GamePlayer<FrogsAndToadsPosition> _frogsChooser = new EvaluatingPlayer("Frogs", new MiniMaxEvaluator());
             FrogsAndToadsGame game = new FrogsAndToadsGame(
                 _toadChooser,
                 _frogsChooser,
