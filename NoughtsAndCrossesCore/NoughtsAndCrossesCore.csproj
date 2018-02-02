@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NoughtsAndCrossesPiece.cs" />
+    <Compile Include="NoughtsAndCrossesPlayer.cs" />
     <Compile Include="NoughtsAndCrossesPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -52,9 +53,10 @@
       <Project>{D1A878CE-4F82-4B04-854F-59D2DD22C81A}</Project>
       <Name>GameCore</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Monads\Monads.csproj">
+      <Project>{43de8fec-5165-4de0-b3b8-40fc7b70bd03}</Project>
+      <Name>Monads</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
