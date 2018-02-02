@@ -57,7 +57,7 @@
     <Compile Include="FrogsAndToadsPiece.cs" />
     <Compile Include="Players\FrogsAndToadsPlayer.cs" />
     <Compile Include="Position\FrogsAndToadsPosition.cs" />
-    <Compile Include="FrogsAndToadsPositionEvaluator.cs" />
+    <Compile Include="Evaluation\FrogsAndToadsPositionEvaluator.cs" />
     <Compile Include="Players\MiniMiniMaxPlayer.cs" />
     <Compile Include="Position\KnotFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

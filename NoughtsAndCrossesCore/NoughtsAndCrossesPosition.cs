@@ -45,6 +45,23 @@ namespace NoughtsAndCrossesCore
         #region internal properties
         internal bool IsEndPosition
             => _isFinished();
+
+        internal int FreeSpaceCount
+            => _countFreeSpaces();
+
+        private int _countFreeSpaces()
+        {
+            return _board.OfType<Space>().Count();
+        }
+        #endregion
+
+
+        #region public methods
+        public IEnumerable<NoughtsAndCrossesPosition> GetCrossOptions()
+            => _getEmptyCells().Select(cell => Play(cell.row, cell.column, Cross.Instance));
+
+        public IEnumerable<NoughtsAndCrossesPosition> GetNoughtOptions()
+            => _getEmptyCells().Select(cell => Play(cell.row, cell.column, Nought.Instance));
         #endregion
 
 
@@ -201,16 +218,18 @@ namespace NoughtsAndCrossesCore
 
             return false;
         }
+        
         #endregion
 
 
 
         #region GamePosition
+
         public override IEnumerable<GamePosition> GetLeftOptions()
-            => _getEmptyCells().Select(cell => Play(cell.row, cell.column, Cross.Instance));
+            => GetCrossOptions();
 
         public override IEnumerable<GamePosition> GetRightOptions()
-            => _getEmptyCells().Select(cell => Play(cell.row, cell.column, Nought.Instance));
+            => GetNoughtOptions();
         #endregion
 
 

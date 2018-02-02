@@ -60,6 +60,10 @@
       <Project>{D1A878CE-4F82-4B04-854F-59D2DD22C81A}</Project>
       <Name>GameCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NoughtsAndCrossesCore\NoughtsAndCrossesCore.csproj">
+      <Project>{8ACDB835-730E-4BAB-AB52-A1F3DE93A149}</Project>
+      <Name>NoughtsAndCrossesCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

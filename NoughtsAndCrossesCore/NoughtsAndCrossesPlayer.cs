@@ -65,7 +65,7 @@ namespace NoughtsAndCrossesCore
                 Console.WriteLine($"Please choose a move from: ");
                 for (int i = 0; i < choices.Count; i++)
                 {
-                    Console.WriteLine($"    {i}: {choices[i]}");
+                    Console.WriteLine($"    {i}: \n{choices[i]}");
                 }
 
                 input = Console.ReadLine();

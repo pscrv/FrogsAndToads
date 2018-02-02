@@ -2,6 +2,7 @@
 
 using FrogsAndToadsCore;
 using GameCore;
+using NoughtsAndCrossesCore;
 
 namespace ConsoleUI
 {
@@ -17,8 +18,15 @@ namespace ConsoleUI
 
         static void Main(string[] args)
         {
-            GamePlayer<FrogsAndToadsPosition> _toadChooser = new ConsolePlayer("Toads");
-            GamePlayer<FrogsAndToadsPosition> _frogsChooser = new EvaluatingPlayer("Frogs", new MiniMaxEvaluator());
+            //PlayFrogsAndToads();
+            PlayNoughtsAndCrosses();
+        }
+
+
+        static void PlayFrogsAndToads()
+        {
+            GamePlayer<FrogsAndToadsPosition> _toadChooser = new FrogsAndToadsCore.ConsolePlayer("Toads");
+            GamePlayer<FrogsAndToadsPosition> _frogsChooser = new FrogsAndToadsCore.EvaluatingPlayer("Frogs", new MiniMaxEvaluator());
             FrogsAndToadsGame game = new FrogsAndToadsGame(
                 _toadChooser,
                 _frogsChooser,
@@ -59,5 +67,49 @@ namespace ConsoleUI
                 game.PlayRound();
             }
         }
+
+
+
+        static void PlayNoughtsAndCrosses()
+        {
+            GamePlayer<NoughtsAndCrossesPosition> _crossesChooser = new NoughtsAndCrossesCore.ConsolePlayer("Crosses");
+            GamePlayer<NoughtsAndCrossesPosition> _noughtsChooser = new NoughtsAndCrossesCore.TrivialPlayer("Noughts");
+            NoughtsAndCrossesGame game = new NoughtsAndCrossesGame(
+                _crossesChooser,
+                _noughtsChooser,
+                3 );
+            PlayInTurns(game);
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"Game over with position {game.PositionString}.");
+            Console.WriteLine($"The winner was {game.Winner}");
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("History:");
+            foreach (string positionString in game.StringHistory)
+            {
+                Console.WriteLine($"    {positionString}");
+            }
+
+            Console.ReadLine();
+        }
+
+        
+
+        static void PlayInTurns(NoughtsAndCrossesGame game)
+        {
+            while (!game.GameIsOver)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"   current position is \n{game.Position}");
+                Console.WriteLine("      Press <Enter>");
+                Console.ReadLine();
+                game.PlayRound();
+            }
+        }
+
     }
 }

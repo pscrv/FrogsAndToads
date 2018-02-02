@@ -43,9 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NoughtsAndCrossesGame.cs" />
     <Compile Include="NoughtsAndCrossesPiece.cs" />
     <Compile Include="NoughtsAndCrossesPlayer.cs" />
     <Compile Include="NoughtsAndCrossesPosition.cs" />
+    <Compile Include="NoughtsAndCrossesPositionEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
